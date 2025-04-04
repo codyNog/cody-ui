@@ -1,5 +1,5 @@
 {
-  "name": "@codynog/cody-rn-ui",
+  "name": "@codynog/cody-ui",
   "version": "0.0.1",
   "module": "cli.ts",
   "type": "module",
@@ -51,7 +51,7 @@
     "dotenv": "^16.4.7"
   },
   "bin": {
-    "cody-rn-ui": "./dist/index.js"
+    "@codynog/cody-ui": "./dist/index.js"
   },
   "optionalDependencies": {
     "@codynog/ai-rules": "latest"

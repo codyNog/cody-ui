@@ -10,7 +10,7 @@ dotenv.config();
 
 const CONFIG = {
   org: "codyNog",
-  repo: "cody-rn-ui",
+  repo: "cody-ui",
   path: "src",
   branch: "main",
   versionFile: ".ui-version.json",
