@@ -1,0 +1,22 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "bun.lockb",
+    "cspell.json",
+    "package.json",
+    "**.stories.tsx",
+    "dist/**"
+  ],
+  "allowCompoundWords": true,
+  "dictionaryDefinitions": [],
+  "ignoreRegExpList": ["/\\d+\\.\\d+\\.\\d+/"],
+  "ignoreWords": ["tamagui", "Tamagui", "rnstorybook"],
+  "patterns": [
+    {
+      "name": "camelCase",
+      "pattern": "[a-z]+(?:[A-Z][a-z]+)+"
+    }
+  ]
+}
