@@ -1,41 +1,19 @@
-import path from "node:path";
-import type { StorybookConfig } from "@storybook/react-native-web-vite";
+import type { StorybookConfig } from '@storybook/react-vite';
 
-const main: StorybookConfig = {
-  stories: ["../src/**/*.stories.tsx"],
-
-  addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@chromatic-com/storybook",
+const config: StorybookConfig = {
+  "stories": [
+    "../src/**/*.mdx",
+    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
-
-  framework: {
-    name: "@storybook/react-native-web-vite",
-    options: {},
-  },
-
-  docs: {},
-
-  typescript: {
-    reactDocgen: "react-docgen",
-  },
-
-  viteFinal: (config) => {
-    return {
-      ...config,
-      resolve: {
-        ...config.resolve,
-        alias: {
-          "react-native": path.resolve(
-            __dirname,
-            "node_modules/react-native-web",
-          ),
-          // Add any custom aliases here
-        },
-      },
-    };
-  },
+  "addons": [
+    "@storybook/addon-essentials",
+    "@storybook/addon-onboarding",
+    "@chromatic-com/storybook",
+    "@storybook/experimental-addon-test"
+  ],
+  "framework": {
+    "name": "@storybook/react-vite",
+    "options": {}
+  }
 };
-
-export default main;
+export default config;

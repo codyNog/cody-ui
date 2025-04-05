@@ -178,7 +178,7 @@ dist
 storybook-static/
 
 # ai-rules
-ai-docs/**
 .cursorrules
 .clinerules
-ai-rules-version.json
+.ai-rules-version.json
+*storybook.log

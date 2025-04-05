@@ -16,7 +16,6 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx"
   },
-  "extends": "expo/tsconfig.base",
   "include": ["cli.ts", "src/**/*.ts", "src/**/*.tsx"],
   "compileOnSave": true
 }
