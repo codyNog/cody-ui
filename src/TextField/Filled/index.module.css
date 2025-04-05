@@ -1,0 +1,202 @@
+/* Wrapper for the entire component including supporting text */
+.wrapper {
+  display: inline-flex; /* Or block, depending on desired layout */
+  flex-direction: column;
+  position: relative; /* Make it a positioning context for absolute children */
+  min-width: 200px; /* Keep min-width on the wrapper */
+  /* Remove padding-bottom, wrapper height should only be the field itself */
+  /* Define common text color variables here so supportingTextContainer can access them */
+  --text-field-supporting-text-color: var(--md-sys-color-on-surface-variant);
+  --text-field-error-text-color: var(--md-sys-color-error);
+}
+
+/* Base container styles (for the input field part) */
+.container {
+  /* display: inline-flex; <- Moved to wrapper */
+  display: flex; /* Use flex for internal alignment */
+  flex-direction: column;
+  position: relative;
+  /* padding-top: 16px; <- Remove this */
+  padding-top: 0; /* Set padding-top to 0 */
+  height: 56px; /* Set fixed height */
+  box-sizing: border-box; /* Ensure padding/border are included in height */
+  min-width: 200px; /* Example minimum width */
+  /* Apply filled styles directly to container */
+  background-color: var(--md-sys-color-surface-container-highest);
+  border-bottom: var(--text-field-border-width) solid var(--md-sys-color-on-surface-variant);
+  border-radius: 4px 4px 0 0; /* Top corners rounded */
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  --text-field-background: var(--md-sys-color-surface-container-highest);
+  --text-field-border-color: var(--md-sys-color-on-surface-variant);
+  --text-field-border-color-focus: var(--md-sys-color-primary);
+  --text-field-border-color-error: var(--md-sys-color-error);
+  --text-field-label-color: var(--md-sys-color-on-surface-variant);
+  --text-field-label-color-focus: var(--md-sys-color-primary);
+  --text-field-label-color-error: var(--md-sys-color-error);
+  --text-field-input-color: var(--md-sys-color-on-surface);
+  /* --text-field-supporting-text-color: var(--md-sys-color-on-surface-variant); /* Moved to wrapper */
+  /* --text-field-error-text-color: var(--md-sys-color-error); /* Moved to wrapper */
+  --text-field-disabled-opacity: 0.38;
+  --text-field-border-width: 1px;
+  --text-field-border-width-focus: 2px;
+}
+
+/* Input element styles */
+.input {
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text-field-input-color);
+  border: none;
+  background-color: transparent; /* Input itself is transparent */
+  /* padding: 16px 12px 8px; <- Old padding */
+  padding: 24px 12px 8px; /* New padding: Top space for label, bottom space */
+  outline: none;
+  width: 100%;
+  height: 100%; /* Fill the container height */
+  box-sizing: border-box;
+  line-height: 1.5; /* Ensure consistent line height */
+  z-index: 1; /* Ensure input is above background/border elements */
+}
+
+/* Label styles */
+.label {
+  position: absolute;
+  left: 12px;
+  /* Initial position: Vertically centered within the 56px container */
+  /* top: 32px; <- Old position */
+  top: 28px; /* Center vertically in 56px height */
+  transform: translateY(-50%); /* Center vertically */
+  color: var(--text-field-label-color);
+  pointer-events: none;
+  transition:
+    top 0.2s ease,
+    transform 0.2s ease,
+    font-size 0.2s ease,
+    color 0.2s ease;
+  font-size: 1rem;
+  z-index: 2; /* Ensure label is above input */
+}
+
+/* Floating label styles for Filled variant */
+/* Use :has selector for value check, and :focus-within for focus. Added :not([value=""]) for robustness */
+.container:focus-within .label,
+.container:has(> .input:not(:placeholder-shown):not([value=""])) .label {
+  top: 8px; /* Move label to the top padding area */
+  transform: translateY(0); /* Reset vertical transform */ /* Keep this transform reset */
+  font-size: 0.75rem; /* Smaller font size */
+}
+
+.container:focus-within .label {
+  color: var(--text-field-label-color-focus);
+}
+
+/* Container for supporting text, absolutely positioned below the wrapper */
+.supportingTextContainer {
+  position: absolute;
+  top: 100%; /* Position directly below the wrapper */
+  /* bottom: 0; <- Remove bottom positioning */
+  left: 12px; /* Align with input horizontal padding */
+  right: 12px; /* Align with input horizontal padding */
+  /* padding-top: 4px; <- Remove padding-top */
+  /* margin-top: 4px; /* Remove vertical space */
+  box-sizing: border-box;
+  /* Ensure it doesn't overflow horizontally */
+  max-width: calc(100% - 24px); /* Wrapper width minus left/right */
+}
+
+/* Supporting text (description/error) styles */
+.description,
+.error {
+  font-size: 0.75rem;
+  /* padding: 4px 12px 0; <- Moved to container */
+  /* min-height: 1.25rem; <- Moved to container */
+  /* Add any specific styles needed for the text itself, like line-height */
+  line-height: 1.33; /* Example line height */
+}
+
+.description {
+  color: var(--text-field-supporting-text-color);
+}
+
+.error {
+  color: var(--text-field-error-text-color);
+}
+
+/* --- Filled Variant Specific Styles --- */
+/* .filled class is now just a marker, styles moved to .container */
+.filled {
+  /* Styles moved to .container */
+  /* height: 100%; <- Remove */
+  /* box-sizing: border-box; <- Remove */
+}
+
+/* Apply hover/focus directly to .container */
+.container:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--text-field-background) 96%,
+    var(--md-sys-color-on-surface) 4%
+  ); /* Slightly darker on hover */
+}
+
+.container:focus-within {
+  border-bottom-width: var(--text-field-border-width-focus);
+  border-bottom-color: var(--text-field-border-color-focus);
+}
+
+/* --- Invalid State --- */
+/* Apply invalid state directly to .container */
+.container.invalid {
+  --text-field-border-color: var(--text-field-border-color-error);
+  --text-field-label-color: var(--text-field-label-color-error);
+  /* Keep the border color change from the general .invalid rule */
+  border-bottom-color: var(--text-field-border-color-error);
+}
+
+.container.invalid:focus-within {
+  --text-field-border-color-focus: var(--text-field-border-color-error);
+  --text-field-label-color-focus: var(--text-field-label-color-error);
+   border-bottom-color: var(--text-field-border-color-error); /* Keep error color on focus */
+}
+
+/* Remove .filled specific invalid rules */
+/* .filled.invalid { ... } */
+/* .filled.invalid:focus-within { ... } */
+
+
+/* --- Disabled State --- */
+/* Apply disabled state directly to .container */
+.container.disabled {
+  opacity: var(--text-field-disabled-opacity);
+  pointer-events: none; /* Disable interactions */
+  /* Apply background and border color changes directly */
+   background-color: color-mix(
+    in srgb,
+    var(--text-field-background) 100%,
+    transparent calc(100% - var(--text-field-disabled-opacity) * 100%)
+  );
+   border-bottom-color: color-mix(
+    in srgb,
+    var(--text-field-border-color) 100%,
+    transparent calc(100% - var(--text-field-disabled-opacity) * 100%)
+  );
+}
+
+.container.disabled .label {
+  color: color-mix(
+    in srgb,
+    var(--text-field-label-color) 100%,
+    transparent calc(100% - var(--text-field-disabled-opacity) * 100%)
+  );
+}
+
+.container.disabled .input {
+   color: color-mix(
+    in srgb,
+    var(--text-field-input-color) 100%,
+    transparent calc(100% - var(--text-field-disabled-opacity) * 100%)
+  );
+}
+
+/* Remove .filled specific disabled rule */
+/* .filled.disabled { ... } */

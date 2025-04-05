@@ -45,4 +45,19 @@ To provide reusable UI components for efficient development.
 
 ### Design Principles
 
-- Adhere to the principles and guidelines of Material Design 3 (M3) for visual consistency and user experience.
+- Adhere strictly to the principles and guidelines of Material Design 3 (M3) ([https://m3.material.io/](https://m3.material.io/)) for visual consistency, functionality, and feature completeness. Implement all standard M3 features and variants by default unless explicitly specified otherwise.
+- Utilize `react-aria-components` as the primary foundation for building new UI components to ensure accessibility best practices, unless explicitly instructed otherwise.
+
+### Component API Design
+
+- Use standard HTML attribute names for common events (e.g., `onClick`). For component-specific callbacks, use descriptive names reflecting the functionality (e.g., `onChangeValue`).
+- Define component props explicitly. Prefer composition or explicit pass-through props for extending functionality over directly extending generic HTML attribute types.
+
+## Code Generation
+
+- Adhere to the format defined in the templates (e.g., in `plop-templates/`) when generating code using tools like `npm run plop`.
+
+## Storybook
+
+- Use named imports.
+- Arrange multiple component variants horizontally using `display: flex; flexDirection: row;` when displaying them in a single story.

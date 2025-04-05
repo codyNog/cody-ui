@@ -1,12 +1,11 @@
 "use client";
+import { clsx } from "clsx"; // Use clsx for conditional classes
 import {
   type ReactNode,
   forwardRef,
-  useRef,
   useCallback,
+  useRef,
   useState,
-  type PointerEvent as ReactPointerEvent,
-  type AnimationEvent as ReactAnimationEvent,
 } from "react";
 import {
   Button as AriaButton,
@@ -14,7 +13,6 @@ import {
   type PressEvent,
 } from "react-aria-components";
 import styles from "./index.module.css";
-import { clsx } from "clsx"; // Use clsx for conditional classes
 
 type ButtonVariant = "filled" | "outlined" | "text" | "elevated" | "tonal";
 
@@ -75,34 +73,39 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     );
 
     // Rename to handlePressStart and use PressEvent
-    const handlePressStart = useCallback((e: PressEvent) => {
-      // Check if disabled within the handler as onPressStart might fire even if disabled
-      if (props.isDisabled) return;
+    const handlePressStart = useCallback(
+      (e: PressEvent) => {
+        // Check if disabled within the handler as onPressStart might fire even if disabled
+        if (props.isDisabled) return;
 
-      // Use e.x and e.y directly from PressEvent for coordinates relative to the target
-      const button = buttonRef.current;
-      if (!button) return;
+        // Use e.x and e.y directly from PressEvent for coordinates relative to the target
+        const button = buttonRef.current;
+        if (!button) return;
 
-      const rect = button.getBoundingClientRect();
-      // Calculate ripple size based on the button's diagonal
-      const size = Math.sqrt(rect.width ** 2 + rect.height ** 2) * 2;
-      // Use coordinates directly from PressEvent
-      const x = e.x;
-      const y = e.y;
+        const rect = button.getBoundingClientRect();
+        // Calculate ripple size based on the button's diagonal
+        const size = Math.sqrt(rect.width ** 2 + rect.height ** 2) * 2;
+        // Use coordinates directly from PressEvent
+        const x = e.x;
+        const y = e.y;
 
-      const newRipple: Ripple = {
-        key: Date.now(), // Simple key generation
-        x,
-        y,
-        size,
-      };
+        const newRipple: Ripple = {
+          key: Date.now(), // Simple key generation
+          x,
+          y,
+          size,
+        };
 
-      setRipples((prevRipples) => [...prevRipples, newRipple]);
-      // Removed the misplaced closing brace from here
-    }, [props.isDisabled]); // Correctly placed dependency array
+        setRipples((prevRipples) => [...prevRipples, newRipple]);
+        // Removed the misplaced closing brace from here
+      },
+      [props.isDisabled],
+    ); // Correctly placed dependency array
 
     const handleAnimationEnd = useCallback((key: number) => {
-      setRipples((prevRipples) => prevRipples.filter((ripple) => ripple.key !== key));
+      setRipples((prevRipples) =>
+        prevRipples.filter((ripple) => ripple.key !== key),
+      );
     }, []);
 
     return (
@@ -131,7 +134,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         }
       >
         {/* Render children directly or via render prop */}
-        {(renderProps) => (
+        {(_renderProps) => (
           <>
             {/* Render existing content */}
             {icon && <span className={styles.iconWrapper}>{icon}</span>}
