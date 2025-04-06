@@ -10,6 +10,8 @@ const preview: Preview = {
       },
     },
   },
+  // Add tags here to enable Autodocs for all stories
+  tags: ["autodocs"],
 };
 
 export default preview;

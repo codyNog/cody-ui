@@ -29,7 +29,6 @@
   z-index: 0; /* Behind content */
 }
 
-/* Ripple Animation - using state layer instead of separate element */
 .button.pressed::before {
   opacity: var(--md-sys-state-pressed-state-layer-opacity, 0.12);
   transition: opacity 0.1s cubic-bezier(0.4, 0, 0.2, 1);

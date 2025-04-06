@@ -1,17 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Button } from "."; // 作成した Button コンポーネントをインポート
-// import { Plus } from "@tamagui/lucide-icons"; // アイコン使うならインポート
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   component: Button,
-  parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: "centered",
-  },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
     variant: {
@@ -28,12 +21,10 @@ const meta = {
     icon: {
       control: "boolean", // 簡単な切り替えのため boolean にする (実際は Node を渡す)
       description: "左側にアイコンを表示するか (例として boolean)",
-      // control: { type: 'object' }, // 実際に Node を渡す場合はこちら
     },
     trailingIcon: {
       control: "boolean", // 簡単な切り替えのため boolean にする (実際は Node を渡す)
       description: "右側にアイコンを表示するか (例として boolean)",
-      // control: { type: 'object' }, // 実際に Node を渡す場合はこちら
     },
     children: {
       control: "text",
@@ -44,9 +35,7 @@ const meta = {
       action: "pressed",
       description: "ボタンが押されたときのイベント",
     },
-    // 他の react-aria-components の Props も必要に応じて追加
   },
-  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: { onPress: fn() },
 } satisfies Meta<typeof Button>;
 
@@ -96,19 +85,3 @@ export const Disabled: Story = {
     isDisabled: true,
   },
 };
-
-// export const WithIcon: Story = {
-//   args: {
-//     variant: "filled",
-//     children: "Button with Icon",
-//     icon: <Plus size={18} />, // アイコンコンポーネントを指定
-//   },
-// };
-
-// export const WithTrailingIcon: Story = {
-//   args: {
-//     variant: "filled",
-//     children: "Button with Trailing Icon",
-//     trailingIcon: <Plus size={18} />, // アイコンコンポーネントを指定
-//   },
-// };

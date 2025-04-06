@@ -146,18 +146,6 @@
   font-size: 0.75rem;
 }
 
-/* Adjust padding on input/textarea when label is floated */
-/* This is now handled by the inputContainer padding */
-/*
-.container:focus-within .input,
-.container:has(> .input:not(:placeholder-shown):not([value=""])) .input,
-.container:focus-within .textarea,
-.container:has(> .textarea:not(:placeholder-shown):not([value=""])) .textarea {
-   padding-top: 28px;
-   padding-bottom: 4px;
-}
-*/
-
 .container:focus-within .label {
   color: var(--text-field-label-color-focus);
 }

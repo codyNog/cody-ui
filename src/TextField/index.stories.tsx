@@ -4,10 +4,6 @@ import { TextField } from "./index"; // Import the main wrapper component
 
 const meta = {
   component: TextField,
-  parameters: {
-    layout: "centered",
-  },
-  tags: ["autodocs"],
   argTypes: {
     variant: {
       control: "select",
@@ -26,7 +22,6 @@ const meta = {
       options: ["text", "password", "email", "number", "tel", "url", "search"],
     },
     value: { control: "text" }, // Added value control for interactive story
-    // Add other relevant controls as needed
   },
   args: {
     // Default args

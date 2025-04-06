@@ -66,4 +66,5 @@ To provide reusable UI components for efficient development.
 
 - Maintain code clarity by removing unused code, including import statements and commented-out blocks. **Proactively remove all commented-out code.** Retain commented code **only** when there is a **clear, documented justification** immediately preceding or within the comment block explaining *why* it must be kept temporarily (e.g., 'Workaround for bug #123, remove after fix'). If unsure whether a commented block meets this strict criteria, **ask the user** before leaving it in the codebase.
 - Use named imports when importing modules.
+- Keep import statements clean and free of comments.
 - When editing an existing component, modify the files in the following order: CSS module (`*.module.css`) -> Component file (`*.tsx`) -> Story file (`*.stories.tsx`).

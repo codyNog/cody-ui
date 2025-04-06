@@ -1,5 +1,5 @@
-import { Checkbox as AriaCheckbox } from "react-aria-components";
 import type { ReactNode } from "react";
+import { Checkbox as AriaCheckbox } from "react-aria-components";
 import styles from "./index.module.css";
 
 export type CheckBoxProps = {

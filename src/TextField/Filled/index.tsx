@@ -1,7 +1,7 @@
 "use client";
 import {
-  type MutableRefObject, // Import MutableRefObject
-  type Ref, // Import Ref
+  type Ref,
+  type RefObject,
   forwardRef,
   useCallback,
   useEffect,
@@ -52,8 +52,7 @@ export const FilledTextField = forwardRef<
         forwardedRef(localRef.current);
       } else {
         (
-          forwardedRef as MutableRefObject<
-            // Remove React. prefix
+          forwardedRef as RefObject<
             HTMLInputElement | HTMLTextAreaElement | null
           >
         ).current = localRef.current;
@@ -141,14 +140,14 @@ export const FilledTextField = forwardRef<
             {/* Conditionally render Input or TextArea */}
             {multiline ? (
               <TextArea
-                ref={localRef as Ref<HTMLTextAreaElement>} // Remove React. prefix
+                ref={localRef as Ref<HTMLTextAreaElement>}
                 className={`${styles.input} ${styles.textarea} ${
                   startAdornment ? styles.inputWithStartAdornment : ""
                 } ${endAdornment ? styles.inputWithEndAdornment : ""}`.trim()}
               />
             ) : (
               <Input
-                ref={localRef as Ref<HTMLInputElement>} // Remove React. prefix
+                ref={localRef as Ref<HTMLInputElement>}
                 className={`${styles.input} ${
                   startAdornment ? styles.inputWithStartAdornment : ""
                 } ${endAdornment ? styles.inputWithEndAdornment : ""}`.trim()}

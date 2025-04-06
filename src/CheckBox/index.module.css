@@ -3,7 +3,6 @@
   align-items: center;
   gap: 8px; /* ラベルとの間隔 */
   cursor: pointer;
-  /* M3 のステートレイヤーとかホバー/フォーカススタイルも後で追加したいね */
   position: relative; /* ステートレイヤー用 */
   padding: 4px; /* タッチターゲット確保 */
   border-radius: 9999px; /* ステートレイヤー用 */
@@ -91,7 +90,7 @@
   outline-offset: 2px;
 }
 
-/* ホバー時のステートレイヤー (仮) */
+/* ホバー時のステートレイヤー */
 .root:not([data-disabled]):hover::before {
   content: "";
   position: absolute;
@@ -102,7 +101,7 @@
   pointer-events: none;
 }
 
-/* 押下時のステートレイヤー (仮) */
+/* 押下時のステートレイヤー */
 .root:not([data-disabled]):active::before {
   opacity: 0.12; /* M3 pressed opacity */
 }

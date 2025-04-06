@@ -34,7 +34,7 @@
   --md-sys-color-on-secondary-fixed: #001f29;
   --md-sys-color-secondary-fixed-dim: #a1e5f7;
   --md-sys-color-on-secondary-fixed-variant: #004d62;
-  --md-sys-color-tertiary-fixed: #255 214 248;
+  --md-sys-color-tertiary-fixed: rgb(255, 214, 248); /* Fixed invalid color value */
   --md-sys-color-surface-dim: #e0e0e0;
   --md-sys-color-surface-bright: #f7f7f7;
   --md-sys-color-surface-container-lowest: #ffffff;

@@ -1,14 +1,9 @@
-import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
 import { CheckBox } from "./index";
 
 const meta = {
-  title: "UI/CheckBox",
   component: CheckBox,
-  parameters: {
-    layout: "centered",
-  },
-  tags: ["autodocs"],
   argTypes: {
     isSelected: { control: "boolean" },
     isIndeterminate: { control: "boolean" },
