@@ -1,0 +1,108 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* ラベルとの間隔 */
+  cursor: pointer;
+  /* M3 のステートレイヤーとかホバー/フォーカススタイルも後で追加したいね */
+  position: relative; /* ステートレイヤー用 */
+  padding: 4px; /* タッチターゲット確保 */
+  border-radius: 9999px; /* ステートレイヤー用 */
+  outline: none; /* react-aria-components がフォーカスリングを管理 */
+  -webkit-tap-highlight-color: transparent; /* iOSでのタップハイライト消す */
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--md-sys-color-on-surface-variant);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 150ms, border-color 150ms;
+  flex-shrink: 0; /* サイズが縮まないように */
+  background-color: var(--md-sys-color-surface); /* 背景色 */
+}
+
+/* アイコン用のスタイル */
+.icon {
+  width: 18px; /* checkbox のサイズに合わせる */
+  height: 18px;
+  display: block; /* SVGがインライン要素にならないように */
+  fill: var(--md-sys-color-on-primary); /* チェックマークの色 (選択時) */
+  opacity: 0;
+  transition: opacity 150ms;
+  pointer-events: none; /* アイコンがクリックイベントを奪わないように */
+}
+
+/* checked 状態のスタイル */
+.root[data-selected] .checkbox {
+  background-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+.root[data-selected] .icon {
+  opacity: 1;
+  fill: var(--md-sys-color-on-primary);
+}
+
+/* indeterminate 状態のスタイル */
+.root[data-indeterminate] .checkbox {
+  background-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+.root[data-indeterminate] .icon {
+  opacity: 1;
+  fill: var(--md-sys-color-on-primary);
+}
+
+/* unchecked 状態のアイコン (非表示だけど、構造は維持) */
+.root:not([data-selected]):not([data-indeterminate]) .icon {
+  opacity: 0;
+}
+
+/* disabled 状態のスタイル */
+.root[data-disabled] {
+  cursor: default;
+  pointer-events: none; /* イベント無効化 */
+}
+
+.root[data-disabled] .checkbox {
+  border-color: var(--md-sys-color-on-surface);
+  opacity: 0.38;
+}
+/* disabled かつ checked/indeterminate の場合 */
+.root[data-disabled][data-selected] .checkbox,
+.root[data-disabled][data-indeterminate] .checkbox {
+  background-color: var(--md-sys-color-on-surface);
+  border-color: var(--md-sys-color-on-surface);
+  opacity: 0.38;
+}
+.root[data-disabled][data-selected] .icon,
+.root[data-disabled][data-indeterminate] .icon {
+  fill: var(--md-sys-color-surface); /* disabled時のアイコン色 */
+  opacity: 1; /* アイコンは表示する */
+}
+
+/* Focus リング (react-aria-components が data-focus-visible を付与) */
+.root[data-focus-visible] .checkbox {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+/* ホバー時のステートレイヤー (仮) */
+.root:not([data-disabled]):hover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--md-sys-color-on-surface);
+  opacity: 0.08; /* M3 hover opacity */
+  pointer-events: none;
+}
+
+/* 押下時のステートレイヤー (仮) */
+.root:not([data-disabled]):active::before {
+  opacity: 0.12; /* M3 pressed opacity */
+}

@@ -55,13 +55,15 @@ To provide reusable UI components for efficient development.
 
 ### Code Generation
 
-- Adhere to the format defined in the templates (e.g., in `plop-templates/`) when generating code using tools like `npm run plop`.
+- Use the specific format `npm run plop ui ComponentName` (e.g., `npm run plop ui Foo`) for generating new UI components.
 
 ### Storybook
 
 - Arrange multiple component variants horizontally using `display: flex; flexDirection: row;` when displaying them in a single story.
+- Keep the `meta` object in Storybook stories concise. Include only the `component` and `args` (or `argTypes`) properties unless there's a specific reason for additional configuration.
 
 ### Code Modification Practices
 
-- Maintain code clarity by removing unused code, including import statements and commented-out blocks. Retain commented code only when there is a specific justification for future reference.
+- Maintain code clarity by removing unused code, including import statements and commented-out blocks. **Proactively remove all commented-out code.** Retain commented code **only** when there is a **clear, documented justification** immediately preceding or within the comment block explaining *why* it must be kept temporarily (e.g., 'Workaround for bug #123, remove after fix'). If unsure whether a commented block meets this strict criteria, **ask the user** before leaving it in the codebase.
 - Use named imports when importing modules.
+- When editing an existing component, modify the files in the following order: CSS module (`*.module.css`) -> Component file (`*.tsx`) -> Story file (`*.stories.tsx`).
