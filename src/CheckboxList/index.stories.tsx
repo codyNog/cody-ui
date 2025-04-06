@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState, type ComponentProps } from "react"; // ComponentProps をインポート
+import { type ComponentProps, useState } from "react"; // ComponentProps をインポート
 // import type { CheckboxListItem } from "./index"; // 不要なインポートを削除
 import { CheckboxList } from "./index";
 
