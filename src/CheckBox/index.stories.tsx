@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { CheckBox } from "./index";
+import { Checkbox } from "./index";
 
 const meta = {
-  component: CheckBox,
+  component: Checkbox,
   argTypes: {
     isSelected: { control: "boolean" },
     isIndeterminate: { control: "boolean" },
@@ -17,7 +17,7 @@ const meta = {
     isDisabled: false,
     children: "Label",
   },
-} satisfies Meta<typeof CheckBox>;
+} satisfies Meta<typeof Checkbox>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -93,14 +93,14 @@ export const Interactive: Story = {
           alignItems: "flex-start",
         }}
       >
-        <CheckBox
+        <Checkbox
           {...args}
           isSelected={selected}
           isIndeterminate={indeterminate}
           onChange={handleChange}
         >
           {args.children ?? "Interactive Checkbox"}
-        </CheckBox>
+        </Checkbox>
         <div style={{ marginTop: "10px", fontSize: "12px", color: "#666" }}>
           Current state: isSelected={String(selected)}, isIndeterminate=
           {String(indeterminate)}
@@ -134,30 +134,30 @@ export const AllStates: Story = {
           alignItems: "center",
         }}
       >
-        <CheckBox
+        <Checkbox
           {...args}
           isSelected={false}
           isIndeterminate={false}
           isDisabled={false}
         >
           Enabled
-        </CheckBox>
-        <CheckBox
+        </Checkbox>
+        <Checkbox
           {...args}
           isSelected={true}
           isIndeterminate={false}
           isDisabled={false}
         >
           Checked
-        </CheckBox>
-        <CheckBox
+        </Checkbox>
+        <Checkbox
           {...args}
           isSelected={false}
           isIndeterminate={true}
           isDisabled={false}
         >
           Indeterminate
-        </CheckBox>
+        </Checkbox>
       </div>
       <div
         style={{
@@ -167,30 +167,30 @@ export const AllStates: Story = {
           alignItems: "center",
         }}
       >
-        <CheckBox
+        <Checkbox
           {...args}
           isSelected={false}
           isIndeterminate={false}
           isDisabled={true}
         >
           Disabled
-        </CheckBox>
-        <CheckBox
+        </Checkbox>
+        <Checkbox
           {...args}
           isSelected={true}
           isIndeterminate={false}
           isDisabled={true}
         >
           Disabled Checked
-        </CheckBox>
-        <CheckBox
+        </Checkbox>
+        <Checkbox
           {...args}
           isSelected={false}
           isIndeterminate={true}
           isDisabled={true}
         >
           Disabled Indeterminate
-        </CheckBox>
+        </Checkbox>
       </div>
     </div>
   ),

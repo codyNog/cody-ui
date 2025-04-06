@@ -1,0 +1,18 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* チェックボックス間のスペース */
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+}
+
+.children {
+  padding-left: 24px; /* 子要素のインデント */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* 子チェックボックス間のスペース */
+  margin-top: 8px; /* 親と子の間のスペース */
+}

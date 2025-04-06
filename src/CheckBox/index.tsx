@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Checkbox as AriaCheckbox } from "react-aria-components";
 import styles from "./index.module.css";
 
-export type CheckBoxProps = {
+type Props = {
   children?: ReactNode;
   isSelected?: boolean;
   defaultSelected?: boolean;
@@ -16,7 +16,7 @@ export type CheckBoxProps = {
   "aria-label"?: string;
 };
 
-export function CheckBox({ children, ...props }: CheckBoxProps) {
+export function Checkbox({ children, ...props }: Props) {
   const {
     isSelected,
     defaultSelected,

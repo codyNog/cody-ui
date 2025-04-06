@@ -52,6 +52,7 @@ To provide reusable UI components for efficient development.
 
 - Use standard HTML attribute names for common events (e.g., `onClick`). For component-specific callbacks, use descriptive names reflecting the functionality (e.g., `onChangeValue`).
 - Define component props explicitly. Prefer composition or explicit pass-through props for extending functionality over directly extending generic HTML attribute types.
+- Prefer deriving prop types using `ComponentProps<typeof ComponentName>` from React instead of exporting internal types (like `Props` or data structures) directly from component files. This keeps the component's public API clean and avoids unnecessary exports.
 
 ### Code Generation
 
@@ -64,7 +65,8 @@ To provide reusable UI components for efficient development.
 
 ### Code Modification Practices
 
-- Maintain code clarity by removing unused code, including import statements and commented-out blocks. **Proactively remove all commented-out code.** Retain commented code **only** when there is a **clear, documented justification** immediately preceding or within the comment block explaining *why* it must be kept temporarily (e.g., 'Workaround for bug #123, remove after fix'). If unsure whether a commented block meets this strict criteria, **ask the user** before leaving it in the codebase.
+- Maintain code clarity by removing unused code, including import statements and commented-out blocks. Proactively remove all commented-out code. Retain commented code only when there is a clear, documented justification immediately preceding or within the comment block explaining *why* it must be kept temporarily (e.g., 'Workaround for bug #123, remove after fix'). If unsure whether a commented block meets this strict criteria, ask the user before leaving it in the codebase.
+- Remove code directly instead of leaving comments explaining the deletion. Rely on version control (Git) for tracking history.
 - Use named imports when importing modules.
 - Keep import statements clean and free of comments.
 - When editing an existing component, modify the files in the following order: CSS module (`*.module.css`) -> Component file (`*.tsx`) -> Story file (`*.stories.tsx`).
