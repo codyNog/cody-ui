@@ -53,11 +53,15 @@ To provide reusable UI components for efficient development.
 - Use standard HTML attribute names for common events (e.g., `onClick`). For component-specific callbacks, use descriptive names reflecting the functionality (e.g., `onChangeValue`).
 - Define component props explicitly. Prefer composition or explicit pass-through props for extending functionality over directly extending generic HTML attribute types.
 
-## Code Generation
+### Code Generation
 
 - Adhere to the format defined in the templates (e.g., in `plop-templates/`) when generating code using tools like `npm run plop`.
 
-## Storybook
+### Storybook
 
-- Use named imports.
 - Arrange multiple component variants horizontally using `display: flex; flexDirection: row;` when displaying them in a single story.
+
+### Code Modification Practices
+
+- Maintain code clarity by removing unused code, including import statements and commented-out blocks. Retain commented code only when there is a specific justification for future reference.
+- Use named imports when importing modules.

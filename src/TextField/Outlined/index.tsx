@@ -1,78 +1,186 @@
 "use client";
-import { forwardRef } from "react";
 import {
-  // Remove FieldError, using Text now
+  type MutableRefObject, // Import MutableRefObject
+  type Ref, // Import Ref
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
+import {
+  TextField as AriaTextField,
   Input,
   Label,
   Text,
-  TextField as AriaTextField,
-  type ValidationResult, // Keep ValidationResult for error message handling
+  TextArea,
+  type ValidationResult,
 } from "react-aria-components";
-import styles from "./index.module.css"; // Use its own CSS module
-import type { Props as CommonProps } from "../types"; // Import the shared Props type
+// ReactNode is only used in the imported type, no need to import here directly
+import type { Props as CommonProps } from "../types";
+import styles from "./index.module.css";
 
-// Define Props specific to OutlinedTextField, extending the common Props
-type Props = Omit<CommonProps, "variant">; // Omit variant
+type Props = Omit<CommonProps, "variant">;
 
-export const OutlinedTextField = forwardRef<HTMLInputElement, Props>(
+export const OutlinedTextField = forwardRef<
+  HTMLInputElement | HTMLTextAreaElement, // Update ref type
+  Props
+>(
   (
     {
       label,
       description,
-      errorMessage, // Keep receiving errorMessage prop
+      errorMessage,
+      multiline,
+      maxLines,
+      onChange,
+      value: controlledValue, // Use controlled value
+      startAdornment, // Destructure startAdornment
+      endAdornment, // Destructure endAdornment
       ...props
     }: Props,
-    ref,
+    forwardedRef,
   ) => {
-    // Determine invalid state based on errorMessage prop
     const isInvalid = !!errorMessage;
+    const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>(null);
+
+    // Combine forwardedRef and localRef
+    useEffect(() => {
+      if (!forwardedRef) return;
+      if (typeof forwardedRef === "function") {
+        forwardedRef(localRef.current);
+      } else {
+        (
+          forwardedRef as MutableRefObject<
+            // Remove React. prefix
+            HTMLInputElement | HTMLTextAreaElement | null
+          >
+        ).current = localRef.current;
+      }
+    }, [forwardedRef]);
+
+    // Function to adjust height, memoized with useCallback
+    const adjustHeight = useCallback(() => {
+      if (multiline && localRef.current instanceof HTMLTextAreaElement) {
+        const textarea = localRef.current;
+        textarea.style.height = "auto"; // Reset height
+
+        requestAnimationFrame(() => {
+          const scrollHeight = textarea.scrollHeight;
+          if (maxLines) {
+            const computedStyle = window.getComputedStyle(textarea);
+            const lineHeight =
+              Number.parseFloat(computedStyle.lineHeight) || 16;
+            const paddingTop = Number.parseFloat(computedStyle.paddingTop) || 0;
+            const paddingBottom =
+              Number.parseFloat(computedStyle.paddingBottom) || 0;
+            const borderTop =
+              Number.parseFloat(computedStyle.borderTopWidth) || 0;
+            const borderBottom =
+              Number.parseFloat(computedStyle.borderBottomWidth) || 0;
+            const maxHeight =
+              lineHeight * maxLines +
+              paddingTop +
+              paddingBottom +
+              borderTop +
+              borderBottom;
+
+            if (scrollHeight > maxHeight) {
+              textarea.style.height = `${maxHeight}px`;
+              textarea.style.overflowY = "auto";
+            } else {
+              textarea.style.height = `${scrollHeight}px`;
+              textarea.style.overflowY = "hidden";
+            }
+          } else {
+            textarea.style.height = `${scrollHeight}px`;
+            textarea.style.overflowY = "hidden";
+          }
+        });
+      } else if (!multiline && localRef.current instanceof HTMLInputElement) {
+        localRef.current.style.height = "";
+        localRef.current.style.overflowY = "";
+      }
+    }, [multiline, maxLines]);
+
+    // Adjust height on initial render and value change
+    useEffect(() => {
+      adjustHeight();
+    }, [adjustHeight]); // Remove controlledValue from dependencies
+
+    // Wrapped onChange handler
+    const handleOnChange = useCallback(
+      (value: string) => {
+        onChange?.(value);
+      },
+      [onChange],
+    );
 
     return (
-      // Add wrapper div like FilledTextField
       <div className={styles.wrapper}>
         <AriaTextField
+          value={controlledValue}
+          onChange={handleOnChange}
+          isInvalid={isInvalid}
+          className={`${styles.container} ${styles.outlined} ${
+            isInvalid ? styles.invalid : ""
+          } ${props.isDisabled ? styles.disabled : ""}`.trim()}
+          style={multiline ? { height: "auto", minHeight: "56px" } : {}}
           {...props}
-          isInvalid={isInvalid} // Pass invalid state
-          // Apply container styles directly to AriaTextField
-          className={
-            `${styles.container} ${styles.outlined} ${
-              isInvalid ? styles.invalid : "" // Use the calculated isInvalid
-            } ${props.isDisabled ? styles.disabled : ""}`.trim() // Use props.isDisabled
-          }
         >
-          {/* Label, Input, Fieldset, Legend remain inside AriaTextField */}
           {label && <Label className={styles.label}>{label}</Label>}
 
           {/* Fieldset/Legend are purely for the border notch effect */}
           <fieldset aria-hidden="true" className={styles.fieldset}>
             <legend className={styles.legend}>
-              {/* Render label inside span for padding, or non-breaking space if no label */}
               <span>{label ? label : "\u00A0"}</span>
             </legend>
           </fieldset>
 
-          {/* Input is now a direct child, positioned relative to the container */}
-          <Input ref={ref} className={styles.input} />
+          {/* Container for input and adornments */}
+          <div className={styles.inputContainer}>
+            {/* Render start adornment if provided */}
+            {startAdornment && (
+              <div className={styles.startAdornment}>{startAdornment}</div>
+            )}
 
-          {/* Description and Error rendering moved OUTSIDE AriaTextField */}
+            {/* Conditionally render Input or TextArea using localRef */}
+            {multiline ? (
+              <TextArea
+                ref={localRef as Ref<HTMLTextAreaElement>} // Remove React. prefix
+                className={`${styles.input} ${styles.textarea} ${
+                  startAdornment ? styles.inputWithStartAdornment : ""
+                } ${endAdornment ? styles.inputWithEndAdornment : ""}`.trim()}
+              />
+            ) : (
+              <Input
+                ref={localRef as Ref<HTMLInputElement>} // Remove React. prefix
+                className={`${styles.input} ${
+                  startAdornment ? styles.inputWithStartAdornment : ""
+                } ${endAdornment ? styles.inputWithEndAdornment : ""}`.trim()}
+              />
+            )}
+
+            {/* Render end adornment if provided */}
+            {endAdornment && (
+              <div className={styles.endAdornment}>{endAdornment}</div>
+            )}
+          </div>
         </AriaTextField>
 
         {/* Container for supporting text like FilledTextField */}
         <div className={styles.supportingTextContainer}>
-          {/* Render supporting text OUTSIDE AriaTextField, but inside the wrapper */}
           {!isInvalid && description && (
             <Text slot="description" className={styles.description}>
               {description}
             </Text>
           )}
-          {/* Render error message OUTSIDE AriaTextField using Text */}
           {isInvalid && (
             <Text slot="errorMessage" className={styles.error}>
-              {/* Handle string or ValidationResult like FilledTextField */}
               {typeof errorMessage === "string"
                 ? errorMessage
-                : (errorMessage as ValidationResult)?.validationErrors?.join(" ") ||
-                  "Invalid input"}
+                : (errorMessage as ValidationResult)?.validationErrors?.join(
+                    " ",
+                  ) || "Invalid input"}
             </Text>
           )}
         </div>

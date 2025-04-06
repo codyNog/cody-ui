@@ -1,4 +1,8 @@
-import type { TextFieldProps as AriaTextFieldProps, ValidationResult } from "react-aria-components";
+import type { ReactNode } from "react"; // ReactNode を named import
+import type {
+  TextFieldProps as AriaTextFieldProps,
+  ValidationResult,
+} from "react-aria-components";
 
 // テキストフィールドのスタイル種別 (Filled or Outlined)
 // Props 型定義内でのみ使用するため export しない
@@ -33,9 +37,24 @@ export type Props = BaseTextFieldProps & {
    */
   multiline?: boolean;
   /**
+   * multiline 時の最大表示行数
+   * これを超えるとスクロールバーが表示される
+   */
+  maxLines?: number;
+  /**
    * テキストフィールドのスタイル種別
    * ラッパーコンポーネントで使用
    * @default 'filled'
    */
   variant?: TextFieldVariant; // export しない TextFieldVariant を使用
+  /**
+   * 入力フィールドの前に表示する要素 (アイコン、テキストなど)
+   * @example <UserIcon /> or '$'
+   */
+  startAdornment?: ReactNode; // React. を削除
+  /**
+   * 入力フィールドの後に表示する要素 (アイコン、テキストなど)
+   * @example <PasswordVisibilityToggle /> or 'kg'
+   */
+  endAdornment?: ReactNode; // React. を削除
 };

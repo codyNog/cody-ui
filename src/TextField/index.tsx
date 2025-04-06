@@ -8,7 +8,8 @@ import type { Props } from "./types"; // Import the shared Props type
 
 // Remove local Props definition, use the imported one
 
-export const TextField = forwardRef<HTMLInputElement, Props>( // Use imported Props
+export const TextField = forwardRef<HTMLInputElement, Props>(
+  // Use imported Props
   (
     {
       variant = "filled", // Default to filled

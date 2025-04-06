@@ -1,33 +1,44 @@
 /* Wrapper for the entire component including supporting text */
 .wrapper {
-  /* display: inline-flex; /* Removed, let block behavior handle width */
-  /* flex-direction: column; /* Removed, absolute positioning handles layout */
-  position: relative; /* Crucial for absolute positioning of supporting text */
+  position: relative;
   width: 100%;
-  /* Define common text color variables here so supportingTextContainer can access them */
+  display: inline-flex; /* Use inline-flex for proper width behavior */
+  flex-direction: column;
+  min-width: 200px;
   --text-field-supporting-text-color: var(--md-sys-color-on-surface-variant);
   --text-field-error-text-color: var(--md-sys-color-error);
 }
 
 /* Styles for the AriaTextField component itself */
 .container {
-  position: relative; /* Needed for absolute positioning of label/fieldset */
-  min-width: 200px; /* Example minimum width */
-  height: 56px; /* Set fixed height */
-  box-sizing: border-box; /* Ensure padding/border are included */
+  position: relative;
+  min-width: 200px;
+  height: 56px;
+  box-sizing: border-box;
+  display: flex; /* Use flex for internal layout */
+  align-items: center; /* Align items vertically */
   /* Define CSS variables specific to the container/input area */
   --text-field-border-color: var(--md-sys-color-on-surface-variant);
   --text-field-border-color-focus: var(--md-sys-color-primary);
   --text-field-border-color-error: var(--md-sys-color-error);
-  --text-field-label-color: var(--md-sys-color-on-surface-variant); /* Used by legend span */
+  --text-field-label-color: var(--md-sys-color-on-surface-variant);
   --text-field-label-color-focus: var(--md-sys-color-primary);
   --text-field-label-color-error: var(--md-sys-color-error);
   --text-field-input-color: var(--md-sys-color-on-surface);
-  /* --text-field-supporting-text-color: var(--md-sys-color-on-surface-variant); /* Moved to wrapper */
-  /* --text-field-error-text-color: var(--md-sys-color-error); /* Moved to wrapper */
   --text-field-disabled-opacity: 0.38;
   --text-field-border-width: 1px;
   --text-field-border-width-focus: 2px;
+}
+
+/* New container for input and adornments, sits inside .container */
+.inputContainer {
+  display: flex;
+  align-items: center; /* Vertically align items */
+  flex-grow: 1; /* Take available space */
+  height: 100%; /* Fill container height */
+  position: relative; /* For positioning input/textarea */
+  padding: 0 12px; /* Horizontal padding moved here */
+  z-index: 1; /* Ensure it's above fieldset */
 }
 
 /* Input element styles */
@@ -37,54 +48,201 @@
   color: var(--text-field-input-color);
   border: none;
   background-color: transparent;
-  /* M3 standard padding for outlined */
-  padding: 16px 12px; /* 16px top/bottom, 12px left/right */
+  padding: 16px 0; /* Vertical padding only */
   outline: none;
   width: 100%;
-  height: 100%; /* Fill the container height */
-  box-sizing: border-box; /* Padding included in height */
-  line-height: 1.5; /* Ensure consistent line height */
-  /* Remove height: 100% */
-  /* Input sits visually on top of the fieldset */
-  position: relative;
-  z-index: 1;
+  height: 100%; /* Fill the inputContainer height */
+  box-sizing: border-box;
+  line-height: 1.5;
+  position: relative; /* Keep relative positioning */
+  z-index: 1; /* Keep above fieldset */
+}
+
+/* Styles specific to the textarea element when multiline is true */
+.textarea {
+  font-family: inherit; /* Ensure font consistency */
+  font-size: 1rem; /* Ensure font consistency */
+  color: var(--text-field-input-color); /* Ensure color consistency */
+  border: none; /* Ensure border consistency */
+  background-color: transparent; /* Ensure background consistency */
+  outline: none; /* Ensure outline consistency */
+  width: 100%; /* Ensure width consistency */
+  box-sizing: border-box; /* Ensure box-sizing consistency */
+  z-index: 1; /* Ensure z-index consistency */
+  height: auto;
+  min-height: calc(56px - 32px); /* Adjust min-height based on vertical padding */
+  resize: none;
+  padding: 16px 0; /* Vertical padding only */
+  line-height: 1.5;
+}
+
+/* Adornment styles */
+.startAdornment,
+.endAdornment {
+  display: flex;
+  align-items: center;
+  color: var(--md-sys-color-on-surface-variant); /* Default color */
+  flex-shrink: 0; /* Prevent adornments from shrinking */
+  height: 100%; /* Match input container height */
+}
+
+.startAdornment {
+  margin-right: 8px; /* Space between start adornment and input */
+}
+
+.endAdornment {
+  margin-left: 8px; /* Space between input and end adornment */
+}
+
+/* Adjust input padding when adornments are present (handled by flex layout) */
+.inputWithStartAdornment {
+  /* No specific padding needed */
+}
+
+.inputWithEndAdornment {
+  /* No specific padding needed */
 }
 
 /* Label styles (for the animated label) */
 .label {
   position: absolute;
-  left: 12px; /* Match input horizontal padding */
-  /* Revert to vertical centering */
-  top: calc(50% - 0.5rem); /* Adjust vertical centering */
-  font-size: 1rem; /* Initial size matches input */
+  left: 12px; /* Initial position */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Precise vertical centering */
+  font-size: 1rem;
   color: var(--text-field-label-color);
-  pointer-events: none; /* Don't interfere with input clicks */
+  pointer-events: none;
   transform-origin: top left;
-  transition: transform 0.15s cubic-bezier(0.4, 0, 0.6, 1),
-              color 0.15s cubic-bezier(0.4, 0, 0.6, 1);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.6, 1), color 0.15s
+    cubic-bezier(0.4, 0, 0.6, 1), left 0.15s cubic-bezier(0.4, 0, 0.6, 1); /* Add left transition */
+  z-index: 2; /* Above input container but below focused fieldset */
 }
 
+/* Adjust label position if start adornment exists */
+.container:has(.startAdornment) .label {
+  /* Adjust left based on typical adornment size + margin + container padding */
+  left: calc(12px + 24px + 8px); /* Adjust 24px based on icon size */
+}
+
+/* Fieldset styles for Outlined variant */
+.fieldset {
+  position: absolute;
+  top: -8px; /* Align border correctly with floated label */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0 8px; /* Horizontal padding for border */
+  border: var(--text-field-border-width) solid var(--text-field-border-color);
+  border-radius: 4px;
+  pointer-events: none;
+  transition: border-color 0.2s ease, border-width 0.2s ease;
+  overflow: hidden;
+}
+
+/* Legend styles for Outlined variant (creates the notch) */
+.legend {
+  padding: 0;
+  margin-left: 4px; /* Align with input padding start */
+  font-size: 0.75rem;
+  line-height: normal;
+  visibility: hidden;
+  max-width: 0.01px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: max-width 0.15s cubic-bezier(0.4, 0, 0.6, 1) 50ms, visibility 0s
+    linear 150ms, transform 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+  white-space: nowrap;
+}
+
+/* Span inside legend provides width for the notch */
+.legend > span {
+  padding: 0 4px;
+  display: inline-block;
+  opacity: 0;
+  color: transparent;
+}
+
+/* Styles when label should float (notch opens) */
+.container:focus-within .fieldset,
+.container:has(.inputContainer .input:not(:placeholder-shown):not([value=""]))
+  .fieldset,
+.container:has(
+    .inputContainer .textarea:not(:placeholder-shown):not([value=""])
+  )
+  .fieldset {
+  border-color: var(--text-field-border-color-focus);
+}
+.container.invalid .fieldset {
+  border-color: var(--text-field-border-color-error);
+}
+.container:focus-within .fieldset {
+  border-width: var(--text-field-border-width-focus);
+}
+.container.invalid:focus-within .fieldset {
+  border-color: var(--text-field-border-color-error);
+  border-width: var(--text-field-border-width-focus);
+}
+
+/* Apply floating styles to the .label element */
+.container:focus-within .label,
+.container:has(.inputContainer .input:not(:placeholder-shown):not([value=""]))
+  .label,
+.container:has(
+    .inputContainer .textarea:not(:placeholder-shown):not([value=""])
+  )
+  .label {
+  /* Adjust transform to move label above the border */
+  /* Original attempt: transform: translateY(calc(-50% - 8px - (var(--text-field-border-width) / 2))) scale(0.75); */
+  /* New attempt: Position relative to top=0, adjusted slightly lower */
+  top: 4px; /* Keep vertical position */
+  left: 16px; /* Adjust left position to move further left */
+  transform: translateY(-50%) scale(0.75); /* Center vertically within the notch space */
+  color: var(--text-field-label-color-focus);
+}
+
+/* Apply error color when floated, invalid, and not focused */
+.container.invalid:not(:focus-within):has(
+    .inputContainer .input:not(:placeholder-shown):not([value=""])
+  )
+  .label,
+.container.invalid:not(:focus-within):has(
+    .inputContainer .textarea:not(:placeholder-shown):not([value=""])
+  )
+  .label {
+  color: var(--text-field-label-color-error);
+}
+.container:focus-within.invalid .label {
+  color: var(--text-field-label-color-error);
+}
+
+/* Expand the legend notch when label floats */
+.container:focus-within .legend,
+.container:has(.inputContainer .input:not(:placeholder-shown):not([value=""]))
+  .legend,
+.container:has(
+    .inputContainer .textarea:not(:placeholder-shown):not([value=""])
+  )
+  .legend {
+  max-width: 100%;
+  visibility: visible;
+  transform: scaleX(1);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+}
+
+/* Container specifically for description and error text below the input */
+.supportingTextContainer {
+  position: relative; /* Let it flow naturally */
+  padding: 4px 12px 0; /* Add padding top, align horizontal */
+  box-sizing: border-box;
+  min-height: 1.25rem; /* Reserve space */
+}
 
 /* Supporting text (description/error) styles */
 .description,
 .error {
   font-size: 0.75rem;
-  /* Removed padding, handled by supportingTextContainer */
-  /* min-height: 1.25rem; /* Handled by supportingTextContainer */
-  /* position: relative; /* Moved to supportingTextContainer */
-}
-
-/* Container specifically for description and error text below the input */
-.supportingTextContainer {
-  position: absolute; /* Position absolutely below the container */
-  top: 100%; /* Directly below the container */
-  left: 12px; /* Align with input horizontal padding */
-  right: 12px; /* Align with input horizontal padding */
-  /* margin-top: 4px; /* Remove vertical space */
-  box-sizing: border-box;
-  /* Ensure it doesn't overflow horizontally */
-  max-width: calc(100% - 24px); /* Wrapper width minus left/right */
-  /* Remove padding and min-height, let content dictate height */
+  line-height: 1.33;
 }
 
 .description {
@@ -97,150 +255,58 @@
 
 /* --- Outlined Variant Specific Styles --- */
 .outlined {
-  /* Container itself doesn't have the border, fieldset does */
+  /* Marker class */
 }
-
-/* Fieldset styles for Outlined variant */
-.fieldset {
-  position: absolute;
-  /* Fieldset provides the visual border and space */
-  /* Shift fieldset up slightly to align border correctly */
-  top: -8px; /* Adjust based on label float space */
-  left: 0;
-  right: 0;
-  bottom: 0; /* Let it fill the container */
-  margin: 0;
-  /* Padding aligns the border correctly around the input area */
-  padding: 0 8px; /* Horizontal padding only, border sits around input padding */
-  border: var(--text-field-border-width) solid var(--text-field-border-color);
-  border-radius: 4px;
-  pointer-events: none; /* <<< Ensure clicks pass through to input */
-  transition: border-color 0.2s ease, border-width 0.2s ease;
-  overflow: hidden; /* Prevent legend overflow issues */
-}
-
-/* Legend styles for Outlined variant (creates the notch) */
-.legend {
-  padding: 0; /* Remove default legend padding */
-  margin-left: 4px; /* Align with input padding start (fieldset 8px + legend 4px = 12px) */
-  font-size: 0.75rem; /* Match floating label size */
-  line-height: normal; /* Use normal line height */
-  visibility: hidden; /* Hide legend initially, rely on scale */
-  max-width: 0.01px; /* Collapse width initially */
-  transform: scaleX(0); /* Ensure it's visually collapsed */
-  transform-origin: left; /* Scale from the left */
-  /* Add transform to the transition */
-  transition: max-width 0.15s cubic-bezier(0.4, 0, 0.6, 1) 50ms,
-              visibility 0s linear 150ms,
-              transform 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0ms; /* Add transform transition */
-  white-space: nowrap;
-}
-
-/* Span inside legend provides width for the notch */
-.legend > span {
-  padding: 0 4px; /* Padding inside the legend for the label text */
-  display: inline-block; /* Needed for padding */
-  opacity: 0; /* Keep text invisible, only provides width */
-  color: transparent; /* Ensure text is not rendered */
-}
-
-/* Styles when label should float (notch opens) */
-/* Apply floating styles to the .label element */
-/* Use :has selector on container targeting the input inside fieldset */
-.container:focus-within .fieldset,
-.container:has(> fieldset > .input:not(:placeholder-shown):not([value=""])) .fieldset {
-  border-color: var(--text-field-border-color-focus);
-}
-.container.invalid .fieldset { /* Error state border */
-   border-color: var(--text-field-border-color-error);
-}
-.container:focus-within .fieldset { /* Focus state border */
-  border-width: var(--text-field-border-width-focus);
-}
-.container.invalid:focus-within .fieldset { /* Error + Focus state border */
-   border-color: var(--text-field-border-color-error);
-   border-width: var(--text-field-border-width-focus);
-}
-
-
-/* Apply floating styles to the .label element */
-/* Check for focus-within OR if the input has value (is not placeholder-shown AND not empty value) */
-.container:focus-within .label,
-.container:has(> .input:not(:placeholder-shown):not([value=""])) .label {
-  /* Move label to top-left and scale down */
-  /* Initial top: ~20px. Target top: -8px (relative to container top) to align with fieldset notch */
-  transform: translateY(-28px) scale(0.75); /* Further increase negative translation */
-  color: var(--text-field-label-color-focus);
-}
-/* Apply error color when floated, invalid, and not focused */
-.container.invalid:not(:focus-within):has(> .input:not(:placeholder-shown):not([value=""])) .label {
-  /* Keep error color when floated but not focused */
-  color: var(--text-field-label-color-error);
-}
-.container:focus-within.invalid .label { /* Error + Focus state label color */
-   color: var(--text-field-label-color-error);
-}
-
-
-/* Expand the legend notch when label floats */
-/* Match label floating condition */
-.container:focus-within .legend,
-.container:has(> .input:not(:placeholder-shown):not([value=""])) .legend {
-  max-width: 100%; /* Allow legend to take space */
-  visibility: visible; /* Make legend visible */
-  transform: scaleX(1); /* Expand the legend visually */
-  /* Ensure transition matches the base legend transition for transform */
-  transition: transform 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
-}
-
-/* Remove styles for legend > span text color change */
-/* .container:focus-within .legend > span { ... } */
-/* .container.invalid .legend > span { ... } */
-/* .container.invalid:focus-within .legend > span { ... } */
-
 
 /* --- Invalid State --- */
-/* Apply invalid class to container */
-.invalid {
-  /* Variables are used by fieldset/legend */
+.container.invalid {
   --text-field-border-color: var(--text-field-border-color-error);
   --text-field-label-color: var(--text-field-label-color-error);
 }
 
-.invalid:focus-within {
+.container.invalid:focus-within {
   --text-field-border-color-focus: var(--text-field-border-color-error);
   --text-field-label-color-focus: var(--text-field-label-color-error);
 }
 
 /* --- Disabled State --- */
-.disabled {
+.container.disabled {
   opacity: var(--text-field-disabled-opacity);
-  pointer-events: none; /* Disable interactions */
+  pointer-events: none;
 }
 
-/* Adjust disabled label color */
-.disabled .label {
-   color: color-mix(
+.container.disabled .label,
+.container.disabled .startAdornment /* Disable adornment color */,
+.container.disabled .endAdornment {
+  /* Disable adornment color */
+  color: color-mix(
     in srgb,
     var(--text-field-label-color) 100%,
     transparent calc(100% - var(--text-field-disabled-opacity) * 100%)
   );
 }
 
-/* Remove disabled styles for legend span */
-/* .disabled .legend > span { ... } */
-
-.disabled .fieldset {
-   border-color: color-mix(
+.container.disabled .fieldset {
+  border-color: color-mix(
     in srgb,
     var(--text-field-border-color) 100%,
     transparent calc(100% - var(--text-field-disabled-opacity) * 100%)
   );
 }
-.disabled .legend > span {
-   color: color-mix(
+.container.disabled .legend > span {
+  color: color-mix(
     in srgb,
     var(--text-field-label-color) 100%,
+    transparent calc(100% - var(--text-field-disabled-opacity) * 100%)
+  );
+}
+
+.container.disabled .input,
+.container.disabled .textarea {
+  /* Disable textarea color too */
+  color: color-mix(
+    in srgb,
+    var(--text-field-input-color) 100%,
     transparent calc(100% - var(--text-field-disabled-opacity) * 100%)
   );
 }
