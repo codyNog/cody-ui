@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Switch } from ".";
 import { action } from "@storybook/addon-actions";
 import { CheckIcon, CloseIcon } from "@storybook/icons"; // Example icons
+import type { Meta, StoryObj } from "@storybook/react";
+import { Switch } from ".";
 
 const meta = {
   component: Switch,

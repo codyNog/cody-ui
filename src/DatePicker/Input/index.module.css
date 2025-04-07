@@ -1,0 +1,337 @@
+/* Wrapper for the entire component including supporting text */
+.wrapper {
+  position: relative;
+  width: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 200px;
+  --dp-input-supporting-text-color: var(--md-sys-color-on-surface-variant);
+  --dp-input-error-text-color: var(--md-sys-color-error);
+}
+
+/* Styles for the Aria DateField component itself */
+.container {
+  position: relative;
+  min-width: 200px;
+  height: 56px;
+  box-sizing: border-box;
+  display: flex; /* Use flex for internal layout */
+  align-items: center; /* Align items vertically */
+  /* Define CSS variables specific to the container/input area */
+  --dp-input-border-color: var(--md-sys-color-on-surface-variant);
+  --dp-input-border-color-focus: var(--md-sys-color-primary);
+  --dp-input-border-color-error: var(--md-sys-color-error);
+  --dp-input-label-color: var(--md-sys-color-on-surface-variant);
+  --dp-input-label-color-focus: var(--md-sys-color-primary);
+  --dp-input-label-color-error: var(--md-sys-color-error);
+  --dp-input-input-color: var(--md-sys-color-on-surface);
+  --dp-input-disabled-opacity: 0.38;
+  --dp-input-border-width: 1px;
+  --dp-input-border-width-focus: 2px;
+  --dp-input-background: var(--md-sys-color-surface-container-highest); /* For Filled */
+}
+
+/* Container for input segments and adornments */
+.inputContainer {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  height: 100%;
+  position: relative;
+  padding: 0 12px;
+  z-index: 1; /* Above fieldset/underline */
+}
+
+/* Styles for the react-aria DateInput component */
+.dateInput {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  height: 100%;
+  padding: 16px 0; /* Vertical padding like TextField input */
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--dp-input-input-color);
+  border: none;
+  background-color: transparent;
+  outline: none;
+  line-height: 1.5;
+  z-index: 1;
+}
+
+/* Styles for individual DateSegments */
+.dateSegment {
+  padding: 0 1px; /* Minimal padding around segments */
+  box-sizing: border-box;
+  text-align: center;
+  outline: none;
+  border-radius: 2px;
+  caret-color: var(--md-sys-color-primary);
+}
+
+.dateSegment:focus {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+/* Adornment styles */
+.startAdornment,
+.endAdornment {
+  display: flex;
+  align-items: center;
+  color: var(--md-sys-color-on-surface-variant);
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.startAdornment {
+  margin-right: 8px;
+}
+
+.endAdornment {
+  margin-left: 8px;
+  cursor: pointer; /* Make icon clickable */
+}
+
+/* Adjust input padding when adornments are present */
+.dateInputWithStartAdornment {
+  /* Flex handles spacing */
+}
+
+.dateInputWithEndAdornment {
+  /* Flex handles spacing */
+}
+
+/* Label styles */
+.label {
+  position: absolute;
+  left: 12px;
+  top: 50%; /* Initial center for outlined */
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--dp-input-label-color);
+  pointer-events: none;
+  transform-origin: top left;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.6, 1), color 0.15s
+    cubic-bezier(0.4, 0, 0.6, 1), top 0.15s cubic-bezier(0.4, 0, 0.6, 1), left
+    0.15s cubic-bezier(0.4, 0, 0.6, 1);
+  z-index: 2;
+}
+
+/* Adjust label position if start adornment exists */
+.container:has(.startAdornment) .label {
+  left: calc(12px + 24px + 8px); /* Adjust 24px based on icon size */
+}
+
+/* Container for supporting text */
+.supportingTextContainer {
+  position: relative;
+  padding: 4px 12px 0;
+  box-sizing: border-box;
+  min-height: 1.25rem;
+}
+
+.description,
+.error {
+  font-size: 0.75rem;
+  line-height: 1.33;
+}
+
+.description {
+  color: var(--dp-input-supporting-text-color);
+}
+
+.error {
+  color: var(--dp-input-error-text-color);
+}
+
+/* --- Outlined Variant --- */
+.outlined {
+  /* Fieldset styles for Outlined variant */
+  .fieldset {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0 8px;
+    border: var(--dp-input-border-width) solid var(--dp-input-border-color);
+    border-radius: 4px;
+    pointer-events: none;
+    transition: border-color 0.2s ease, border-width 0.2s ease;
+    overflow: hidden;
+  }
+
+  /* Legend styles for Outlined variant (creates the notch) */
+  .legend {
+    padding: 0;
+    margin-left: 4px;
+    font-size: 0.75rem;
+    line-height: normal;
+    visibility: hidden;
+    max-width: 0.01px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: max-width 0.15s cubic-bezier(0.4, 0, 0.6, 1) 50ms, visibility 0s
+      linear 150ms, transform 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+    white-space: nowrap;
+  }
+
+  .legend > span {
+    padding: 0 4px;
+    display: inline-block;
+    opacity: 0;
+    color: transparent;
+  }
+
+  /* Styles when label should float (notch opens) */
+  &.container:focus-within .fieldset,
+  &.container:has(.dateInput:not(:placeholder-shown)) .fieldset {
+    border-color: var(--dp-input-border-color-focus);
+  }
+  &.container.invalid .fieldset {
+    border-color: var(--dp-input-border-color-error);
+  }
+  &.container:focus-within .fieldset {
+    border-width: var(--dp-input-border-width-focus);
+  }
+  &.container.invalid:focus-within .fieldset {
+    border-color: var(--dp-input-border-color-error);
+    border-width: var(--dp-input-border-width-focus);
+  }
+
+  /* Apply floating styles to the .label element */
+  &.container:focus-within .label,
+  &.container:has(.dateInput:not(:placeholder-shown)) .label {
+    top: 4px;
+    left: 16px;
+    transform: translateY(-50%) scale(0.75);
+    color: var(--dp-input-label-color-focus);
+  }
+
+  /* Apply error color when floated, invalid, and not focused */
+  &.container.invalid:not(:focus-within):has(.dateInput:not(:placeholder-shown))
+    .label {
+    color: var(--dp-input-label-color-error);
+  }
+  &.container:focus-within.invalid .label {
+    color: var(--dp-input-label-color-error);
+  }
+
+  /* Expand the legend notch when label floats */
+  &.container:focus-within .legend,
+  &.container:has(.dateInput:not(:placeholder-shown)) .legend {
+    max-width: 100%;
+    visibility: visible;
+    transform: scaleX(1);
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+  }
+}
+
+/* --- Filled Variant --- */
+.filled {
+  background-color: var(--dp-input-background);
+  border-bottom: var(--dp-input-border-width) solid var(--dp-input-border-color);
+  border-radius: 4px 4px 0 0;
+
+  /* Adjust input container padding for filled */
+  .inputContainer {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  /* Adjust dateInput padding for filled */
+  .dateInput {
+    padding: 8px 0;
+  }
+
+  /* Adjust label initial position for filled */
+  .label {
+    top: 28px; /* Approx center */
+  }
+
+  /* Floating label styles for filled */
+  &.container:focus-within .label,
+  &.container:has(.dateInput:not(:placeholder-shown)) .label {
+    top: 8px;
+    transform: translateY(0) scale(0.75);
+    color: var(--dp-input-label-color-focus);
+  }
+
+  /* Apply hover/focus directly to .container */
+  &.container:hover {
+    background-color: color-mix(
+      in srgb,
+      var(--dp-input-background) 96%,
+      var(--md-sys-color-on-surface) 4%
+    );
+  }
+
+  &.container:focus-within {
+    border-bottom-width: var(--dp-input-border-width-focus);
+    border-bottom-color: var(--dp-input-border-color-focus);
+  }
+}
+
+/* --- Invalid State --- */
+.container.invalid {
+  --dp-input-border-color: var(--dp-input-border-color-error);
+  --dp-input-label-color: var(--dp-input-label-color-error);
+}
+.container.invalid.filled {
+  border-bottom-color: var(--dp-input-border-color-error);
+}
+.container.invalid:focus-within {
+  --dp-input-border-color-focus: var(--dp-input-border-color-error);
+  --dp-input-label-color-focus: var(--dp-input-label-color-error);
+}
+.container.invalid.filled:focus-within {
+  border-bottom-color: var(--dp-input-border-color-error);
+}
+
+/* --- Disabled State --- */
+.container.disabled {
+  opacity: var(--dp-input-disabled-opacity);
+  pointer-events: none;
+}
+.container.disabled.filled {
+  background-color: color-mix(
+    in srgb,
+    var(--dp-input-background) 100%,
+    transparent calc(100% - var(--dp-input-disabled-opacity) * 100%)
+  );
+  border-bottom-color: color-mix(
+    in srgb,
+    var(--dp-input-border-color) 100%,
+    transparent calc(100% - var(--dp-input-disabled-opacity) * 100%)
+  );
+}
+.container.disabled.outlined .fieldset {
+  border-color: color-mix(
+    in srgb,
+    var(--dp-input-border-color) 100%,
+    transparent calc(100% - var(--dp-input-disabled-opacity) * 100%)
+  );
+}
+.container.disabled .label,
+.container.disabled .startAdornment,
+.container.disabled .endAdornment {
+  color: color-mix(
+    in srgb,
+    var(--dp-input-label-color) 100%,
+    transparent calc(100% - var(--dp-input-disabled-opacity) * 100%)
+  );
+}
+.container.disabled .dateInput,
+.container.disabled .dateSegment {
+  color: color-mix(
+    in srgb,
+    var(--dp-input-input-color) 100%,
+    transparent calc(100% - var(--dp-input-disabled-opacity) * 100%)
+  );
+}
+.container.disabled .dateSegment:focus {
+  background-color: transparent; /* Don't show focus style when disabled */
+}

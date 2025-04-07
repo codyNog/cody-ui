@@ -1,0 +1,114 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.calendar {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 10;
+  background-color: var(--md-sys-color-surface);
+  border-radius: 8px;
+  box-shadow: var(--md-sys-elevation-3);
+  padding: 16px;
+  margin-top: 4px;
+  width: 320px;
+}
+
+/* カレンダーのスタイル */
+.calendar :global(.react-aria-Calendar),
+.calendar :global(.react-aria-RangeCalendar) {
+  width: 100%;
+}
+
+.calendar :global(header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.calendar :global(.react-aria-Heading) {
+  text-align: center;
+  font-weight: 500;
+  margin: 0 8px;
+}
+
+.calendar :global(.react-aria-Button) {
+  background: none;
+  border: none;
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.calendar :global(.react-aria-Button:hover) {
+  background-color: var(--md-sys-color-surface-variant);
+}
+
+.calendar :global(.react-aria-CalendarGrid) {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendar :global(.react-aria-CalendarGridHeader) {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8px;
+}
+
+.calendar :global(.react-aria-CalendarHeaderCell) {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 4px 0;
+}
+
+.calendar :global(.react-aria-CalendarGrid) {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar :global(.react-aria-CalendarCell) {
+  text-align: center;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.calendar :global(.react-aria-CalendarCell[data-selected]) {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.calendar
+  :global(
+    .react-aria-CalendarCell:hover:not([data-selected]):not([data-disabled])
+  ) {
+  background-color: var(--md-sys-color-surface-variant);
+}
+
+.calendar :global(.react-aria-CalendarCell[data-disabled]) {
+  opacity: 0.38;
+  cursor: default;
+}
+
+.calendar :global(.react-aria-CalendarCell[data-outside-month]) {
+  color: var(--md-sys-color-on-surface-variant);
+  opacity: 0.6;
+}
+
+.calendar :global(.react-aria-CalendarCell[data-focused]) {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
