@@ -156,7 +156,7 @@ export function CheckboxList({ items: initialItems, onChange }: Props) {
         <Checkbox
           isSelected={isSelected}
           isIndeterminate={isIndeterminate}
-          onChange={() => handleCheckboxChange(item.id)} // クリック時にIDを渡す
+          onChangeChecked={() => handleCheckboxChange(item.id)} // クリック時にIDを渡す
           isDisabled={item.isDisabled}
           aria-label={item.label} // アクセシビリティのため
         >

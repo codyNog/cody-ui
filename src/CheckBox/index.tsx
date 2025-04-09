@@ -8,39 +8,38 @@ type Props = {
   defaultSelected?: boolean;
   isIndeterminate?: boolean;
   isDisabled?: boolean;
-  onChange?: (isSelected: boolean) => void;
+  onChangeChecked?: (isSelected: boolean) => void;
   value?: string;
   name?: string;
   isReadOnly?: boolean;
   isRequired?: boolean;
   "aria-label"?: string;
+  checked?: boolean | "indeterminate";
+  required?: boolean;
 };
 
 export function Checkbox({ children, ...props }: Props) {
   const {
-    isSelected,
     defaultSelected,
-    isIndeterminate,
     isDisabled,
-    onChange,
-    value,
+    onChangeChecked,
     name,
     isReadOnly,
-    isRequired,
+    required,
     "aria-label": ariaLabel,
+    checked,
   } = props;
 
   return (
     <AriaCheckbox
-      isSelected={isSelected}
+      isSelected={typeof checked === "boolean" ? checked : undefined}
       defaultSelected={defaultSelected}
-      isIndeterminate={isIndeterminate}
+      isIndeterminate={checked === "indeterminate"}
       isDisabled={isDisabled}
-      onChange={onChange}
-      value={value}
+      onChange={onChangeChecked}
       name={name}
       isReadOnly={isReadOnly}
-      isRequired={isRequired}
+      isRequired={required}
       aria-label={ariaLabel}
       className={styles.root}
     >

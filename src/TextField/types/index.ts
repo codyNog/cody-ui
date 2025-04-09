@@ -12,7 +12,7 @@ type TextFieldVariant = "filled" | "outlined";
 // (このファイル内でのみ使用するため export しない)
 type BaseTextFieldProps = Omit<
   AriaTextFieldProps,
-  "className" | "style" | "children"
+  "className" | "style" | "children" | "onChange"
 >;
 
 /**
@@ -57,4 +57,10 @@ export type Props = BaseTextFieldProps & {
    * @example <PasswordVisibilityToggle /> or 'kg'
    */
   endAdornment?: ReactNode; // React. を削除
+  /**
+   * 必須項目かどうか
+   * @default false
+   */
+  required?: boolean;
+  onChangeText?: (text: string) => void;
 };

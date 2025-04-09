@@ -16,10 +16,8 @@ import {
   type ValidationResult,
 } from "react-aria-components";
 // ReactNode is only used in the imported type, no need to import here directly
-import type { Props as CommonProps } from "../types";
+import type { Props } from "../types";
 import styles from "./index.module.css";
-
-type Props = Omit<CommonProps, "variant">;
 
 export const OutlinedTextField = forwardRef<
   HTMLInputElement | HTMLTextAreaElement, // Update ref type
@@ -32,7 +30,7 @@ export const OutlinedTextField = forwardRef<
       errorMessage,
       multiline,
       maxLines,
-      onChange,
+      onChangeText,
       value: controlledValue, // Use controlled value
       startAdornment, // Destructure startAdornment
       endAdornment, // Destructure endAdornment
@@ -106,19 +104,11 @@ export const OutlinedTextField = forwardRef<
       adjustHeight();
     }, [adjustHeight]); // Remove controlledValue from dependencies
 
-    // Wrapped onChange handler
-    const handleOnChange = useCallback(
-      (value: string) => {
-        onChange?.(value);
-      },
-      [onChange],
-    );
-
     return (
       <div className={styles.wrapper}>
         <AriaTextField
           value={controlledValue}
-          onChange={handleOnChange}
+          onChange={onChangeText}
           isInvalid={isInvalid}
           className={`${styles.container} ${styles.outlined} ${
             isInvalid ? styles.invalid : ""

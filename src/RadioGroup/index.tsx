@@ -13,10 +13,12 @@ import styles from "./index.module.css";
 type RadioGroupProps = {
   /** Group label */
   label?: ReactNode;
-  /** Children (Radio components) */
-  children: ReactNode;
   /** Additional CSS class */
   className?: string;
+  options: {
+    value: string;
+    label: string;
+  }[];
 } & Omit<RACRadioGroupProps, "className">; // Exclude RAC className
 
 /**
@@ -25,8 +27,8 @@ type RadioGroupProps = {
  */
 export const RadioGroup = ({
   label,
-  children,
   className,
+  options,
   ...props
 }: RadioGroupProps) => {
   return (
@@ -35,7 +37,11 @@ export const RadioGroup = ({
       className={className ? `${styles.root} ${className}` : styles.root}
     >
       {label && <RACLabel className={styles.groupLabel}>{label}</RACLabel>}
-      {children}
+      {options.map((option) => (
+        <Radio key={option.value} value={option.value}>
+          {option.label}
+        </Radio>
+      ))}
     </RACRadioGroup>
   );
 };

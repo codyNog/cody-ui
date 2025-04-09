@@ -15,13 +15,8 @@ import {
   TextArea,
   type ValidationResult,
 } from "react-aria-components";
-// ReactNode is only used in the imported type, no need to import here directly
-import type { Props as CommonProps } from "../types";
+import type { Props } from "../types";
 import styles from "./index.module.css";
-
-// Define Props specific to FilledTextField, extending the common Props
-// Note: variant is not needed here as this component IS the filled variant.
-type Props = Omit<CommonProps, "variant">;
 
 export const FilledTextField = forwardRef<
   HTMLInputElement | HTMLTextAreaElement, // Update ref type
@@ -34,7 +29,7 @@ export const FilledTextField = forwardRef<
       errorMessage,
       multiline,
       maxLines,
-      onChange,
+      onChangeText,
       value: controlledValue, // Use controlled value from props
       startAdornment, // Destructure startAdornment
       endAdornment, // Destructure endAdornment
@@ -108,19 +103,11 @@ export const FilledTextField = forwardRef<
       adjustHeight();
     }, [adjustHeight]); // Remove controlledValue from dependencies
 
-    // Wrapped onChange handler
-    const handleOnChange = useCallback(
-      (value: string) => {
-        onChange?.(value);
-      },
-      [onChange],
-    );
-
     return (
       <div className={styles.wrapper}>
         <AriaTextField
           value={controlledValue}
-          onChange={handleOnChange}
+          onChange={onChangeText}
           isInvalid={isInvalid}
           className={`${styles.container} ${styles.filled} ${
             isInvalid ? styles.invalid : ""

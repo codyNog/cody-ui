@@ -8,6 +8,7 @@ import styles from "./index.module.css";
 type SwitchProps = AriaSwitchProps & {
   /** Optional icon to display within the switch thumb */
   icon?: ReactNode;
+  checked?: boolean;
 };
 
 /**
@@ -22,11 +23,13 @@ export const Switch = ({
   icon,
   className,
   children,
+  checked,
   ...props
 }: SwitchProps) => {
   return (
     <AriaSwitch
       {...props}
+      isSelected={checked}
       className={(renderProps) =>
         [
           styles.root,

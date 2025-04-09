@@ -2,7 +2,7 @@
 .wrapper {
   position: relative;
   width: 100%;
-  display: inline-flex; /* Use inline-flex for proper width behavior */
+  display: flex; /* Changed from inline-flex to allow full width */
   flex-direction: column;
   min-width: 200px;
   --text-field-supporting-text-color: var(--md-sys-color-on-surface-variant);

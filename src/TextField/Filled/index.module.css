@@ -1,6 +1,6 @@
 /* Wrapper for the entire component including supporting text */
 .wrapper {
-  display: inline-flex; /* Or block, depending on desired layout */
+  display: flex; /* Changed from inline-flex to allow full width */
   flex-direction: column;
   position: relative; /* Make it a positioning context for absolute children */
   min-width: 200px; /* Keep min-width on the wrapper */
