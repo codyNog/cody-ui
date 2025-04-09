@@ -2,13 +2,13 @@
 import {
   type ReactElement,
   forwardRef,
+  useCallback,
   useEffect,
   useRef,
   useState,
-  useCallback,
 } from "react";
-import { Button } from "../../Button";
 import type { Ref } from "react";
+import { Button } from "../../Button";
 import { Calendar } from "../../Calendar";
 import { DatePickerInput } from "../Input";
 import type { DatePickerType, DatePickerValue, Props } from "../types";
@@ -21,7 +21,7 @@ export const DockedDatePicker = forwardRef(function DockedDatePicker(
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
-  
+
   // 一時的な選択状態を管理するための内部状態
   const [tempValue, setTempValue] = useState<
     DatePickerValue<typeof props.type> | undefined
@@ -46,7 +46,7 @@ export const DockedDatePicker = forwardRef(function DockedDatePicker(
     (selectedDate: DatePickerValue<typeof type>) => {
       setTempValue(selectedDate);
     },
-    [type]
+    [type],
   );
 
   // キャンセルボタンクリック時の処理
@@ -110,8 +110,8 @@ export const DockedDatePicker = forwardRef(function DockedDatePicker(
       </div>
 
       {isCalendarOpen && (
-        <div 
-          className={styles.calendar} 
+        <div
+          className={styles.calendar}
           ref={calendarRef}
           role="dialog"
           aria-modal="true"

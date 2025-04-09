@@ -1,9 +1,9 @@
 import type { CalendarDate, DateValue } from "@internationalized/date";
 import type { ComponentProps } from "react";
 import type {
+  Calendar as AriaCalendar,
   CalendarProps as AriaCalendarPropsBase,
   RangeCalendarProps as AriaRangeCalendarPropsBase,
-  Calendar as AriaCalendar,
 } from "react-aria-components";
 
 // --- Common Type Definitions ---

@@ -7,15 +7,15 @@ import {
 } from "@internationalized/date";
 import {
   Calendar as AriaCalendar,
+  type CalendarProps as AriaCalendarProps, // Import base Aria props
   Button,
   CalendarCell,
   CalendarGrid,
   CalendarGridBody,
   CalendarGridHeader,
   CalendarHeaderCell,
-  Heading,
   type DateValue,
-  type CalendarProps as AriaCalendarProps, // Import base Aria props
+  Heading,
 } from "react-aria-components";
 import styles from "../index.module.css";
 // Remove unused date conversion imports

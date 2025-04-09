@@ -1,6 +1,7 @@
 "use client";
 import { clsx } from "clsx"; // Use clsx for conditional classes
-import React, {
+import type React from "react";
+import {
   type ReactNode,
   forwardRef,
   useCallback,
@@ -82,12 +83,12 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         // Convert PressEvent to MouseEvent for onClick
         if (onClick && e.target instanceof HTMLButtonElement) {
           // Create a synthetic MouseEvent
-          const mouseEvent = new MouseEvent('click', {
+          const mouseEvent = new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
-            view: window
+            view: window,
           }) as unknown as React.MouseEvent<HTMLButtonElement>;
-          
+
           // Call onClick with the synthetic event
           onClick(mouseEvent);
         }
