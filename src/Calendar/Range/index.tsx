@@ -1,7 +1,7 @@
 "use client";
 import {
   type CalendarDate,
-  CalendarDate as CalendarDateConstructor,
+  // CalendarDateConstructor removed as it's unused
   isToday as checkIsToday,
   getLocalTimeZone,
 } from "@internationalized/date";
@@ -14,46 +14,28 @@ import {
   CalendarGridHeader,
   CalendarHeaderCell,
   Heading,
-  type DateValue,
+  type RangeCalendarProps as AriaRangeCalendarProps, // Import base Aria props
 } from "react-aria-components";
 import styles from "../index.module.css";
-import {
-  dateRangeToCalendarDateRange,
-  calendarDateRangeToDateRange,
-} from "../modules";
-import type { CalendarProps } from "../types";
+// Remove unused date conversion imports
+import type { InternalDateRange } from "../types"; // Import internal type
 
-export const RangeCalendar = (props: CalendarProps<"range">) => {
-  const {
-    value: rangeValueProp,
-    defaultValue: rangeDefaultValueProp,
-    onChange: rangeOnChangeProp,
-    ...rangeRestProps
-  } = props;
+// Define props based on internal types
+type InternalRangeCalendarProps = Omit<
+  AriaRangeCalendarProps<CalendarDate>, // Use CalendarDate here
+  "value" | "defaultValue" | "onChange" // Omit original value/onChange
+> & {
+  value?: InternalDateRange; // Expect internal range type
+  defaultValue?: InternalDateRange; // Expect internal range type
+  onChange?: (value: InternalDateRange | null) => void; // Expect internal range type in callback
+};
 
-  const rangeValue = dateRangeToCalendarDateRange(rangeValueProp);
-  const rangeDefaultValue = dateRangeToCalendarDateRange(rangeDefaultValueProp);
+export const RangeCalendar = (props: InternalRangeCalendarProps) => {
+  // Props are now already in the internal format, destructure directly
+  const { value, defaultValue, onChange, ...rest } = props;
 
-  const handleRangeChange = (
-    internalRange: { start: DateValue; end: DateValue } | null,
-  ) => {
-    if (rangeOnChangeProp) {
-      if (
-        internalRange &&
-        internalRange.start instanceof CalendarDateConstructor &&
-        internalRange.end instanceof CalendarDateConstructor
-      ) {
-        rangeOnChangeProp(
-          calendarDateRangeToDateRange({
-            start: internalRange.start,
-            end: internalRange.end,
-          }),
-        );
-      } else {
-        rangeOnChangeProp(null);
-      }
-    }
-  };
+  // No need for handleRangeChange wrapper, pass onChange directly if it exists
+  // const handleRangeChange = ... (Removed)
 
   // --- Render Calendar Cell ---
   const renderCell = (date: CalendarDate) => {
@@ -100,10 +82,10 @@ export const RangeCalendar = (props: CalendarProps<"range">) => {
 
   return (
     <AriaRangeCalendar
-      {...rangeRestProps}
-      value={rangeValue}
-      defaultValue={rangeDefaultValue}
-      onChange={handleRangeChange}
+      {...rest} // Use rest directly
+      value={value} // Pass internal value directly
+      defaultValue={defaultValue} // Pass internal defaultValue directly
+      onChange={onChange} // Pass internal onChange directly
       className={styles.calendar}
     >
       {calendarHeader}

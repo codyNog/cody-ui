@@ -1,6 +1,6 @@
 "use client";
 import { clsx } from "clsx"; // Use clsx for conditional classes
-import {
+import React, {
   type ReactNode,
   forwardRef,
   useCallback,
@@ -19,7 +19,11 @@ type ButtonVariant = "filled" | "outlined" | "text" | "elevated" | "tonal";
 // react-aria-components の ButtonProps から不要なものを除外し、
 // 独自のプロパティを追加する
 // (className は module css で管理するため除外, children は独自に定義するため除外)
-type BaseProps = Omit<AriaButtonProps, "className" | "style" | "children">;
+// onPressはonClickに置き換えるため除外
+type BaseProps = Omit<
+  AriaButtonProps,
+  "className" | "style" | "children" | "onPress"
+>;
 
 type Props = BaseProps & {
   /**
@@ -39,6 +43,15 @@ type Props = BaseProps & {
    * ボタンのラベルとして表示する内容
    */
   children: ReactNode;
+  /**
+   * クリック時のコールバック関数
+   */
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  /**
+   * @private
+   * 内部的に使用するプロパティ
+   */
+  onPress?: (e: PressEvent) => void;
 };
 
 type Ripple = {
@@ -55,7 +68,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       icon,
       trailingIcon,
       children,
-      onPress,
+      onClick,
       ...props
     }: Props,
     ref,
@@ -63,13 +76,23 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [ripples, setRipples] = useState<Ripple[]>([]); // Initialize state here
 
-    // Pass through the onPress handler
+    // Pass through the onClick handler to onPress
     const handlePress = useCallback(
       (e: PressEvent) => {
-        // onPress is already guarded by react-aria-components for isDisabled
-        onPress?.(e);
+        // Convert PressEvent to MouseEvent for onClick
+        if (onClick && e.target instanceof HTMLButtonElement) {
+          // Create a synthetic MouseEvent
+          const mouseEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+          }) as unknown as React.MouseEvent<HTMLButtonElement>;
+          
+          // Call onClick with the synthetic event
+          onClick(mouseEvent);
+        }
       },
-      [onPress],
+      [onClick],
     );
 
     // Rename to handlePressStart and use PressEvent

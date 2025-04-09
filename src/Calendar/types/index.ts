@@ -10,7 +10,7 @@ import type {
 
 // 外部インターフェース用の日付型
 export type ExternalDateValue = Date;
-export type ExternalDateRange = { start: Date; end: Date };
+export type ExternalDateRange = Date[]; // Changed from { start: Date; end: Date }
 export type ExternalDateArray = Date[];
 
 // react-aria-components 用の内部日付型
@@ -35,7 +35,7 @@ export type CalendarVariant = "single" | "range" | "multiple";
 
 // variantに基づいて値の型を決定
 export type ValueType<T extends CalendarVariant | undefined> = T extends "range"
-  ? ExternalDateRange
+  ? ExternalDateRange // Now Date[]
   : T extends "multiple"
     ? ExternalDateArray
     : ExternalDateValue;
@@ -43,7 +43,7 @@ export type ValueType<T extends CalendarVariant | undefined> = T extends "range"
 // variantに基づいてonChangeの型を決定
 export type OnChangeType<T extends CalendarVariant | undefined> =
   T extends "range"
-    ? (dateRange: ExternalDateRange | null) => void
+    ? (dateRange: ExternalDateRange | null) => void // Now (dates: Date[] | null) => void
     : T extends "multiple"
       ? (dates: ExternalDateArray) => void
       : (date: ExternalDateValue | null) => void;

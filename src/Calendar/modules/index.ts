@@ -36,28 +36,29 @@ export const calendarDateToDate = (date: CalendarDate): Date => {
   return date.toDate(timeZone);
 };
 
-// ExternalDateRange => InternalDateRange
+// ExternalDateRange (Date[]) => InternalDateRange ({ start: CalendarDate, end: CalendarDate })
 export const dateRangeToCalendarDateRange = (
-  range: ExternalDateRange | undefined,
+  range: ExternalDateRange | undefined, // ExternalDateRange is Date[]
 ): InternalDateRange | undefined => {
-  if (!range) return undefined;
-  const start = dateToCalendarDate(range.start);
-  const end = dateToCalendarDate(range.end);
-  // start と end が両方とも有効な CalendarDate に変換できた場合のみ RangeValue を返す
+  if (!range || range.length < 2 || !range[0] || !range[1]) return undefined;
+  // Use the first two elements as start and end
+  const start = dateToCalendarDate(range[0]);
+  const end = dateToCalendarDate(range[1]);
+  // Ensure both start and end were successfully converted
   if (start && end) {
+    // Return in the { start, end } format expected internally
     return { start, end };
   }
   return undefined;
 };
 
-// InternalDateRange => ExternalDateRange
+// InternalDateRange ({ start: CalendarDate, end: CalendarDate }) => ExternalDateRange (Date[])
 export const calendarDateRangeToDateRange = (
   range: InternalDateRange,
 ): ExternalDateRange => {
-  return {
-    start: calendarDateToDate(range.start),
-    end: calendarDateToDate(range.end),
-  };
+  // ExternalDateRange is Date[]
+  // Return as a two-element array [startDate, endDate]
+  return [calendarDateToDate(range.start), calendarDateToDate(range.end)];
 };
 
 // ExternalDateArray => InternalDateArray

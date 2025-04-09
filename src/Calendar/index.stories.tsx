@@ -83,15 +83,14 @@ export const UnavailableDates: Story = {
 // 範囲選択のStory
 export const Range: Story = {
   render: (args) => {
-    const [dateRange, setDateRange] = useState<
-      { start: Date; end: Date } | undefined
-    >({
-      start: new Date(2024, 5, 10), // June 10, 2024
-      end: new Date(2024, 5, 15), // June 15, 2024
-    });
+    // Use Date[] for state, matching the new ExternalDateRange type
+    const [dateRange, setDateRange] = useState<Date[] | undefined>([
+      new Date(2024, 5, 10), // June 10, 2024
+      new Date(2024, 5, 15), // June 15, 2024
+    ]);
 
-    // ラッパー関数を作成して型を合わせる
-    const handleChange = (newRange: { start: Date; end: Date } | null) => {
+    // onChange now receives Date[] | null directly
+    const handleChange = (newRange: Date[] | null) => {
       setDateRange(newRange || undefined);
     };
 
@@ -147,13 +146,13 @@ export const AllVariants: Story = {
     };
 
     // Range
-    const [dateRange, setDateRange] = useState<
-      { start: Date; end: Date } | undefined
-    >({
-      start: new Date(2024, 5, 10),
-      end: new Date(2024, 5, 15),
-    });
-    const handleRangeChange = (newRange: { start: Date; end: Date } | null) => {
+    // Use Date[] for state
+    const [dateRange, setDateRange] = useState<Date[] | undefined>([
+      new Date(2024, 5, 10),
+      new Date(2024, 5, 15),
+    ]);
+    // onChange now receives Date[] | null
+    const handleRangeChange = (newRange: Date[] | null) => {
       setDateRange(newRange || undefined);
     };
 

@@ -1,7 +1,7 @@
 "use client";
 import {
   type CalendarDate,
-  CalendarDate as CalendarDateConstructor,
+  // CalendarDateConstructor removed as it's unused
   isToday as checkIsToday,
   getLocalTimeZone,
 } from "@internationalized/date";
@@ -14,32 +14,28 @@ import {
   CalendarGridHeader,
   CalendarHeaderCell,
   Heading,
-  type DateValue,
+  type CalendarProps as AriaCalendarProps, // Import base Aria props
 } from "react-aria-components";
 import styles from "../index.module.css";
-import { dateToCalendarDate, calendarDateToDate } from "../modules";
-import type { CalendarProps } from "../types";
+// Remove unused date conversion imports
+import type { InternalDateValue } from "../types"; // Import internal type
 
-export const SingleCalendar = (props: CalendarProps<"single">) => {
-  const {
-    value: singleValueProp,
-    defaultValue: singleDefaultValueProp,
-    onChange: singleOnChangeProp,
-    ...singleRestProps
-  } = props;
+// Define props based on internal types
+type InternalSingleCalendarProps = Omit<
+  AriaCalendarProps<CalendarDate>, // Use CalendarDate here
+  "value" | "defaultValue" | "onChange" // Omit original value/onChange
+> & {
+  value?: InternalDateValue; // Expect internal date type
+  defaultValue?: InternalDateValue; // Expect internal date type
+  onChange?: (value: InternalDateValue | null) => void; // Expect internal date type in callback
+};
 
-  const singleValue = dateToCalendarDate(singleValueProp);
-  const singleDefaultValue = dateToCalendarDate(singleDefaultValueProp);
+export const SingleCalendar = (props: InternalSingleCalendarProps) => {
+  // Props are now already in the internal format, destructure directly
+  const { value, defaultValue, onChange, ...rest } = props;
 
-  const handleSingleChange = (internalDate: DateValue | null) => {
-    if (singleOnChangeProp) {
-      if (internalDate instanceof CalendarDateConstructor) {
-        singleOnChangeProp(calendarDateToDate(internalDate));
-      } else {
-        singleOnChangeProp(null);
-      }
-    }
-  };
+  // No need for handleSingleChange wrapper, pass onChange directly if it exists
+  // const handleSingleChange = ... (Removed)
 
   // --- Render Calendar Cell ---
   const renderCell = (date: CalendarDate) => {
@@ -86,10 +82,10 @@ export const SingleCalendar = (props: CalendarProps<"single">) => {
 
   return (
     <AriaCalendar
-      {...singleRestProps}
-      value={singleValue}
-      defaultValue={singleDefaultValue}
-      onChange={handleSingleChange}
+      {...rest} // Use rest directly
+      value={value} // Pass internal value directly
+      defaultValue={defaultValue} // Pass internal defaultValue directly
+      onChange={onChange} // Pass internal onChange directly
       className={styles.calendar}
     >
       {calendarHeader}
