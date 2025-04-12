@@ -1,0 +1,149 @@
+/* Grid基本スタイル - 共通 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--space-2); /* モバイル用の小さいgap */
+  width: 100%;
+}
+
+/* BentoGrid特有のスタイル */
+.bentoGrid {
+  container-type: inline-size;
+  container-name: bento-grid;
+}
+
+/* コンテナクエリによるレスポンシブ対応 - タブレット */
+@container bento-grid (min-width: 768px) {
+  .grid {
+    gap: var(--space-3); /* タブレット用の中くらいgap */
+  }
+}
+
+/* コンテナクエリによるレスポンシブ対応 - デスクトップ */
+@container bento-grid (min-width: 1024px) {
+  .grid {
+    gap: var(--space-4); /* デスクトップ用の大きいgap */
+  }
+}
+
+/* コンテナクエリによるレスポンシブ対応 */
+/* 小さいコンテナ（400px以下）では全てのアイテムを1カラムに */
+@container bento-grid (max-width: 400px) {
+  .grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .item {
+    grid-column: span 1 !important;
+  }
+}
+
+/* 中くらいのコンテナ（401px〜700px）では6カラム */
+@container bento-grid (min-width: 401px) and (max-width: 700px) {
+  .grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .item[data-col-span="12"] {
+    grid-column: span 6 !important;
+  }
+  .item[data-col-span="8"] {
+    grid-column: span 4 !important;
+  }
+  .item[data-col-span="6"] {
+    grid-column: span 3 !important;
+  }
+  .item[data-col-span="4"] {
+    grid-column: span 2 !important;
+  }
+  .item[data-col-span="3"],
+  .item[data-col-span="2"],
+  .item[data-col-span="1"] {
+    grid-column: span 1 !important;
+  }
+}
+
+/* GridItem基本スタイル */
+.item {
+  position: relative;
+  min-width: 0; /* 内容が潰れないようにする */
+  box-sizing: border-box;
+}
+
+/* Bentoバリアント用のスタイル */
+.bentoItem {
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: var(--space-3);
+  padding: var(--space-4);
+  box-shadow: var(--md-sys-elevation-level1);
+  transition: box-shadow 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+/* ホバー時のエフェクト */
+.bentoItem:hover {
+  box-shadow: var(--md-sys-elevation-level2);
+}
+
+/* アクティブ時のエフェクト */
+.bentoItem:active {
+  box-shadow: var(--md-sys-elevation-level1);
+}
+
+/* GridRow用のスタイル */
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Bentoバリアント用のRowスタイル */
+.bentoRow {
+  padding: 0; /* rowの場合はパディングをリセット */
+}
+
+/* GridRowの子要素のスタイル */
+.row > * {
+  flex: 1;
+  min-width: 0;
+}
+
+/* コンテナクエリ用の小さい画面対応 */
+@container bento-grid (max-width: 600px) {
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  /* 子要素の幅を100%に */
+  .row > * {
+    width: 100%;
+  }
+}
+
+/* メディアクエリによるレスポンシブ対応 - タブレット */
+@media (min-width: 768px) {
+  .grid:not(.bentoGrid) {
+    gap: var(--space-3); /* タブレット用の中くらいgap */
+  }
+}
+
+/* メディアクエリによるレスポンシブ対応 - デスクトップ */
+@media (min-width: 1024px) {
+  .grid:not(.bentoGrid) {
+    gap: var(--space-4); /* デスクトップ用の大きいgap */
+  }
+}
+
+/* 小さい画面では縦並びに（非ベントグリッド用） */
+@media (max-width: 600px) {
+  .row:not(.bentoRow) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  /* 子要素の幅を100%に */
+  .row:not(.bentoRow) > * {
+    width: 100%;
+  }
+}

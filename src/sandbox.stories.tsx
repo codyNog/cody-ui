@@ -3,7 +3,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "./Button";
 import { Checkbox } from "./Checkbox";
-import { Grid } from "./Grid";
+import { Grid, GridItem, GridRow } from "./Grid";
 import { RadioGroup } from "./RadioGroup";
 import { Switch } from "./Switch";
 import { TextField } from "./TextField";
@@ -32,97 +32,79 @@ export const FormExample: Story = {
     };
 
     return (
-      <Grid.Container>
-        <h2>Contact Form Example</h2>
-        <form onSubmit={handleSubmit}>
-          <Grid.Row>
-            <Grid.Column span={12}>
-              <TextField
-                label="Name"
-                value={formState.name}
-                onChangeText={(e) => setFormState({ ...formState, name: e })}
-                required
-              />
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Column span={12}>
-              <TextField
-                label="Email"
-                type="email"
-                value={formState.email}
-                onChangeText={(e) => setFormState({ ...formState, email: e })}
-                required
-              />
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Column span={12}>
-              <TextField
-                label="Message"
-                value={formState.message}
-                onChangeText={(e) => setFormState({ ...formState, message: e })}
-                multiline
-                required
-              />
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Column span={12}>
-              <RadioGroup
-                label="Preferred contact method"
-                value={formState.contactPreference}
-                onChange={(value) =>
-                  setFormState({ ...formState, contactPreference: value })
-                }
-                options={[
-                  { value: "email", label: "Email" },
-                  { value: "phone", label: "Phone" },
-                  { value: "mail", label: "Mail" },
-                ]}
-              />
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Column span={12}>
-              <Switch
-                checked={formState.subscribe}
-                onChange={(checked) =>
-                  setFormState({ ...formState, subscribe: checked })
-                }
-              >
-                Subscribe to newsletter
-              </Switch>
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Column span={12}>
-              <Checkbox
-                checked={formState.termsAccepted}
-                onChangeChecked={(checked) =>
-                  setFormState({ ...formState, termsAccepted: checked })
-                }
-                required
-              >
-                I accept the terms and conditions
-              </Checkbox>
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Column span={12}>
-              <div style={{ marginTop: "16px" }}>
-                <Button type="submit">Submit</Button>
-              </div>
-            </Grid.Column>
-          </Grid.Row>
+      <Grid>
+        <GridItem colSpan={12}>
+          <h2>Contact Form Example</h2>
+        </GridItem>
+        <form onSubmit={handleSubmit} style={{ display: "contents" }}>
+          {/* formがGridレイアウトを壊さないように */}
+          {/* 名前とメールアドレスを横に並べる */}
+          <GridRow>
+            <TextField
+              label="Name"
+              value={formState.name}
+              onChangeText={(e) => setFormState({ ...formState, name: e })}
+              required
+            />
+            <TextField
+              label="Email"
+              type="email"
+              value={formState.email}
+              onChangeText={(e) => setFormState({ ...formState, email: e })}
+              required
+            />
+          </GridRow>
+          <GridItem colSpan={12}>
+            <TextField
+              label="Message"
+              value={formState.message}
+              onChangeText={(e) => setFormState({ ...formState, message: e })}
+              multiline
+              required
+            />
+          </GridItem>
+          <GridItem colSpan={12}>
+            <RadioGroup
+              label="Preferred contact method"
+              value={formState.contactPreference}
+              onChange={(value) =>
+                setFormState({ ...formState, contactPreference: value })
+              }
+              options={[
+                { value: "email", label: "Email" },
+                { value: "phone", label: "Phone" },
+                { value: "mail", label: "Mail" },
+              ]}
+            />
+          </GridItem>
+          {/* スイッチとチェックボックスを横に並べる */}
+          <GridRow colSpan={12} spacing="var(--space-4)" align="center">
+            <Switch
+              checked={formState.subscribe}
+              onChange={(checked) =>
+                setFormState({ ...formState, subscribe: checked })
+              }
+            >
+              Subscribe to newsletter
+            </Switch>
+            <Checkbox
+              checked={formState.termsAccepted}
+              onChangeChecked={(checked) =>
+                setFormState({ ...formState, termsAccepted: checked })
+              }
+              required
+            >
+              I accept the terms and conditions
+            </Checkbox>
+          </GridRow>
+          {/* 送信ボタンを右寄せ */}
+          <GridItem colSpan={12}>
+            <div style={{ marginTop: "16px", textAlign: "right" }}>
+              <Button type="submit">Submit</Button>
+            </div>
+          </GridItem>
         </form>
-      </Grid.Container>
+      </Grid>
     );
   },
 };

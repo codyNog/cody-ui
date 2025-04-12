@@ -4,7 +4,16 @@ import { Provider } from "../src/Provider";
 
 const preview: Preview = {
   parameters: {
+    // アドオンパネル、ツールバー、サイドバーを非表示にする設定
+    toolbar: {
+      hidden: true,
+    },
+    sidebar: {
+      hidden: true,
+    },
     controls: {
+      disable: true,
+      expanded: false,
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i,
