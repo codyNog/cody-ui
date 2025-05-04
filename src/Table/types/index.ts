@@ -1,13 +1,13 @@
 import type {
   ColumnDef,
-  SortingState,
-  PaginationState,
   ColumnFiltersState,
-  RowSelectionState,
-  VisibilityState,
-  Updater,
-  Row,
   ColumnOrderState as ColumnOrderStateType,
+  PaginationState,
+  Row,
+  RowSelectionState,
+  SortingState,
+  Updater,
+  VisibilityState,
 } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 

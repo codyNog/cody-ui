@@ -1,7 +1,7 @@
-import type { CSSProperties } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import type { CSS } from "@dnd-kit/utilities"; // CSS を type import
-import { flexRender, type Header } from "@tanstack/react-table";
+import { type Header, flexRender } from "@tanstack/react-table";
+import type { CSSProperties } from "react";
 import type { DataWithId } from "./types";
 
 type DraggableHeaderProps<TData extends DataWithId> = {

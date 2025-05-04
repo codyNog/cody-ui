@@ -1,13 +1,13 @@
+import { arrayMove } from "@dnd-kit/sortable"; // arrayMove をインポート
 import type { Meta, StoryObj } from "@storybook/react";
-import { Table } from ".";
 import {
-  createColumnHelper,
-  type PaginationState,
   type ColumnOrderState, // ColumnOrderState をインポート
+  type PaginationState,
   type Updater, // Updater もインポートしておく
+  createColumnHelper,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { arrayMove } from "@dnd-kit/sortable"; // arrayMove をインポート
+import { Table } from ".";
 
 const meta = {
   component: Table,

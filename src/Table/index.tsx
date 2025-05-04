@@ -1,11 +1,11 @@
+import { flexRender } from "@tanstack/react-table";
+import { Button } from "../Button"; // Button をインポート
+import { DraggableHeader } from "./DraggableHeader";
+import { DraggableRow } from "./DraggableRow";
+import { Pagination } from "./Pagination";
+import { useTable } from "./hooks"; // useTable をインポート
 import styles from "./index.module.css";
 import type { DataWithId, TableProps } from "./types";
-import { useTable } from "./hooks"; // useTable をインポート
-import { flexRender } from "@tanstack/react-table";
-import { Pagination } from "./Pagination";
-import { DraggableRow } from "./DraggableRow";
-import { DraggableHeader } from "./DraggableHeader";
-import { Button } from "../Button"; // Button をインポート
 // 不要になったインポートを削除: unparse, format, useCallback
 
 export const Table = <TData extends DataWithId>(props: TableProps<TData>) => {
