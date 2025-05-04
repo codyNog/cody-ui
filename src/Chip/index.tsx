@@ -1,11 +1,12 @@
 "use client";
 import { type ReactNode, forwardRef } from "react";
 import { type PressEvent, Button as RACButton } from "react-aria-components";
+import { MdCheck } from "../Icons"; // Import MdCheck
 import styles from "./index.module.css";
 
 // --- Type Definitions ---
 
-// Base props common to all variants
+// ベースとなる共通プロパティ
 type ChipBaseProps = {
   children: ReactNode;
   leadingIcon?: ReactNode;
@@ -14,48 +15,35 @@ type ChipBaseProps = {
   "aria-label"?: string;
 };
 
-// Assist Chip: No trailingIcon
-type AssistChipProps = ChipBaseProps & {
-  variant: "assist";
-  trailingIcon?: never; // Explicitly forbid trailingIcon
-  isSelected?: never; // Forbid isSelected
-};
+// Chip のバリアントを定義
+type ChipVariant = "assist" | "filter" | "input" | "suggestion";
 
-// Filter Chip: Allows isSelected and trailingIcon
-type FilterChipProps = ChipBaseProps & {
-  variant: "filter";
-  isSelected?: boolean; // isSelected is allowed only for filter
-  trailingIcon?: ReactNode; // trailingIcon is allowed
-};
+// バリアントに応じた固有のプロパティを定義する Conditional Type
+type VariantSpecificProps<V extends ChipVariant> =
+  // 'filter' の場合は isSelected と trailingIcon を許可
+  V extends "filter"
+    ? { isSelected?: boolean; trailingIcon?: ReactNode }
+    : // 'input' の場合は trailingIcon を許可し、isSelected は禁止
+      V extends "input"
+      ? { isSelected?: never; trailingIcon?: ReactNode }
+      : // 'assist' または 'suggestion' の場合は両方禁止
+        { isSelected?: never; trailingIcon?: never };
 
-// Input Chip: Allows trailingIcon
-type InputChipProps = ChipBaseProps & {
-  variant: "input";
-  trailingIcon?: ReactNode; // trailingIcon is allowed
-  isSelected?: never; // Forbid isSelected
-};
-
-// Suggestion Chip: Allows trailingIcon
-type SuggestionChipProps = ChipBaseProps & {
-  variant: "suggestion";
-  trailingIcon?: ReactNode; // trailingIcon is allowed
-  isSelected?: never; // Forbid isSelected
-};
-
-// Union type for all possible Chip props based on variant
-type ChipProps =
-  | AssistChipProps
-  | FilterChipProps
-  | InputChipProps
-  | SuggestionChipProps;
+// ChipProps を Conditional Type を使って定義
+// デフォルトのバリアントは 'assist' に設定
+export type ChipProps<V extends ChipVariant = "assist"> = ChipBaseProps & {
+  variant?: V; // variant プロパティを追加
+} & VariantSpecificProps<V>; // バリアント固有のプロパティを合成
 
 // --- Component Implementation ---
 
-export const Chip = forwardRef<HTMLButtonElement, ChipProps>(
+// forwardRef の型引数を更新
+export const Chip = forwardRef<HTMLButtonElement, ChipProps<ChipVariant>>(
   // Use the new ChipProps type
   (props, ref) => {
     // Destructure props based on the specific variant type
     const {
+      // デフォルトの variant を 'assist' に設定
       variant = "assist", // Default variant
       children,
       leadingIcon,
@@ -65,20 +53,23 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps>(
     } = props;
 
     // Type guards are needed for variant-specific props
+    // この辺のロジックは Conditional Type でも正しく機能するはず
     const isSelected =
-      props.variant === "filter" ? (props.isSelected ?? false) : false;
+      // variant === "filter" && props.isSelected ? props.isSelected : false;
+      variant === "filter" && "isSelected" in props ? props.isSelected : false; // Check if isSelected exists
+    // trailingIcon is allowed only for filter and input variants
     const trailingIcon =
-      props.variant !== "assist" ? props.trailingIcon : undefined;
+      // (variant === "filter" || variant === "input") && props.trailingIcon
+      (variant === "filter" || variant === "input") && "trailingIcon" in props
+        ? props.trailingIcon
+        : undefined; // Check if trailingIcon exists
+    // ? props.trailingIcon
+    // : undefined;
 
     // Determine leading icon (checkmark for selected filter chip)
+    // Determine leading icon (checkmark for selected filter chip)
     const actualLeadingIcon =
-      variant === "filter" && isSelected ? (
-        <span className={styles.icon} aria-hidden="true">
-          ✓
-        </span>
-      ) : (
-        leadingIcon
-      );
+      variant === "filter" && isSelected ? <MdCheck /> : leadingIcon;
 
     const hasLeadingIcon = actualLeadingIcon != null;
     // trailingIcon is now correctly typed based on variant, check directly
@@ -103,8 +94,15 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps>(
         data-selected={variant === "filter" && isSelected ? true : undefined}
         data-disabled={isDisabled || undefined}
       >
+        {/* Render leading icon with appropriate class and aria-hidden */}
         {hasLeadingIcon && (
-          <span className={styles.icon}>{actualLeadingIcon}</span>
+          <span
+            className={styles.icon}
+            // Add aria-hidden only if it's the checkmark icon
+            aria-hidden={variant === "filter" && isSelected ? true : undefined}
+          >
+            {actualLeadingIcon}
+          </span>
         )}
         {children}
         {/* Render trailingIcon only if it exists (type system ensures it's not for assist) */}

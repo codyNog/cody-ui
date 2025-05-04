@@ -100,7 +100,7 @@
 /* Filter Chip - Selected State Icon (Checkmark) */
 .filter[data-selected="true"] .icon {
   color: var(--md-sys-color-on-secondary-container);
-  margin-right: 6px; /* Space between checkmark and label */
+  margin-right: 8px; /* M3 Spec: Space between checkmark and label */
   /* Assumes the checkmark icon is passed via leadingIcon prop when selected */
 }
 /* Hide trailing icon when selected (usually not present in selected filter chip) */
