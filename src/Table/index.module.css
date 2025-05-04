@@ -1,0 +1,55 @@
+.table {
+  border-collapse: collapse; /* テーブルの罫線を綺麗に */
+  width: 100%; /* テーブル幅を親要素に合わせる */
+  table-layout: fixed; /* 列幅の計算方法を指定 (列 DnD で重要) */
+}
+
+.table th,
+.table td {
+  border: 1px solid #ccc; /* 罫線 */
+  padding: 8px; /* セル内の余白 */
+  text-align: left; /* テキスト左寄せ */
+  /* 列 DnD のために overflow と white-space を設定 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table th {
+  background-color: #f2f2f2; /* ヘッダー背景色 */
+  position: relative; /* DraggableHeader の z-index のため */
+}
+
+.table tr {
+  position: relative; /* DraggableRow の z-index のため */
+}
+
+/* DraggableHeader/DraggableRow に listeners が適用される要素のカーソル */
+/* useSortable が role="button" をつけるので、それをターゲットにする */
+.table th[role="button"],
+.table tr[role="button"] {
+  cursor: grab; /* ドラッグ可能を示すカーソル */
+}
+
+/* ドラッグ中の要素のスタイル (インラインスタイルで opacity/transform などは設定済み) */
+/* 必要であれば Draggable コンポーネントに data-* 属性を追加して、
+   [data-dragging="true"] のようなセレクタでスタイルを当てることも可能 */
+/* 例: ドラッグ中の影など
+.table [data-dragging="true"] {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+*/
+
+.pagination {
+  /* とりあえず空 */
+  margin-top: 1rem; /* ちょっとだけ上に余白つけとく */
+  display: flex; /* 横並びにする */
+  gap: 0.5rem; /* 要素間のスペース */
+  align-items: center; /* 垂直方向中央揃え */
+}
+
+/* ページネーションのボタンやセレクトのスタイル（任意） */
+.pagination button,
+.pagination select {
+  padding: 4px 8px;
+}
