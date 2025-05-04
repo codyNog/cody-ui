@@ -29,16 +29,16 @@ const convertValueByType = <T extends DatePickerType>(
 
   if (type === "single") {
     return dateToCalendarDate(value as Date);
-  } else if (type === "range") {
+  }
+  if (type === "range") {
     // DateRangeは直接DateValueとして使用できないため、
     // 単一の日付（範囲の開始日）を返す
     const range = dateRangeToCalendarDateRange(value as Date[]);
     return range?.start;
-  } else {
-    // 複数選択の場合は最初の日付を返す
-    const dates = dateArrayToCalendarDateArray(value as Date[]);
-    return dates && dates.length > 0 ? dates[0] : undefined;
   }
+  // 複数選択の場合は最初の日付を返す
+  const dates = dateArrayToCalendarDateArray(value as Date[]);
+  return dates && dates.length > 0 ? dates[0] : undefined;
 };
 
 // Calendar Icon SVG (Material Symbols - calendar_today)

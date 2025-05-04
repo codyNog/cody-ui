@@ -46,7 +46,7 @@ export const DockedDatePicker = forwardRef(function DockedDatePicker(
     (selectedDate: DatePickerValue<typeof type>) => {
       setTempValue(selectedDate);
     },
-    [type],
+    [],
   );
 
   // キャンセルボタンクリック時の処理

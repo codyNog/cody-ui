@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
-import { Grid, GridItem, GridRow, BentoGrid, BentoGridItem } from ".";
+import { BentoGrid, BentoGridItem, Grid, GridItem, GridRow } from ".";
 import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Grid> = {
