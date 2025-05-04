@@ -18,6 +18,8 @@ type RadioGroupProps = {
   options: {
     value: string;
     label: string;
+    /** Optionally disable this specific radio button */
+    isDisabled?: boolean;
   }[];
 } & Omit<RACRadioGroupProps, "className">; // Exclude RAC className
 
@@ -38,7 +40,11 @@ export const RadioGroup = ({
     >
       {label && <RACLabel className={styles.groupLabel}>{label}</RACLabel>}
       {options.map((option) => (
-        <Radio key={option.value} value={option.value}>
+        <Radio
+          key={option.value}
+          value={option.value}
+          isDisabled={option.isDisabled} // Pass isDisabled from option data
+        >
           {option.label}
         </Radio>
       ))}
