@@ -1,7 +1,7 @@
+import clsx from "clsx"; // スタイルを結合するために clsx を使うのがおすすめ
+import { forwardRef } from "react";
 import { Separator, type SeparatorProps } from "react-aria-components";
 import styles from "./index.module.css";
-import { forwardRef } from "react";
-import clsx from "clsx"; // スタイルを結合するために clsx を使うのがおすすめ
 
 type Props = {
   /**

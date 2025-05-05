@@ -37,7 +37,7 @@ type MenuItemData = {
   /** Whether the item is disabled (optional, only for type='item'). */
   isDisabled?: boolean;
   /** Array of MenuItemData for submenu items (optional, only for type='item'). */
-  children?: MenuItemData[];
+  items?: MenuItemData[];
 };
 
 /**

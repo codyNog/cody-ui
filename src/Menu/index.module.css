@@ -1,0 +1,110 @@
+.button {
+  /* TODO: Use styles from existing Button component or define M3-like button styles */
+  padding: 8px 16px;
+  border: 1px solid var(--md-sys-color-outline); /* M3 Outline */
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.popover {
+  background-color: var(--md-sys-color-surface-container-high); /* M3 Surface Container High - Fallback removed */
+  border-radius: 4px;
+  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.2), 0 4px 5px 0 rgb(0 0 0 / 0.14), 0
+    1px 10px 0 rgb(0 0 0 / 0.12); /* M3 Elevation 2 */
+  min-width: 112px; /* M3 spec */
+  max-width: 280px; /* M3 spec */
+  overflow: auto; /* Enable scrolling if content overflows */
+  padding: 8px 0; /* M3 spec: 8dp top/bottom padding */
+}
+
+/* Entering state */
+.popover[data-entering] {
+  animation: fadeIn 200ms ease-out;
+}
+
+/* Exiting state */
+.popover[data-exiting] {
+  animation: fadeOut 150ms ease-in;
+}
+
+.menu {
+  outline: none; /* Remove default focus outline */
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: 0 12px; /* M3 spec: 12dp horizontal padding */
+  height: 48px; /* M3 spec: 48dp height */
+  cursor: pointer;
+  outline: none;
+  color: var(--md-sys-color-on-surface); /* M3 On Surface - Fallback removed */
+  font-family: var(--md-sys-typescale-body-large-font-family-name), sans-serif; /* Fallback removed */
+  font-size: var(--md-sys-typescale-body-large-font-size); /* Fallback removed */
+  font-weight: var(--md-sys-typescale-body-large-font-weight); /* Removed fallback */
+  line-height: var(--md-sys-typescale-body-large-line-height); /* Removed fallback */
+  letter-spacing: var(--md-sys-typescale-body-large-tracking); /* Removed fallback */
+}
+
+.menuItem.focused {
+  background-color: var(--md-sys-color-surface-container-highest-hover); /* M3 On Surface, 8% opacity - Fallback removed */
+}
+
+.menuItem.disabled {
+  color: var(--md-sys-color-on-surface-disabled); /* M3 On Surface, 38% opacity - Fallback removed */
+  cursor: default;
+}
+.leadingIcon {
+  margin-right: 12px; /* M3 spec: 12dp margin */
+  display: flex;
+  align-items: center;
+  color: var(--md-sys-color-on-surface-variant); /* M3 On Surface Variant - Fallback removed */
+}
+
+.label {
+  flex-grow: 1;
+  /* Text styles are already applied to menuItem */
+}
+
+.trailingIcon {
+  margin-left: 12px; /* M3 spec: 12dp margin */
+  display: flex;
+  align-items: center;
+  color: var(--md-sys-color-on-surface-variant); /* M3 On Surface Variant - Fallback removed */
+}
+
+/* Style for submenu indicator (usually a chevron) */
+.menuItem[data-rac-has-submenu]::after {
+  content: "▶"; /* Simple indicator, replace with proper icon if available */
+  margin-left: auto; /* Push to the right */
+  font-size: 0.8em;
+  color: var(--md-sys-color-on-surface-variant); /* Fallback removed */
+}
+
+.separator {
+  height: 1px;
+  background-color: var(--md-sys-color-outline-variant); /* M3 Outline Variant - Fallback removed */
+  margin: 8px 0; /* M3 spec: 8dp top/bottom margin */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
