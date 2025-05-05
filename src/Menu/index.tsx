@@ -1,21 +1,20 @@
+import type { ComponentProps, ReactNode } from "react";
 import {
-  Menu as RACMenu,
-  MenuItem as RACMenuItem,
   MenuTrigger,
   Popover,
+  Menu as RACMenu,
+  MenuItem as RACMenuItem,
   Separator,
   SubmenuTrigger,
   composeRenderProps,
 } from "react-aria-components";
 import type {
-  MenuProps as RACMenuProps,
-  SeparatorProps,
-  PopoverProps,
-  Selection, // Selection を react-aria-components からインポート
   Key, // Key も react-aria-components からインポート (react-aria からでも良いが統一)
+  PopoverProps,
+  MenuProps as RACMenuProps,
+  Selection, // Selection を react-aria-components からインポート
+  SeparatorProps,
 } from "react-aria-components";
-import clsx from "clsx";
-import type { ComponentProps, ReactNode } from "react";
 import styles from "./index.module.css";
 
 // --- Type Definitions based on docs/components/Menu.md ---
@@ -107,10 +106,9 @@ const InternalMenuItem = ({ item, ...props }: InternalMenuItemProps) => {
       className={composeRenderProps(
         props.className,
         (className, { isFocused, isDisabled: racIsDisabled }) =>
-          clsx(styles.menuItem, className, {
-            [styles.focused]: isFocused,
-            [styles.disabled]: racIsDisabled, // Use state from RAC
-          }),
+          `${styles.menuItem} ${className || ""} ${
+            isFocused ? styles.focused : ""
+          } ${racIsDisabled ? styles.disabled : ""}`.trim(),
       )}
     >
       {item.leadingIcon && (

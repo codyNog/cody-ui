@@ -1,5 +1,4 @@
 "use client";
-import { clsx } from "clsx"; // Use clsx for conditional classes
 import type React from "react";
 import {
   type ReactNode,
@@ -147,14 +146,11 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         }}
         onPress={handlePress}
         className={(renderProps) =>
-          clsx(
-            styles.button,
-            styles[variant],
-            renderProps.isPressed && styles.pressed,
-            renderProps.isFocused && styles.focused,
-            renderProps.isHovered && styles.hovered,
-            props.isDisabled && styles.disabled,
-          )
+          `${styles.button} ${styles[variant]} ${
+            renderProps.isPressed ? styles.pressed : ""
+          } ${renderProps.isFocused ? styles.focused : ""} ${
+            renderProps.isHovered ? styles.hovered : ""
+          } ${props.isDisabled ? styles.disabled : ""}`.trim()
         }
       >
         {/* Render children directly or via render prop */}

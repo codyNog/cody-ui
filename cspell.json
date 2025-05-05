@@ -12,7 +12,14 @@
   "allowCompoundWords": true,
   "dictionaryDefinitions": [],
   "ignoreRegExpList": ["/\\d+\\.\\d+\\.\\d+/"],
-  "ignoreWords": ["tamagui", "Tamagui", "rnstorybook"],
+  "ignoreWords": [
+    "tamagui",
+    "Tamagui",
+    "rnstorybook",
+    "bento",
+    "Bento",
+    "unparse"
+  ],
   "patterns": [
     {
       "name": "camelCase",

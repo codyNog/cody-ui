@@ -1,4 +1,3 @@
-import clsx from "clsx"; // スタイルを結合するために clsx を使うのがおすすめ
 import { forwardRef } from "react";
 import { Separator, type SeparatorProps } from "react-aria-components";
 import styles from "./index.module.css";
@@ -22,12 +21,9 @@ export const Divider = forwardRef<HTMLHRElement, Props>(
       <Separator
         ref={ref}
         orientation={orientation}
-        className={clsx(
-          styles.divider,
-          styles[orientation], // horizontal か vertical のスタイルを適用
-          { [styles.inset]: inset }, // inset が true なら inset スタイルを適用
-          className,
-        )}
+        className={`${styles.divider} ${styles[orientation]} ${
+          inset ? styles.inset : ""
+        } ${className || ""}`.trim()}
         {...props}
       />
     );
