@@ -1,0 +1,49 @@
+/* --- DEBUGGING: Minimal Tooltip Styles --- */
+.tooltip {
+  position: absolute; /* Required by react-aria */
+  top: 0; /* Default, will be overridden */
+  left: 0; /* Default, will be overridden */
+
+  /* Restore basic appearance */
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  background-color: var(--md-sys-color-inverse-surface);
+  color: var(--md-sys-color-inverse-on-surface);
+  box-shadow: var(--md-sys-elevation-level1); /* Or appropriate elevation */
+  padding: 4px 8px; /* M3 spec for plain (default) */
+  font: var(--md-sys-typescale-body-small); /* Default font */
+  /* border: 1px solid black; */ /* Remove debug border */
+  z-index: 1000;
+  /* opacity: 1; */ /* Remove forced opacity, let Aria control visibility */
+  pointer-events: auto; /* Allow hover */
+  /* Remove all other styles like border-radius, shadow, font, max-width etc. */
+}
+
+/* Variant-specific styles */
+.plain {
+  /* Already has padding: 4px 8px; */
+  /* font: var(--md-sys-typescale-body-small); */
+  /* Already set */
+}
+
+.rich {
+  padding: 12px 16px; /* M3 spec for rich */
+  font: var(--md-sys-typescale-body-medium); /* M3 spec for rich */
+  max-width: 250px; /* Example max-width */
+  /* display: flex; Remove flex layout */
+  /* flex-direction: column; Remove flex layout */
+  /* gap: 8px; Remove flex layout gap */
+}
+
+/* Actions container styles */
+.actions {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 8px; /* Space between action buttons */
+  margin-top: 4px; /* Small space above actions */
+}
+
+/* Placement styles (keep commented if not needed yet) */
+/* .tooltip[data-placement="..."] { ... } */
+
+/* Remove arrow styles */
+/* .tooltip[data-placement="top"]::after { ... } */
