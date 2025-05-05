@@ -185,3 +185,6 @@ storybook-static/
 .github/copilot-instructions.md
 .ai-rules-version.json
 *storybook.log
+
+# CSS type definition files
+*.css.d.ts
