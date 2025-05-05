@@ -76,7 +76,7 @@
     "type-check": "tsc --noEmit",
     "format": "biome check --write .",
     "postplop": "npm run format",
-    "postinstall": "npm run gen && [ '$CI' != 'true' ] && npx @codynog/ai-rules",
+    "postinstall": "npm run gen && [ '$CI' != 'true' ] && npx ai-rules",
     "plop": "plop",
     "lint": "run-p lint:*",
     "lint:script": "npx biome check .",

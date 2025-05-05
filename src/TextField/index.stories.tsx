@@ -132,14 +132,14 @@ export const Interactive: Story = {
           {...args}
           variant="filled" // Explicitly set variant
           value={filledValue}
-          onChange={createHandleChange(setFilledValue, setFilledError)}
+          onChangeText={createHandleChange(setFilledValue, setFilledError)}
           errorMessage={filledError || args.errorMessage} // Show validation or storybook error
         />
         <TextField
           {...args}
           variant="outlined" // Explicitly set variant
           value={outlinedValue}
-          onChange={createHandleChange(setOutlinedValue, setOutlinedError)}
+          onChangeText={createHandleChange(setOutlinedValue, setOutlinedError)}
           errorMessage={outlinedError || args.errorMessage} // Show validation or storybook error
         />
       </div>
@@ -181,7 +181,7 @@ export const MultilineInteractive: Story = {
           {...args} // Pass all args like maxLines, label etc.
           variant="filled"
           value={filledValue}
-          onChange={createHandleChange(setFilledValue)}
+          onChangeText={createHandleChange(setFilledValue)}
           // Ensure multiline is explicitly true for this story's render
           multiline={true}
         />
@@ -189,7 +189,7 @@ export const MultilineInteractive: Story = {
           {...args} // Pass all args like maxLines, label etc.
           variant="outlined"
           value={outlinedValue}
-          onChange={createHandleChange(setOutlinedValue)}
+          onChangeText={createHandleChange(setOutlinedValue)}
           // Ensure multiline is explicitly true for this story's render
           multiline={true}
         />

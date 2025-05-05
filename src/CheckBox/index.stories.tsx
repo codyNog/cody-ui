@@ -81,7 +81,7 @@ export const Interactive: Story = {
     const handleChange = (newSelected: boolean) => {
       setSelected(newSelected);
       setIndeterminate(false);
-      args.onChange?.(newSelected);
+      args.onChangeChecked?.(newSelected);
     };
 
     return (
@@ -97,7 +97,7 @@ export const Interactive: Story = {
           {...args}
           isSelected={selected}
           isIndeterminate={indeterminate}
-          onChange={handleChange}
+          onChangeChecked={handleChange}
         >
           {args.children ?? "Interactive Checkbox"}
         </Checkbox>
