@@ -68,7 +68,7 @@
     "@codynog/cody-ui": "./dist/index.js"
   },
   "optionalDependencies": {
-    "@codynog/ai-rules": "latest"
+    "@codynog/ai-rules": "^2025.4.13"
   },
   "scripts": {
     "extract": "echo 'Extract functionality removed as per user request'",

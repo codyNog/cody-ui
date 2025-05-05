@@ -178,7 +178,10 @@ dist
 storybook-static/
 
 # ai-rules
-.cursorrules
+.cursor/rules
 .clinerules
+.roo/rules*
+.roomodes
+.github/copilot-instructions.md
 .ai-rules-version.json
 *storybook.log

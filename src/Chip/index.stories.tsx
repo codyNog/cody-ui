@@ -1,13 +1,13 @@
-import type { ComponentProps } from "react"; // Use type import
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
+import type { ComponentProps } from "react"; // Use type import
+import { Chip as Component } from ".";
 import {
   MdArrowDropDown,
   MdClose,
   MdLightbulbOutline,
   MdPerson,
 } from "../Icons"; // Import necessary icons
-import { Chip as Component } from ".";
 import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
