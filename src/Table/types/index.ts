@@ -16,13 +16,13 @@ export type TableOperationMode = "client" | "server";
 export type Id = string | number;
 export type DataWithId = { id: Id };
 
-type Filter =
-  | ({
-      key: string;
-    } & {
+type Filter = {
+  key: string;
+} & (
+  | {
       type: "text";
       value: string;
-    })
+    }
   | {
       type: "number";
       value: number;
@@ -32,9 +32,14 @@ type Filter =
       value: Date;
     }
   | {
-      type: "term";
+      type: "dateRange";
       value: Date[];
-    };
+    }
+  | {
+      type: "boolean";
+      value: boolean;
+    }
+);
 
 export interface TableProps<TData extends DataWithId> {
   // --- 基本データ ---

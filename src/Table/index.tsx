@@ -6,6 +6,7 @@ import { Pagination } from "./Pagination";
 import { useTable } from "./hooks"; // useTable をインポート
 import styles from "./index.module.css";
 import type { DataWithId, TableProps } from "./types";
+import { Chip } from "../Chip";
 // 不要になったインポートを削除: unparse, format, useCallback
 
 export const Table = <TData extends DataWithId>(props: TableProps<TData>) => {
@@ -36,6 +37,7 @@ export const Table = <TData extends DataWithId>(props: TableProps<TData>) => {
     onColumnOrderChange,
     onPaginationChange,
     onCsvDownloadRequest, // ボタン表示の判定に使用
+    filter,
   } = props;
 
   // ページネーションが必要かどうかを判断
@@ -57,6 +59,15 @@ export const Table = <TData extends DataWithId>(props: TableProps<TData>) => {
       onDragEnd={handleDragEnd}
     >
       <div className={className}>
+        {filter?.map((filter) => (
+          <Chip key={filter.key} variant="filter" isSelected={!!filter.value}>
+            {filter.type === "dateRange" && String(filter.value)}
+            {filter.type === "boolean" && String(filter.value)}
+            {filter.type === "date" && String(filter.value)}
+            {filter.type === "number" && String(filter.value)}
+            {filter.type === "text" && String(filter.value)}
+          </Chip>
+        ))}
         <table className={styles.table}>
           {caption && <caption>{caption}</caption>}
           <thead>
