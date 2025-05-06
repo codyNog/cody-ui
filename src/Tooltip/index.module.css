@@ -1,49 +1,141 @@
-/* --- DEBUGGING: Minimal Tooltip Styles --- */
-.tooltip {
-  position: absolute; /* Required by react-aria */
-  top: 0; /* Default, will be overridden */
-  left: 0; /* Default, will be overridden */
+/* Base styles for Tooltip Action Button */
+.tooltipAction {
+  composes: typescale-label-large from global; /* Use M3 Label Large */
+  position: relative; /* Needed for state layer */
+  overflow: hidden; /* Needed for state layer */
+  border-radius: var(--space-5); /* 20px, using space variable */
+  padding: var(--space-2) var(--space-3); /* 8px 12px, from .text variant */
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-in-out; /* Only transition shadow */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2); /* 8px */
+  text-decoration: none;
+  outline: none; /* react-aria handles focus */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+  background-color: transparent; /* From .text variant */
+  color: var(--md-sys-color-primary); /* From .text variant */
+}
 
-  /* Restore basic appearance */
-  border-radius: var(--md-sys-shape-corner-extra-small);
+/* State Layer for Tooltip Action Button */
+.tooltipAction::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: transparent; /* Initial state is transparent */
+  transition: background-color 0.2s ease-in-out;
+  z-index: 0; /* Behind content */
+}
+
+.tooltipAction:active::before {
+  /* Changed from .pressed to :active */
+  background-color: color-mix(
+    in srgb,
+    currentcolor
+      calc(var(--md-sys-state-pressed-state-layer-opacity, 0.12) * 100%),
+    transparent
+  );
+  transition: background-color 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tooltipAction > * {
+  position: relative; /* Ensure content is above state layer */
+  z-index: 1;
+}
+
+/* Hover, Focus, Pressed States using State Layer for Tooltip Action Button */
+.tooltipAction:hover::before {
+  /* Changed from .hovered to :hover */
+  background-color: color-mix(
+    in srgb,
+    currentcolor calc(var(--md-sys-state-hover-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+.tooltipAction:focus-visible::before {
+  /* Changed from .focused to :focus-visible */
+  background-color: color-mix(
+    in srgb,
+    currentcolor calc(var(--md-sys-state-focus-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+/* .tooltipAction:active::before is already defined above, so removing .pressed here */
+
+/* Disabled State Base for Tooltip Action Button */
+.tooltipAction:disabled {
+  /* Changed from .disabled to :disabled */
+  color: var(--md-sys-color-on-surface);
+  opacity: 0.38; /* Text disabled opacity */
+  cursor: not-allowed;
+  box-shadow: var(--md-sys-elevation-level0); /* Use M3 token */
+  background-color: transparent; /* From .text.disabled variant */
+  border: none; /* From .text.disabled variant */
+}
+.tooltipAction:disabled::before {
+  background-color: transparent !important; /* No state layer on disabled, ensure override */
+}
+
+/* New styles for the Tooltip popup itself */
+/* Base styles for all tooltip popups */
+.tooltipPopupBase {
+  max-width: 240px; /* Or as per M3 guidelines if specified, else a reasonable default */
+  /* width: 200px; */ /* Removed fixed width from base */
+  word-wrap: break-word;
+  z-index: 1000; /* Ensure it's above other content, consider a global z-index variable */
+  /* No box-shadow for M3 tooltips by default */
+}
+
+/* Styles for Plain Tooltip */
+.tooltipPopupPlain {
+  composes: typescale-body-small from global;
+  composes: tooltipPopupBase;
   background-color: var(--md-sys-color-inverse-surface);
+  /* color for supporting text will be handled by .tooltipContent in .tooltipPopupPlain .tooltipContent */
+  padding: var(--space-1) var(--space-2); /* 4dp vertical, 8dp horizontal */
+  border-radius: var(--md-sys-shape-corner-extra-small); /* M3 Extra Small corner (4dp) */
+  width: fit-content; /* Plain tooltip should fit its content */
+}
+
+/* Styles for Rich Tooltip */
+.tooltipPopupRich {
+  composes: tooltipPopupBase; /* Base styles first */
+  background-color: var(--md-sys-color-surface-container);
+  /* color for supporting text will be handled by .tooltipContent */
+  padding: var(--space-4); /* 16dp */
+  border-radius: var(--space-2); /* M3 Small corner (8dp), using existing space variable */
+  min-width: 180px; /* Ensure a minimum width for rich tooltips */
+  display: flex; /* To allow stacking of title, content, and actions */
+  flex-direction: column; /* Stack them vertically */
+  gap: var(--space-2); /* Gap between title/content and actions, adjust as needed */
+}
+
+/* Styles for Rich Tooltip Title */
+.richTitle {
+  composes: typescale-body-medium from global;
+  color: var(--md-sys-color-on-surface); /* M3 Title color */
+  /* margin-bottom: var(--space-1); */ /* Gap is handled by parent flex container */
+}
+
+/* Styles for Tooltip Content (Supporting Text) */
+.tooltipContent {
+  composes: typescale-body-small from global;
+  /* Default color, will be overridden for plain tooltip */
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tooltipPopupPlain .tooltipContent {
   color: var(--md-sys-color-inverse-on-surface);
-  box-shadow: var(--md-sys-elevation-level1); /* Or appropriate elevation */
-  padding: 4px 8px; /* M3 spec for plain (default) */
-  font: var(--md-sys-typescale-body-small); /* Default font */
-  /* border: 1px solid black; */ /* Remove debug border */
-  z-index: 1000;
-  /* opacity: 1; */ /* Remove forced opacity, let Aria control visibility */
-  pointer-events: auto; /* Allow hover */
-  /* Remove all other styles like border-radius, shadow, font, max-width etc. */
 }
 
-/* Variant-specific styles */
-.plain {
-  /* Already has padding: 4px 8px; */
-  /* font: var(--md-sys-typescale-body-small); */
-  /* Already set */
-}
-
-.rich {
-  padding: 12px 16px; /* M3 spec for rich */
-  font: var(--md-sys-typescale-body-medium); /* M3 spec for rich */
-  max-width: 250px; /* Example max-width */
-  /* display: flex; Remove flex layout */
-  /* flex-direction: column; Remove flex layout */
-  /* gap: 8px; Remove flex layout gap */
-}
-
-/* Actions container styles */
 .actions {
   display: flex;
-  justify-content: flex-start; /* Align buttons to the left */
-  gap: 8px; /* Space between action buttons */
-  margin-top: 4px; /* Small space above actions */
+  justify-content: flex-start; /* M3 typically aligns actions to the end */
+  gap: var(--space-2);
+  /* padding-top is handled by the parent's (tooltipPopupRich) gap or direct padding if needed */
+  /* M3 Rich Tooltips might have a Divider here:
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-top: var(--space-2); */
 }
-
-/* Placement styles (keep commented if not needed yet) */
-/* .tooltip[data-placement="..."] { ... } */
-
-/* Remove arrow styles */
-/* .tooltip[data-placement="top"]::after { ... } */
