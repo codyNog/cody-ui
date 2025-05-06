@@ -1,0 +1,163 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 28px;
+  background-color: var(--md-sys-color-surface-container-high); /* M3 Surface Container High */
+  color: var(--md-sys-color-on-surface); /* M3 On Surface */
+  box-shadow: var(--md-sys-elevation-level3); /* M3 Elevation Level 3 */
+  max-width: 560px; /* M3 Dialog width */
+  min-width: 280px; /* M3 Dialog min width */
+}
+
+.dialogFullScreen {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--md-sys-color-secondary); /* M3 Secondary */
+  font-size: 24px; /* M3 Icon size */
+  margin-bottom: 16px; /* M3 Spacing */
+}
+
+.headline {
+  font: var(--md-sys-typescale-headline-small-font); /* M3 Headline Small */
+  letter-spacing: var(--md-sys-typescale-headline-small-tracking);
+  color: var(--md-sys-color-on-surface); /* M3 On Surface */
+  margin: 0;
+  text-align: center;
+}
+
+.supportingText {
+  font: var(--md-sys-typescale-body-medium-font); /* M3 Body Medium */
+  letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+  color: var(--md-sys-color-on-surface-variant); /* M3 On Surface Variant */
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px; /* M3 Spacing */
+}
+
+/* Basic button styling, assuming Button component will be used later */
+.actions button {
+  padding: 10px 24px;
+  border-radius: 20px; /* M3 Button corner radius */
+  border: none;
+  cursor: pointer;
+  font: var(--md-sys-typescale-label-large-font);
+  letter-spacing: var(--md-sys-typescale-label-large-tracking);
+}
+
+/* Example for a primary action button */
+.actions button:last-child {
+  background-color: var(--md-sys-color-primary); /* M3 Primary */
+  color: var(--md-sys-color-on-primary); /* M3 On Primary */
+}
+
+/* Example for a secondary/text action button */
+.actions button:not(:last-child) {
+  background-color: transparent;
+  color: var(--md-sys-color-primary); /* M3 Primary */
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* 半透明の黒背景 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* 他の要素より手前に表示 */
+}
+
+.modal {
+  /* Modal自体のスタイルはDialogコンポーネント側で制御するので、ここでは最小限に */
+  outline: none; /* フォーカス時のアウトラインを消す */
+}
+
+.modalOverlayFullScreen {
+  position: fixed;
+  inset: 0;
+  background-color: var(--md-sys-color-surface-container-high); /* M3 Surface Container High, or specific color for full-screen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow: hidden; /* Prevent scrollbars on the overlay itself */
+}
+
+.modalFullScreen {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  display: flex; /* Ensure dialog inside takes full space */
+  flex-direction: column; /* Ensure dialog inside takes full space */
+}
+
+/* .dialogFullScreen is already defined, ensure it works with the new structure */
+/* It should be applied to the AriaDialog component inside FullScreenDialog.tsx */
+/* Make sure .dialogFullScreen styles are appropriate for a container within .modalFullScreen */
+.dialogFullScreen {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent dialog itself from scrolling, content will scroll */
+  background-color: var(--md-sys-color-surface); /* M3 Surface for full-screen dialogs */
+  padding: 0; /* Reset padding, header/content will manage их own */
+}
+
+.fullScreenHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 4px 12px 16px; /* M3 spec: 4dp from icon, 16dp from edge */
+  border-bottom: 1px solid var(--md-sys-color-outline-variant); /* M3 Divider */
+  flex-shrink: 0; /* Prevent header from shrinking */
+  background-color: var(--md-sys-color-surface-container-low); /* Optional: Header background */
+}
+
+.fullScreenHeadline {
+  font: var(--md-sys-typescale-title-large-font); /* M3 Title Large */
+  letter-spacing: var(--md-sys-typescale-title-large-tracking);
+  color: var(--md-sys-color-on-surface);
+  margin: 0 16px; /* Spacing around title */
+  flex-grow: 1; /* Allow title to take available space if actions are few */
+  text-align: left; /* Align to left, not center like basic dialog */
+}
+
+.fullScreenHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 12px; /* M3 spec: 12dp from edge for actions */
+}
+
+/* Ensure Button component styles are compatible or override if needed for text buttons in header */
+.fullScreenHeaderActions button {
+  /* Assuming Button component's 'text' variant handles this well */
+  /* Override if necessary, e.g., color for header actions */
+  color: var(--md-sys-color-primary);
+}
+
+.fullScreenContent {
+  flex-grow: 1;
+  padding: 24px; /* M3 Content padding */
+  overflow-y: auto; /* Enable scrolling for content */
+  color: var(--md-sys-color-on-surface);
+}

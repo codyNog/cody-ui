@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
 import { Tooltip as Component } from ".";
-import { getCanvas } from "../libs/storybook";
 import { Button } from "../Button";
-import { Switch } from "../Switch";
-import { TextField } from "../TextField";
 import { Chip } from "../Chip";
+import { TextField } from "../TextField";
+import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
   component: Component,
