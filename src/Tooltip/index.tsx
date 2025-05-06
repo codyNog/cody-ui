@@ -14,18 +14,19 @@ type Action = {
 
 type BaseProps = {
   children?: ReactNode;
-  content: string;
 };
 
 type PlainTooltipProps = BaseProps & {
   variant?: "plain";
   actions?: never;
+  content: string;
 };
 
 type RichTooltipProps = BaseProps & {
   variant: "rich";
   title: string;
   actions: Action[];
+  content: ReactNode;
 };
 
 type Props = PlainTooltipProps | RichTooltipProps;
@@ -45,27 +46,32 @@ export const Tooltip = forwardRef<HTMLDivElement, Props>(
       .join(" ");
 
     return (
-      <TooltipTrigger delay={0}>
+      <TooltipTrigger delay={100}>
         {children}
         <AriaTooltip ref={ref} className={tooltipPopupClasses}>
-          {isRich && title && <span className={styles.richTitle}>{title}</span>}
-          <span className={styles.tooltipContent}>{content}</span>
-          {isRich && actions && actions.length > 0 && (
-            <div className={styles.actions}>
-              {actions.map((action) => (
-                <button
-                  key={action.label}
-                  type="button"
-                  onClick={() => {
-                    action.onPress?.();
-                  }}
-                  disabled={action.isDisabled}
-                  className={styles.tooltipAction}
-                >
-                  {action.label}
-                </button>
-              ))}
-            </div>
+          {!isRich && <span className={styles.tooltipContent}>{content}</span>}
+          {isRich && (
+            <>
+              {title && <span className={styles.richTitle}>{title}</span>}
+              <div className={styles.richContent}>{content}</div>
+              {actions && actions.length > 0 && (
+                <div className={styles.actions}>
+                  {actions.map((action) => (
+                    <button
+                      key={action.label}
+                      type="button"
+                      onClick={() => {
+                        action.onPress?.();
+                      }}
+                      disabled={action.isDisabled}
+                      className={styles.tooltipAction}
+                    >
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </AriaTooltip>
       </TooltipTrigger>

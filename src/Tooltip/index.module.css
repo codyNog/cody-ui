@@ -129,6 +129,20 @@
 .tooltipPopupPlain .tooltipContent {
   color: var(--md-sys-color-inverse-on-surface);
 }
+/* Styles for Rich Tooltip Content */
+.richContent {
+  /* Add styles to ensure proper positioning and layout for rich content */
+  /* Example: */
+  width: 100%; /* Ensure it takes full width within the flex column */
+  /* Add other necessary styles like display, position, etc. if needed */
+  /* Let's also ensure the content itself doesn't break out unexpectedly */
+  word-wrap: break-word; /* To prevent long strings from breaking layout */
+  /* If the content has its own margins, we might want to reset them or control them */
+  margin: 0;
+  padding: 0;
+  position: relative; /* Ensure a positioning context for absolute children */
+  overflow: hidden; /* Prevent children from overflowing, as a safeguard */
+}
 
 .actions {
   display: flex;

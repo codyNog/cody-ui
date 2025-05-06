@@ -3,6 +3,9 @@ import { expect } from "@storybook/test";
 import { Tooltip as Component } from ".";
 import { getCanvas } from "../libs/storybook";
 import { Button } from "../Button";
+import { Switch } from "../Switch";
+import { TextField } from "../TextField";
+import { Chip } from "../Chip";
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -16,7 +19,7 @@ const args: Story["args"] = {};
 
 export const Default: Story = {
   args,
-  render: (args) => (
+  render: () => (
     <div style={{ display: "flex", gap: "16px" }}>
       <Component content="Edit" variant="plain">
         <Button>Edit</Button>
@@ -28,6 +31,14 @@ export const Default: Story = {
         actions={[{ label: "Edit", onPress: () => {} }]}
       >
         <Button>Edit</Button>
+      </Component>
+      <Component
+        title="Edit"
+        content={<TextField />}
+        variant="rich"
+        actions={[{ label: "Edit", onPress: () => {} }]}
+      >
+        <Chip>chip</Chip>
       </Component>
     </div>
   ),
