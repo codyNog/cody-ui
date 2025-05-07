@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { type SnackbarContent, useSnackbar } from "."; // SnackbarProviderのインポートを削除
 import { Button } from "../Button"; // プロジェクト内のButtonコンポーネントをインポート
-import { useSnackbar, type SnackbarContent } from "."; // SnackbarProviderのインポートを削除
 
 const meta = {
   component: undefined, // Snackbarコンポーネント自体は直接レンダリングしないためundefined

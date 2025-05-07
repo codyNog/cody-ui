@@ -4,8 +4,8 @@ import {
   type I18nProviderProps,
   OverlayProvider,
 } from "react-aria";
-import { SnackbarProvider, type SnackbarContent } from "../Snackbar";
 import { ToastQueue } from "react-stately";
+import { type SnackbarContent, SnackbarProvider } from "../Snackbar";
 
 export const Provider = ({
   children,

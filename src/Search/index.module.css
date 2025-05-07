@@ -1,0 +1,96 @@
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 360px; /* M3 spec */
+}
+
+.label {
+  font-size: 0.875rem; /* 14px */
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: var(--md-sys-color-surface-container-highest);
+  border-radius: 28px; /* M3 spec for full-width search */
+  padding: 0 16px;
+  height: 56px; /* M3 spec */
+  box-shadow: var(--md-sys-elevation-1);
+}
+
+.inputWrapper:has(:focus-visible) {
+  box-shadow: var(--md-sys-elevation-2);
+}
+
+.leadingIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  padding: 8px; /* Add some padding for easier clicking */
+  margin-right: 4px; /* Adjust margin */
+  border-radius: 50%;
+  transition: background-color 0.2s; /* Add transition for hover */
+}
+
+.leadingIcon:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-on-surface-variant) 8%,
+    transparent
+  );
+}
+
+.inputWrapper:has(:focus-visible) .leadingIcon {
+  color: var(--md-sys-color-primary); /* Example: change color on focus */
+}
+
+.leadingIcon svg {
+  font-size: 1.5rem; /* 24px */
+}
+
+.input {
+  flex-grow: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1rem; /* 16px */
+  height: 100%;
+}
+
+.input::placeholder {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  margin-left: 8px;
+}
+
+.clearButton:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-on-surface-variant) 8%,
+    transparent
+  );
+}
+
+.clearButton svg {
+  font-size: 1.25rem; /* 20px */
+}
