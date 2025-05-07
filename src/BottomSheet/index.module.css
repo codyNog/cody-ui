@@ -1,0 +1,64 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40; /* M3のDialogのscrimと同じ値を参考に */
+}
+
+.content {
+  position: fixed;
+  bottom: 0; /* 下から出てくる */
+  left: 0;
+  right: 0;
+  max-height: 90vh; /* 画面の高さの90%を最大に */
+  background-color: var(--md-sys-color-surface-container-low); /* M3の色 */
+  z-index: 50; /* overlayより手前 */
+  display: flex;
+  flex-direction: column;
+  padding: 16px; /* SideSheetより少し小さめ */
+  padding-top: 24px; /* 上部はハンドルとかあるかもだから少し広めに */
+  box-sizing: border-box;
+  box-shadow: var(--md-sys-elevation-level2); /* M3の影 */
+  border-top-left-radius: 28px; /* M3のBottomSheetの角丸参考 */
+  border-top-right-radius: 28px; /* M3のBottomSheetの角丸参考 */
+}
+
+/* vaulのハンドル部分のスタイル（仮） */
+.handle {
+  width: 32px;
+  height: 4px;
+  background-color: var(--md-sys-color-on-surface-variant);
+  border-radius: 2px;
+  margin: 0 auto 16px; /* 上部中央に配置 */
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-inline: 8px; /* contentのpaddingと合わせて24pxになるように */
+}
+
+.title {
+  font: var(--md-sys-typescale-headline-small-font);
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+.body {
+  flex-grow: 1;
+  overflow-y: auto;
+  color: var(--md-sys-color-on-surface-variant);
+  font: var(--md-sys-typescale-body-medium-font);
+  padding-inline: 8px; /* contentのpaddingと合わせて24pxになるように */
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+  padding-top: 16px; /* 区切り線っぽく見えるように */
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-inline: 8px; /* contentのpaddingと合わせて24pxになるように */
+}
