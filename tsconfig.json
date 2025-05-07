@@ -16,6 +16,12 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx"
   },
-  "include": ["cli.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "cli.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx"
+  ],
   "compileOnSave": true
 }
