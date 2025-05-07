@@ -18,7 +18,8 @@
     "rnstorybook",
     "bento",
     "Bento",
-    "unparse"
+    "unparse",
+    "vaul"
   ],
   "patterns": [
     {

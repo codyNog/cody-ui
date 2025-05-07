@@ -3,8 +3,8 @@ import {
   type DialogProps as AriaDialogElementProps, // Renamed to avoid conflict
   DialogTrigger as AriaDialogTrigger,
 } from "react-aria-components";
-import { FullScreenDialog } from "./FullScreen";
 import { BasicDialog } from "./Basic";
+import { FullScreenDialog } from "./FullScreen";
 import type { DialogProps, FullScreenDialogProps } from "./types";
 
 export const Dialog = (props: DialogProps) => {
