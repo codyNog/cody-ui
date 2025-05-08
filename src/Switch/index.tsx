@@ -4,9 +4,10 @@ import {
   type SwitchProps as AriaSwitchProps,
 } from "react-aria-components";
 import styles from "./index.module.css";
+import { MdCheck } from "../Icons";
 
 type SwitchProps = AriaSwitchProps & {
-  /** Optional icon to display within the switch thumb */
+  /** Optional icon to display within the switch thumb. Defaults to a checkmark when selected and no icon is provided. */
   icon?: ReactNode;
   checked?: boolean;
 };
@@ -26,6 +27,16 @@ export const Switch = ({
   checked,
   ...props
 }: SwitchProps) => {
+  const renderIcon = (isSelected: boolean) => {
+    if (icon) {
+      return icon;
+    }
+    if (isSelected) {
+      return <MdCheck />; // デフォルトのチェックアイコン
+    }
+    return null;
+  };
+
   return (
     <AriaSwitch
       {...props}
@@ -37,7 +48,8 @@ export const Switch = ({
           renderProps.isDisabled ? "disabled" : "",
           renderProps.isFocusVisible ? "focus-visible" : "",
           renderProps.isPressed ? "pressed" : "",
-          // icon ? styles.icon : "", // Remove this - styles.icon is for the icon element itself
+          // Add .withIcon class if an icon (custom or default check) is present
+          icon || renderProps.isSelected ? styles.withIcon : "",
           typeof className === "function"
             ? className(renderProps)
             : (className ?? ""),
@@ -45,22 +57,22 @@ export const Switch = ({
           .filter(Boolean)
           .join(" ")
       }
-      // data-* attributes are automatically handled by react-aria-components based on props
-      // We rely on the className render prop to apply state-based styles
-      // Add data-icon manually as it's a custom prop
-      data-icon={icon ? "" : undefined}
     >
-      {() => (
-        // Remove unused renderProps from here
-        <>
-          <div className={styles.track}>
-            <div className={styles.thumb}>
-              {icon && <div className={styles.icon}>{icon}</div>}
+      {(renderProps) => {
+        const currentIcon = renderIcon(renderProps.isSelected);
+        return (
+          <>
+            <div className={styles.track}>
+              <div className={styles.thumb}>
+                {currentIcon && (
+                  <div className={styles.icon}>{currentIcon}</div>
+                )}
+              </div>
             </div>
-          </div>
-          {children}
-        </>
-      )}
+            {children}
+          </>
+        );
+      }}
     </AriaSwitch>
   );
 };

@@ -1,15 +1,11 @@
 .root {
   --switch-track-width: 52px;
   --switch-track-height: 32px;
-  --switch-thumb-size: 24px;
+  --switch-thumb-size-off: 16px;
+  --switch-thumb-size-on: 24px;
   --switch-icon-size: 16px;
-  --switch-track-padding: 4px; /* Reverting to original calculation (track_height - thumb_size) / 2 */
-  --switch-thumb-offset-x: calc(
-    var(--switch-track-width) /* 52px */ -
-    var(--switch-thumb-size) /* 24px */ -
-    2 *
-    var(--switch-track-padding) /* 2 * 4px = 8px --> 52-24-8 = 20px */
-  );
+  --switch-track-padding: 4px;
+  /* --switch-thumb-offset-x will be calculated dynamically in transform */
 
   display: inline-flex;
   align-items: center;
@@ -34,27 +30,41 @@
 
 .thumb {
   position: absolute;
-  top: var(--switch-track-padding);
-  left: var(--switch-track-padding);
-  width: var(--switch-thumb-size);
-  height: var(--switch-thumb-size);
+  top: 50%;
+  /* Adjust left position for off state to center the smaller thumb */
+  left: calc(
+    var(--switch-track-padding) +
+    (var(--switch-thumb-size-on) - var(--switch-thumb-size-off)) /
+    2
+  );
+  width: var(--switch-thumb-size-off);
+  height: var(--switch-thumb-size-off);
   border-radius: 50%; /* Circular thumb */
   background-color: var(--md-sys-color-outline); /* Unselected thumb color */
   box-shadow: var(--md-sys-elevation-1);
-  transition: transform 150ms ease-in-out, background-color 150ms ease-in-out,
-    width 150ms ease-in-out, height 150ms ease-in-out;
-  /* display: flex; Remove flex properties, icon is absolutely positioned */
-  /* align-items: center; */
-  /* justify-content: center; */
-  /* Default icon color set below based on selection */
+  transition:
+    transform 150ms ease-in-out, background-color 150ms ease-in-out,
+    width 150ms ease-in-out, height 150ms ease-in-out, top 150ms ease-in-out, left 150ms ease-in-out;
+  display: flex; /* Icon centering */
+  align-items: center; /* Icon centering */
+  justify-content: center; /* Icon centering */
+  box-sizing: border-box;
+  transform: translateY(-50%);
+}
+
+/* Styles for when an icon is present (either custom or default checkmark) */
+.withIcon.thumb {
+  /* Adjust padding or size if needed when an icon is present */
+  /* For now, assume the icon fits within the standard thumb size */
 }
 
 .icon {
   width: var(--switch-icon-size);
   height: var(--switch-icon-size);
-  /* Visibility / Opacity is handled implicitly by presence in DOM */
-  transition: color 150ms ease-in-out; /* Transition color */
-  color: var(--md-sys-color-surface-container-highest); /* Default unselected icon color */
+  /* Visibility / Opacity is handled by opacity property */
+  opacity: 0; /* Hidden by default (off state) */
+  transition: opacity 150ms ease-in-out, color 150ms ease-in-out; /* Transition opacity and color */
+  /* Default icon color will be handled by specific state selectors below */
   /* Ensure icon is centered if thumb is flex container */
   position: absolute; /* Position icon within thumb */
   top: 50%;
@@ -69,7 +79,18 @@
 }
 
 .root[data-selected] .thumb {
-  transform: translateX(var(--switch-thumb-offset-x));
+  width: var(--switch-thumb-size-on);
+  height: var(--switch-thumb-size-on);
+  left: var(--switch-track-padding); /* Reset left for on state */
+  transform: translateX(
+      calc(
+        var(--switch-track-width) -
+        var(--switch-thumb-size-on) -
+        2 *
+        var(--switch-track-padding)
+      )
+    )
+    translateY(-50%);
   /* background-color set based on icon presence below */
 }
 
@@ -113,20 +134,29 @@
 
 /* Pressed state */
 .root:not([data-disabled]):active .thumb {
-  /* M3 uses a larger thumb on press */
+  /* M3 uses a larger thumb on press - 28px */
+  /* For off state, when active, it should grow from 16px to 28px */
+  /* For on state, when active, it should grow from 24px to 28px */
   width: 28px;
   height: 28px;
-  /* Adjust position slightly to keep centered feel */
-  /* With padding 4px, this becomes 4px - 0px = 4px? No, should center 28px in 32px box -> top 2px */
-  /* Let's recalculate based on 28px thumb in 32px track height */
-  /* Padding needed = (32 - 28) / 2 = 2px */
-  top: 2px;
-  left: 2px; /* Keep horizontal adjustment simple */
+  /* Adjust left for off state when pressed */
+  left: calc(
+    var(--switch-track-padding) +
+    (var(--switch-thumb-size-on) - 28px) /
+    2
+  );
 }
+
 .root[data-selected]:not([data-disabled]):active .thumb {
-  transform: translateX(var(--switch-thumb-offset-x));
-  /* top: 2px; Should inherit from above */
-  left: 2px; /* Keep left adjustment */
+  width: 28px;
+  height: 28px;
+  /* transform will use the new 28px size for calculation if we redefine offset, or adjust manually */
+  /* Keep left as per selected state, translateX will handle the rest */
+  left: var(--switch-track-padding);
+  transform: translateX(
+      calc(var(--switch-track-width) - 28px - 2 * var(--switch-track-padding))
+    )
+    translateY(-50%);
 }
 
 /* Disabled state */
@@ -157,59 +187,63 @@
   color: var(--md-sys-color-on-surface); /* Disabled selected icon color */
 }
 
-/* --- Icon Specific Styles --- */
+/* --- Icon Color Styles (Applied when icon is present, regardless of data-icon attribute) --- */
 
-/* Unselected Icon State */
-.root[data-icon]:not([data-selected]) .thumb {
+/* Unselected Icon Color */
+.root:not([data-selected]):not([data-disabled]) .icon {
+  color: var(--md-sys-color-surface-container-highest);
+}
+/* Selected Icon Color */
+.root[data-selected]:not([data-disabled]) .icon {
+  color: var(--md-sys-color-on-primary-container);
+  opacity: 1; /* Show icon in selected state */
+}
+
+/* Disabled Unselected Icon Color */
+.root[data-disabled]:not([data-selected]) .icon {
+  color: var(--md-sys-color-on-surface);
+}
+/* Disabled Selected Icon Color - already handled by .root[data-selected][data-disabled] .icon */
+
+/* --- Thumb background and border styles based on icon presence and state --- */
+
+/* Unselected Icon State - Thumb Style */
+.root.withIcon:not([data-selected]) .thumb {
   background-color: transparent;
   border: 2px solid var(--md-sys-color-outline);
   box-sizing: border-box;
 }
-.root[data-icon]:not([data-selected]) .icon {
-  color: var(--md-sys-color-surface-container-highest); /* Explicitly set unselected icon color */
-}
 
-/* Selected Icon State */
-.root[data-icon][data-selected] .thumb {
-  transform: translateX(var(--switch-thumb-offset-x)); /* Ensure transform is applied */
+/* Selected Icon State - Thumb Style */
+.root.withIcon[data-selected] .thumb {
   background-color: var(--md-sys-color-primary-container); /* M3 uses primary container for selected icon thumb */
   border: none;
 }
-.root[data-icon][data-selected] .icon {
-  color: var(--md-sys-color-on-primary-container); /* M3 uses on-primary-container for selected icon */
-}
 /* Ensure selected track color applies even with icon */
-.root[data-icon][data-selected] .track {
+.root.withIcon[data-selected] .track {
   background-color: var(--md-sys-color-primary);
   border-color: var(--md-sys-color-primary);
 }
 
-/* Disabled Unselected Icon State */
-.root[data-icon][data-disabled]:not([data-selected]) .thumb {
+/* Disabled Unselected Icon State - Thumb Style */
+.root.withIcon[data-disabled]:not([data-selected]) .thumb {
   border-color: var(--md-sys-color-on-surface);
   background-color: transparent;
 }
-.root[data-icon][data-disabled]:not([data-selected]) .icon {
-  color: var(--md-sys-color-on-surface); /* Disabled unselected icon color */
-}
 
-/* Disabled Selected Icon State */
-.root[data-icon][data-selected][data-disabled] .thumb {
-  transform: translateX(var(--switch-thumb-offset-x)); /* Ensure transform is applied */
+/* Disabled Selected Icon State - Thumb Style */
+.root.withIcon[data-selected][data-disabled] .thumb {
   background-color: transparent; /* Disabled selected thumb is transparent */
   border-color: var(--md-sys-color-on-surface); /* Use disabled border color */
-  /* Ensure border is applied */
   border-width: 2px;
   border-style: solid;
   box-sizing: border-box;
 }
-.root[data-icon][data-selected][data-disabled] .icon {
-  color: var(--md-sys-color-on-surface); /* Disabled selected icon color */
-}
 
 /* --- Default Switch Specific Styles (No Icon) --- */
-.root:not([data-icon])[data-selected] .thumb {
-  transform: translateX(var(--switch-thumb-offset-x)); /* Ensure transform is applied */
+/* This means .root:not(.withIcon) */
+.root:not(.withIcon)[data-selected] .thumb {
+  /* transform is already handled by .root[data-selected] .thumb, which now includes translateY */
   background-color: var(--md-sys-color-on-primary);
 }
 /* Track color already handled by general .root[data-selected] .track */
