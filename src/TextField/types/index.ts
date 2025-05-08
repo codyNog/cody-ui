@@ -63,4 +63,5 @@ export type Props = BaseTextFieldProps & {
    */
   required?: boolean;
   onChangeText?: (text: string) => void;
+  supportingText?: string;
 };

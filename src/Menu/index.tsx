@@ -62,6 +62,10 @@ type MenuProps = {
    * Uses react-aria-components Popover placement options.
    */
   placement?: PopoverProps["placement"]; // Use PopoverProps['placement']
+  /** The offset of the menu relative to the trigger (optional). */
+  offset?: number;
+  /** Whether the menu should match the width of the trigger (optional, default: false). */
+  matchTriggerWidth?: boolean;
   /** Whether the entire menu is disabled (optional, default: false). */
   isDisabled?: boolean;
   /** Accessibility label for the menu (optional). */
@@ -165,6 +169,8 @@ export const Menu = ({
   items,
   onAction,
   placement = "bottom start",
+  offset,
+  matchTriggerWidth = true,
   isDisabled,
   "aria-label": ariaLabel,
   selectionMode = "none",
@@ -172,7 +178,6 @@ export const Menu = ({
   defaultSelectedKeys,
   onSelectionChange,
 }: MenuProps) => {
-  // Extract RACMenuProps for clarity
   const menuProps: RACMenuProps<object> = {
     onAction,
     "aria-label": ariaLabel,
@@ -180,17 +185,17 @@ export const Menu = ({
     selectedKeys,
     defaultSelectedKeys,
     onSelectionChange,
-    // ReadonlyArray でも map は使えるのでここは変更不要だが、念のため確認
     disabledKeys: isDisabled ? items.map((item) => item.id) : undefined, // Disable all if menu is disabled
   };
 
   return (
     <MenuTrigger>
-      {" "}
-      {/* isDisabled を削除 */}
-      {/* Trigger element provided by the user */}
       {children}
-      <Popover placement={placement} className={styles.popover}>
+      <Popover
+        placement={placement}
+        offset={offset} // Pass offset to Popover
+        className={`${styles.popover} ${matchTriggerWidth ? styles.matchTriggerWidthPopover : ""}`}
+      >
         <RACMenu {...menuProps} className={styles.menu}>
           {renderMenuItems(items)}
         </RACMenu>

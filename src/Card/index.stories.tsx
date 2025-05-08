@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Card } from ".";
-import { Grid, GridRow, GridItem } from "../Grid";
+import { Grid, GridItem, GridRow } from "../Grid";
 
 const meta = {
   component: Card,

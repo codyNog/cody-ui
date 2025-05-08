@@ -1,7 +1,7 @@
 "use client";
-import { forwardRef, type HTMLAttributes } from "react";
-import styles from "./index.module.css";
+import { type HTMLAttributes, forwardRef } from "react";
 import { Button } from "../Button"; // Assuming Button component exists
+import styles from "./index.module.css";
 
 type Props = {
   headline?: string;
