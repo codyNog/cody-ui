@@ -1,13 +1,14 @@
 "use client";
 import {
-  forwardRef,
   type ComponentProps,
   type ReactNode,
+  forwardRef,
   useCallback,
   useState,
 } from "react";
-import { VisuallyHidden, useFocusRing } from "react-aria";
+import { useFocusRing } from "react-aria"; // VisuallyHidden を削除
 import { Link } from "react-aria-components";
+import { Badge } from "../Badge"; // Badgeコンポーネントをインポート (パス修正)
 import styles from "./index.module.css";
 
 type NavigationItem = {
@@ -45,15 +46,19 @@ const NavigationRailItem = ({
     <>
       <div className={styles.iconContainer}>
         <span className={styles.icon}>{item.icon}</span>
-        {item.badge && (
-          <span
-            className={`${styles.badge} ${
-              item.badge === "small" ? styles.small : ""
-            }`}
-          >
-            {typeof item.badge === "number" && item.badge}
-            {item.badge === "large" && <VisuallyHidden>New</VisuallyHidden>}
-          </span>
+        {/* 新しいBadgeコンポーネントを使用 */}
+        {item.badge !== undefined && (
+          <div className={styles.badgeContainer}>
+            {" "}
+            {/* Badgeの位置調整用コンテナ */}
+            {typeof item.badge === "number" && (
+              <Badge variant="large" count={item.badge} />
+            )}
+            {item.badge === "small" && <Badge variant="small" />}
+            {/* item.badge === "large" の場合、M3のlargeはcountが必須なため、smallで代用 */}
+            {/* もしテキスト等を表示したい場合はBadgeコンポーネントの改修かNavigationItemの型変更が必要 */}
+            {item.badge === "large" && <Badge variant="small" />}
+          </div>
         )}
       </div>
       <span className={styles.label}>{item.label}</span>

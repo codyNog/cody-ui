@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, fn } from "@storybook/test";
 import { NavigationRail as Component } from ".";
-import { getCanvas } from "../libs/storybook";
-import { MdHome, MdSettings, MdFavorite, MdInfo, MdAdd } from "../Icons";
 import { Button } from "../Button";
+import { MdAdd, MdFavorite, MdHome, MdInfo, MdSettings } from "../Icons";
+import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
   component: Component,

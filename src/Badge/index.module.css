@@ -1,0 +1,44 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px; /* M3では形状に合わせて調整 */
+  font-family: "Roboto", sans-serif; /* M3の推奨フォント */
+  font-weight: 500;
+  color: var(--md-sys-color-on-error, #ffffff); /* エラーコンテナ上の色 */
+  background-color: var(--md-sys-color-error, #b3261e); /* エラーコンテナの色 */
+  box-sizing: border-box;
+}
+
+.small {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border-radius: 50%; /* 完全な円 */
+}
+
+/* countがない場合のlargeバッジ（大きな円形） */
+.largeNoCount {
+  width: 16px;
+  height: 16px;
+  padding: 0; /* 中身がないのでパディング不要 */
+  border-radius: 50%; /* 完全な円 */
+}
+
+/* countがある場合のlargeバッジ（pill形状） */
+.largeWithCount {
+  min-width: 16px; /* 1桁の場合は円形に近くなるように */
+  height: 16px;
+  padding: 0 4px; /* テキストの左右にパディング */
+  font-size: 0.75rem; /* 12sp */
+  line-height: 1; /* 中央揃えのため */
+  border-radius: 8px; /* pill形状のための角丸 */
+}
+
+.count {
+  /* 数字のスタイル（.largeWithCount 内で使用） */
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
