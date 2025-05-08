@@ -5,6 +5,12 @@ import { Octokit } from "@octokit/rest";
 // @ts-ignore
 import AdmZip from "adm-zip";
 import * as dotenv from "dotenv";
+import { EOL } from "node:os";
+import {
+  argbFromHex,
+  themeFromSourceColor,
+} from "@material/material-color-utilities";
+import type { TonalPalette } from "@material/material-color-utilities"; // TonalPalette を型としてインポート
 
 dotenv.config();
 
@@ -28,6 +34,156 @@ interface PackageJson {
   // biome-ignore lint:
   [key: string]: any;
 }
+
+// --- ここから移植 ---
+// ARGB to HEX 変換関数
+function argbToHex(argb: number): string {
+  const red = (argb >> 16) & 0xff;
+  const green = (argb >> 8) & 0xff;
+  const blue = argb & 0xff;
+  return `#${[red, green, blue]
+    .map((c) => c.toString(16).padStart(2, "0"))
+    .join("")}`;
+}
+
+// CSSカラーカスタムプロパティを生成する関数
+function generateThemeCssFromColor(sourceColorHex = "#131313"): string {
+  const sourceColorArgb = argbFromHex(sourceColorHex);
+  const theme = themeFromSourceColor(sourceColorArgb);
+
+  const colorProperties: string[] = [];
+  const lightScheme = theme.schemes.light;
+  const palettes = theme.palettes;
+
+  console.log(
+    "🎨 Generating CSS color properties from lightScheme and palettes...",
+  );
+
+  // 1. 基本的な色は lightScheme から直接取得
+  const M3SystemLightColorKeys = [
+    "primary",
+    "onPrimary",
+    "primaryContainer",
+    "onPrimaryContainer",
+    "secondary",
+    "onSecondary",
+    "secondaryContainer",
+    "onSecondaryContainer",
+    "tertiary",
+    "onTertiary",
+    "tertiaryContainer",
+    "onTertiaryContainer",
+    "error",
+    "onError",
+    "errorContainer",
+    "onErrorContainer",
+    "background",
+    "onBackground",
+    "surface",
+    "onSurface",
+    "surfaceVariant",
+    "onSurfaceVariant",
+    "outline",
+    "outlineVariant",
+    "shadow", // shadow と scrim は色だが、他のデザイントークンと一緒に global.css に残すことも検討可
+    "scrim",
+    "inverseSurface",
+    "inverseOnSurface",
+    "inversePrimary",
+    // "surfaceTint" は additionalPaletteColors で定義
+  ];
+
+  for (const key of M3SystemLightColorKeys) {
+    // biome-ignore lint/suspicious/noExplicitAny: Schemeのプロパティアクセスにanyを使用
+    const argbValue = (lightScheme as any)[key];
+    if (typeof argbValue === "number") {
+      const kebabKey = key.replace(
+        /([A-Z])/g,
+        (match) => `-${match.toLowerCase()}`,
+      );
+      const cssVarName = `--md-sys-color-${kebabKey}`;
+      colorProperties.push(`  ${cssVarName}: ${argbToHex(argbValue)}`);
+    } else {
+      console.warn(
+        `⚠️ Could not get ARGB value for scheme color "${key}": ${argbValue}`,
+      );
+    }
+  }
+
+  // 2. 追加の詳細なカラーロールをパレットとトーンから生成
+  const additionalPaletteColors: Record<
+    string,
+    { palette: TonalPalette; tone: number }
+  > = {
+    // --- Fixed ---
+    "primary-fixed": { palette: palettes.primary, tone: 90 },
+    "primary-fixed-dim": { palette: palettes.primary, tone: 80 },
+    "on-primary-fixed": { palette: palettes.primary, tone: 10 },
+    "on-primary-fixed-variant": { palette: palettes.primary, tone: 30 },
+    "secondary-fixed": { palette: palettes.secondary, tone: 90 },
+    "secondary-fixed-dim": { palette: palettes.secondary, tone: 80 },
+    "on-secondary-fixed": { palette: palettes.secondary, tone: 10 },
+    "on-secondary-fixed-variant": { palette: palettes.secondary, tone: 30 },
+    "tertiary-fixed": { palette: palettes.tertiary, tone: 90 },
+    "tertiary-fixed-dim": { palette: palettes.tertiary, tone: 80 },
+    "on-tertiary-fixed": { palette: palettes.tertiary, tone: 10 },
+    "on-tertiary-fixed-variant": { palette: palettes.tertiary, tone: 30 },
+    // --- Surface Containers ---
+    "surface-dim": { palette: palettes.neutral, tone: 87 },
+    "surface-bright": { palette: palettes.neutral, tone: 98 },
+    "surface-container-lowest": { palette: palettes.neutral, tone: 100 },
+    "surface-container-low": { palette: palettes.neutral, tone: 96 },
+    "surface-container": { palette: palettes.neutral, tone: 94 },
+    "surface-container-high": { palette: palettes.neutral, tone: 92 },
+    "surface-container-highest": { palette: palettes.neutral, tone: 90 },
+    // --- Surface Tint ---
+    "surface-tint": { palette: palettes.primary, tone: 40 },
+  };
+
+  console.log("🎨 Generating additional color properties from palettes...");
+  for (const [kebabKey, { palette, tone }] of Object.entries(
+    additionalPaletteColors,
+  )) {
+    if (!palette) {
+      console.warn(
+        `❓ Palette not found for generating ${kebabKey}. Skipping.`,
+      );
+      continue;
+    }
+    try {
+      const argbValue = palette.tone(tone);
+      if (typeof argbValue === "number") {
+        const cssVarName = `--md-sys-color-${kebabKey}`;
+        // lightScheme から既に同じキーが生成されていなければ追加
+        if (
+          !colorProperties.some((p) => p.trim().startsWith(`${cssVarName}:`))
+        ) {
+          console.log(`  ➕ Adding ${cssVarName} from palette.`);
+          colorProperties.push(`  ${cssVarName}: ${argbToHex(argbValue)}`);
+        }
+      } else {
+        console.warn(
+          `⚠️ Could not get number value for ${kebabKey} (Tone ${tone}) from palette.`,
+        );
+      }
+    } catch (error) {
+      console.error(`❌ Error generating ${kebabKey} from palette:`, error);
+    }
+  }
+
+  if (colorProperties.length === 0) {
+    console.error(
+      "🚨 No color properties generated! Check color generation logic.",
+    );
+  } else {
+    console.log(
+      `✨ Generated ${colorProperties.length} CSS color properties in total.`,
+    );
+  }
+  colorProperties.sort();
+  return colorProperties.join(EOL);
+}
+// --- ここまで移植 ---
 
 const GitHubFileExtractor = (token: string) => {
   const octokit = new Octokit({
@@ -259,6 +415,70 @@ const GitHubFileExtractor = (token: string) => {
         console.log("✨ Already up to date!");
         return;
       }
+
+      // --- テーマカラー生成処理 ---
+      console.log("🎨 Generating theme colors for src/theme.css...");
+      try {
+        const keyColor = process.env.THEME_KEY_COLOR || "#131313";
+        const newThemeColorProperties = generateThemeCssFromColor(keyColor);
+        const themeCssPath = "src/theme.css"; // 書き込み先を theme.css に変更
+        let themeCssContent = "";
+        try {
+          themeCssContent = await fs.readFile(themeCssPath, "utf8");
+        } catch (e: unknown) {
+          const readError = e as Error & { code?: string }; // 型アサーション
+          if (readError.code !== "ENOENT") {
+            // ファイルが存在しないエラー以外は再スロー
+            throw readError;
+          }
+          // ファイルが存在しない場合は空の内容で開始
+          console.log(`ℹ️ ${themeCssPath} not found, will create it.`);
+        }
+
+        const themeBlockRegex =
+          /(\/\*\s*m3 theme generated from source color\s*\*\/)([\s\S]*?)(?=\s*--md-sys-color-background:|$)/s; // マッチ範囲を調整
+        const fallbackRegex =
+          /(\/\*\s*m3 theme\s*\*\/)([\s\S]*?)(?=\s*--md-sys-color-background:|$)/s; // マッチ範囲を調整
+
+        const replacementComment = "/* m3 theme generated from source color */";
+        const newThemeBlockContent = `${replacementComment}${EOL}${newThemeColorProperties}${EOL}`;
+
+        let updatedContent: string = themeCssContent; // 初期値を設定し、型を明示
+        if (themeBlockRegex.test(themeCssContent)) {
+          updatedContent = themeCssContent.replace(
+            themeBlockRegex,
+            newThemeBlockContent,
+          );
+        } else if (fallbackRegex.test(themeCssContent)) {
+          updatedContent = themeCssContent.replace(
+            fallbackRegex,
+            newThemeBlockContent,
+          );
+        } else {
+          // :root があるか確認し、なければ作成
+          if (themeCssContent.includes(":root {")) {
+            updatedContent = themeCssContent.replace(
+              /(:root\s*\{)/,
+              `$1${EOL}${newThemeBlockContent}`,
+            );
+          } else {
+            updatedContent = `:root {${EOL}${newThemeBlockContent}}${EOL}${themeCssContent}`;
+            console.warn(
+              `⚠️ :root block not found in ${themeCssPath}. Created a new :root block.`,
+            );
+          }
+          console.warn(
+            `⚠️ Could not find m3 theme markers in ${themeCssPath}. Inserted into :root.`,
+          );
+        }
+        await fs.writeFile(themeCssPath, updatedContent, "utf8");
+        console.log(
+          `✅ Theme colors updated successfully in ${themeCssPath} with key color ${keyColor}.`,
+        );
+      } catch (error) {
+        console.error("❌ Failed to generate or update theme colors:", error);
+      }
+      // --- テーマカラー生成処理ここまで ---
 
       console.log(
         `🚀 Starting extraction of files from ${CONFIG.org}/${CONFIG.repo}:${CONFIG.path} to ${options.outputPath}`,

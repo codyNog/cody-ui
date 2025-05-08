@@ -1,54 +1,16 @@
+@import "./theme.css";
+
 :root {
-  /* m3 theme */
-  --md-sys-color-primary: #131313;
-  --md-sys-color-surface-tint: #131313;
-  --md-sys-color-on-primary: #ffffff;
-  --md-sys-color-primary-container: #e5e2e1;
-  --md-sys-color-on-primary-container: #1c1b1b;
-  --md-sys-color-secondary: #15bdeb;
-  --md-sys-color-on-secondary: #131313;
-  --md-sys-color-secondary-container: #d0f2fb;
-  --md-sys-color-on-secondary-container: #001f29;
-  --md-sys-color-error: #ce324e;
-  --md-sys-color-on-error: #ffffff;
-  --md-sys-color-error-container: #ffdad6;
-  --md-sys-color-on-error-container: #410002;
-  --md-sys-color-background: #f7f7f7;
-  --md-sys-color-on-background: #1c1b1b;
-  --md-sys-color-surface: #f7f7f7;
-  --md-sys-color-on-surface: #1c1b1b;
-  --md-sys-color-surface-variant: #e5e2e1;
-  --md-sys-color-on-surface-variant: #4f4f4f;
-  --md-sys-color-outline: #888888;
-  --md-sys-color-outline-variant: #d1d1d1;
-  --md-sys-color-shadow: #000000;
-  --md-sys-color-scrim: #000000;
-  --md-sys-color-inverse-surface: #313030;
-  --md-sys-color-inverse-on-surface: #ecf2f3;
-  --md-sys-color-inverse-primary: #73d7f3;
-  --md-sys-color-primary-fixed: #e5e2e1;
-  --md-sys-color-on-primary-fixed: #1c1b1b;
-  --md-sys-color-primary-fixed-dim: #c8c6c5;
-  --md-sys-color-on-primary-fixed-variant: #464747;
-  --md-sys-color-secondary-fixed: #d0f2fb;
-  --md-sys-color-on-secondary-fixed: #001f29;
-  --md-sys-color-secondary-fixed-dim: #a1e5f7;
-  --md-sys-color-on-secondary-fixed-variant: #004d62;
-  --md-sys-color-tertiary-fixed: rgb(255, 214, 248); /* Fixed invalid color value */
-  --md-sys-color-surface-dim: #e0e0e0;
-  --md-sys-color-surface-bright: #f7f7f7;
-  --md-sys-color-surface-container-lowest: #ffffff;
-  --md-sys-color-surface-container-low: #f5f5f5;
-  --md-sys-color-surface-container: #ebebeb;
-  --md-sys-color-surface-container-high: #e0e0e0;
-  --md-sys-color-surface-container-highest: #d6d6d6;
-  --md-sys-color-link: #3269e9;
+  /* --md-sys-color-link はM3の標準トークンではないため、カスタムとして定義 */
+  /* TODO: Consider aliasing from theme colors e.g. var(--md-sys-color-primary) */
+  --custom-color-link: #3269e9;
 
   /* react-day-picker */
-  --rdp-accent-color: var(--md-sys-color-primary); /* Accent color for the background of selected days. */
-  --rdp-background-color: var(--md-sys-color-primary); /* Background color for the hovered/focused elements. */
-  --rdp-accent-color-dark: var(--md-sys-color-primary); /* Accent color for the background of selected days (to use in dark-mode). */
-  --rdp-background-color-dark: var(--md-sys-color-primary); /* Background color for the hovered/focused elements (to use in dark-mode). */
+  /* These will now reference variables from theme.css */
+  --rdp-accent-color: var(--md-sys-color-primary);
+  --rdp-background-color: var(--md-sys-color-primary);
+  --rdp-accent-color-dark: var(--md-sys-color-primary); /* Consider dark theme variables if/when implemented */
+  --rdp-background-color-dark: var(--md-sys-color-primary); /* Consider dark theme variables if/when implemented */
   --rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
   --rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
 

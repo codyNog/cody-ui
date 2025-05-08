@@ -14,6 +14,6 @@ npm run dev
 
 ## storybook  
 
-[storybook](https://cody-rn-ui.pages.dev/)
+[storybook](https://cody-ui.pages.dev/)
 # cody-ui
 # cody-ui
