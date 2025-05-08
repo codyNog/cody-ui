@@ -3,8 +3,8 @@ import {
   Switch as AriaSwitch,
   type SwitchProps as AriaSwitchProps,
 } from "react-aria-components";
-import styles from "./index.module.css";
 import { MdCheck } from "../Icons";
+import styles from "./index.module.css";
 
 type SwitchProps = AriaSwitchProps & {
   /** Optional icon to display within the switch thumb. Defaults to a checkmark when selected and no icon is provided. */
