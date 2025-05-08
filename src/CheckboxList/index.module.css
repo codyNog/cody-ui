@@ -16,3 +16,30 @@
   gap: 8px; /* 子チェックボックス間のスペース */
   margin-top: 8px; /* 親と子の間のスペース */
 }
+
+/* CheckboxGroup全体を囲むスタイル */
+.groupRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* ラベルやエラーメッセージとリスト本体との間隔 */
+}
+
+/* Group全体のラベルスタイル */
+.groupLabel {
+  font-weight: bold; /* 例: ラベルを太字に */
+  font-size: 16px;
+}
+
+/* Group全体の説明テキストスタイル */
+.groupDescription {
+  font-size: 14px;
+  color: #666; /* 例: 少し薄めの色 */
+  margin-bottom: 4px; /* 説明とリスト本体の間隔調整 */
+}
+
+/* Group全体のエラーメッセージスタイル */
+.groupFieldError {
+  font-size: 14px;
+  color: var(--cui-danger-text-color); /* 例: エラー色 */
+  margin-top: 4px; /* リスト本体とエラーメッセージの間隔調整 */
+}

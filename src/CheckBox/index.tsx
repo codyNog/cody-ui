@@ -1,74 +1,61 @@
-import type { ReactNode } from "react";
 import { Checkbox as AriaCheckbox } from "react-aria-components";
+import { MdCheck, MdRemove } from "../Icons"; // react-icons/md からインポート
 import styles from "./index.module.css";
 
 type Props = {
-  children?: ReactNode;
-  isSelected?: boolean;
-  defaultSelected?: boolean;
-  isIndeterminate?: boolean;
-  isDisabled?: boolean;
-  onChangeChecked?: (isSelected: boolean) => void;
   value?: string;
   name?: string;
   isReadOnly?: boolean;
-  isRequired?: boolean;
   "aria-label"?: string;
   checked?: boolean | "indeterminate";
   required?: boolean;
+  disabled?: boolean;
+  onChangeChecked?: (isSelected: boolean) => void;
+  label?: string; // ★ ラベル用のpropsを追加
 };
 
-export function Checkbox({ children, ...props }: Props) {
+export const Checkbox = (props: Props) => {
   const {
-    defaultSelected,
-    isDisabled,
+    checked,
+    disabled,
     onChangeChecked,
     name,
     isReadOnly,
     required,
     "aria-label": ariaLabel,
-    checked,
+    label, // ★ labelをpropsから取得
   } = props;
+
+  const isSelected = typeof checked === "boolean" ? checked : false;
+  const isIndeterminate = checked === "indeterminate";
 
   return (
     <AriaCheckbox
-      isSelected={typeof checked === "boolean" ? checked : undefined}
-      defaultSelected={defaultSelected}
-      isIndeterminate={checked === "indeterminate"}
-      isDisabled={isDisabled}
+      isSelected={isSelected}
+      defaultSelected={
+        typeof props.checked === "boolean" ? props.checked : undefined
+      }
+      isIndeterminate={isIndeterminate}
+      isDisabled={disabled}
       onChange={onChangeChecked}
       name={name}
       isReadOnly={isReadOnly}
       isRequired={required}
-      aria-label={ariaLabel}
+      aria-label={label ? undefined : ariaLabel} // ★ labelがある場合はaria-labelを使わない
       className={styles.root}
     >
       {(renderProps) => (
         <>
           <div className={styles.checkbox} aria-hidden="true">
-            <svg viewBox="0 0 18 18" className={styles.icon} aria-hidden="true">
-              {" "}
-              {/* SVG自体もスクリーンリーダーから隠す */}
-              <title>Checkbox icon</title> {/* Biomeエラー対応 */}
-              {renderProps.isIndeterminate ? (
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M4 8H14V10H4V8Z"
-                /> // Indeterminate icon path (from Material Symbols)
-              ) : renderProps.isSelected ? (
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M6.59998 12.4L3.59998 9.4L4.99998 8L6.59998 9.6L13 3.2L14.4 4.6L6.59998 12.4Z"
-                /> // Checked icon path (from Material Symbols)
-              ) : null}
-            </svg>
+            {renderProps.isIndeterminate ? (
+              <MdRemove className={styles.icon} aria-hidden="true" />
+            ) : renderProps.isSelected ? (
+              <MdCheck className={styles.icon} aria-hidden="true" />
+            ) : null}
           </div>
-          {children ?? renderProps.defaultChildren}{" "}
-          {/* children があればそれを、なければデフォルトを使う */}
+          {label && <span className={styles.labelText}>{label}</span>}
         </>
       )}
     </AriaCheckbox>
   );
-}
+};

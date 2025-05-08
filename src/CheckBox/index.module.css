@@ -25,8 +25,9 @@
 
 /* アイコン用のスタイル */
 .icon {
-  width: 18px; /* checkbox のサイズに合わせる */
-  height: 18px;
+  width: 16px;
+  height: 16px;
+  color: var(--cui-primary-text-color); /* アイコンの色など調整 */
   display: block; /* SVGがインライン要素にならないように */
   fill: var(--md-sys-color-on-primary); /* チェックマークの色 (選択時) */
   opacity: 0;
@@ -104,4 +105,11 @@
 /* 押下時のステートレイヤー */
 .root:not([data-disabled]):active::before {
   opacity: 0.12; /* M3 pressed opacity */
+}
+
+/* ★ labelTextのスタイルを追加 */
+.labelText {
+  font-size: 14px; /* 例: フォントサイズ */
+  color: var(--cui-text-color); /* 例: テキストカラー */
+  user-select: none; /* テキスト選択を無効に */
 }

@@ -16,6 +16,7 @@ import {
   dateRangeToCalendarDateRange,
   dateToCalendarDate,
 } from "../../Calendar/modules";
+import { MdCalendarToday } from "../../Icons"; // react-icons/md からインポート
 // Import Props directly and DatePickerType
 import type { DatePickerType, DatePickerValue, Props } from "../types";
 import styles from "./index.module.css";
@@ -40,21 +41,6 @@ const convertValueByType = <T extends DatePickerType>(
   const dates = dateArrayToCalendarDateArray(value as Date[]);
   return dates && dates.length > 0 ? dates[0] : undefined;
 };
-
-// Calendar Icon SVG (Material Symbols - calendar_today)
-const CalendarIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    height="24px"
-    viewBox="0 0 24 24"
-    width="24px"
-    fill="currentColor"
-  >
-    <title>カレンダーを開く</title>
-    <path d="M0 0h24v24H0V0z" fill="none" />
-    <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zM7 12h5v5H7v-5z" />
-  </svg>
-);
 
 // 内部コンポーネントを使わずに直接forwardRefを使用
 export const DatePickerInput = forwardRef(function DatePickerInput<
@@ -122,7 +108,7 @@ export const DatePickerInput = forwardRef(function DatePickerInput<
             tabIndex={0}
             aria-label="カレンダーを開く"
           >
-            <CalendarIcon />
+            <MdCalendarToday />
           </div>
         </div>
       </AriaDateField>

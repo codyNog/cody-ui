@@ -5,17 +5,14 @@ import { Checkbox } from "./index";
 const meta = {
   component: Checkbox,
   argTypes: {
-    isSelected: { control: "boolean" },
-    isIndeterminate: { control: "boolean" },
-    isDisabled: { control: "boolean" },
-    children: { control: "text" },
+    checked: { control: "select", options: [true, false, "indeterminate"] },
+    disabled: { control: "boolean" },
+    label: { control: "text" },
   },
   args: {
-    // Default args for controls
-    isSelected: false,
-    isIndeterminate: false,
-    isDisabled: false,
-    children: "Label",
+    checked: false,
+    disabled: false,
+    label: "Checkbox Label",
   },
 } satisfies Meta<typeof Checkbox>;
 
@@ -26,44 +23,44 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: "Default",
+    label: "Default Checkbox",
   },
 };
 
-export const Checked: Story = {
+export const CheckedStory: Story = {
   args: {
-    children: "Checked",
-    isSelected: true,
+    checked: true,
+    label: "Checked Checkbox",
   },
 };
 
-export const Indeterminate: Story = {
+export const IndeterminateStory: Story = {
   args: {
-    children: "Indeterminate",
-    isIndeterminate: true,
+    checked: "indeterminate",
+    label: "Indeterminate Checkbox",
   },
 };
 
-export const Disabled: Story = {
+export const DisabledStory: Story = {
   args: {
-    children: "Disabled",
-    isDisabled: true,
+    disabled: true,
+    label: "Disabled Checkbox",
   },
 };
 
-export const DisabledChecked: Story = {
+export const DisabledCheckedStory: Story = {
   args: {
-    children: "Disabled Checked",
-    isSelected: true,
-    isDisabled: true,
+    checked: true,
+    disabled: true,
+    label: "Disabled Checked",
   },
 };
 
-export const DisabledIndeterminate: Story = {
+export const DisabledIndeterminateStory: Story = {
   args: {
-    children: "Disabled Indeterminate",
-    isIndeterminate: true,
-    isDisabled: true,
+    checked: "indeterminate",
+    disabled: true,
+    label: "Disabled Indeterminate",
   },
 };
 
@@ -71,16 +68,12 @@ export const DisabledIndeterminate: Story = {
 
 export const Interactive: Story = {
   render: function Render(args) {
-    const [selected, setSelected] = useState(
-      args.isSelected ?? args.defaultSelected ?? false,
-    );
-    const [indeterminate, setIndeterminate] = useState(
-      args.isIndeterminate ?? false,
+    const [checked, setChecked] = useState<boolean | "indeterminate">(
+      args.checked ?? false,
     );
 
     const handleChange = (newSelected: boolean) => {
-      setSelected(newSelected);
-      setIndeterminate(false);
+      setChecked(newSelected);
       args.onChangeChecked?.(newSelected);
     };
 
@@ -93,21 +86,15 @@ export const Interactive: Story = {
           alignItems: "flex-start",
         }}
       >
-        <Checkbox
-          {...args}
-          isSelected={selected}
-          isIndeterminate={indeterminate}
-          onChangeChecked={handleChange}
-        >
-          {args.children ?? "Interactive Checkbox"}
-        </Checkbox>
+        <Checkbox {...args} checked={checked} onChangeChecked={handleChange} />
         <div style={{ marginTop: "10px", fontSize: "12px", color: "#666" }}>
-          Current state: isSelected={String(selected)}, isIndeterminate=
-          {String(indeterminate)}
+          Current state: checked={String(checked)}
         </div>
         <button
           type="button"
-          onClick={() => setIndeterminate(!indeterminate)}
+          onClick={() =>
+            setChecked(checked === "indeterminate" ? false : "indeterminate")
+          }
           style={{ marginTop: "5px" }}
         >
           Toggle Indeterminate (External)
@@ -116,8 +103,8 @@ export const Interactive: Story = {
     );
   },
   args: {
-    isDisabled: false,
-    children: "Click Me!",
+    disabled: false,
+    label: "Interactive Checkbox",
   },
 };
 
@@ -134,30 +121,14 @@ export const AllStates: Story = {
           alignItems: "center",
         }}
       >
+        <Checkbox {...args} checked={false} disabled={false} label="Enabled" />
+        <Checkbox {...args} checked={true} disabled={false} label="Checked" />
         <Checkbox
           {...args}
-          isSelected={false}
-          isIndeterminate={false}
-          isDisabled={false}
-        >
-          Enabled
-        </Checkbox>
-        <Checkbox
-          {...args}
-          isSelected={true}
-          isIndeterminate={false}
-          isDisabled={false}
-        >
-          Checked
-        </Checkbox>
-        <Checkbox
-          {...args}
-          isSelected={false}
-          isIndeterminate={true}
-          isDisabled={false}
-        >
-          Indeterminate
-        </Checkbox>
+          checked={"indeterminate"}
+          disabled={false}
+          label="Indeterminate"
+        />
       </div>
       <div
         style={{
@@ -167,34 +138,26 @@ export const AllStates: Story = {
           alignItems: "center",
         }}
       >
+        <Checkbox {...args} checked={false} disabled={true} label="Disabled" />
         <Checkbox
           {...args}
-          isSelected={false}
-          isIndeterminate={false}
-          isDisabled={true}
-        >
-          Disabled
-        </Checkbox>
+          checked={true}
+          disabled={true}
+          label="Disabled Checked"
+        />
         <Checkbox
           {...args}
-          isSelected={true}
-          isIndeterminate={false}
-          isDisabled={true}
-        >
-          Disabled Checked
-        </Checkbox>
-        <Checkbox
-          {...args}
-          isSelected={false}
-          isIndeterminate={true}
-          isDisabled={true}
-        >
-          Disabled Indeterminate
-        </Checkbox>
+          checked={"indeterminate"}
+          disabled={true}
+          label="Disabled Indeterminate"
+        />
       </div>
     </div>
   ),
   parameters: {
-    controls: { include: [] }, // Hide controls for this composite story
+    controls: { include: [] },
+  },
+  args: {
+    label: undefined,
   },
 };
