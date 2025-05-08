@@ -1,7 +1,11 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: var(--md-sys-color-scrim);
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-scrim) 32%,
+    transparent
+  ); /* M3 scrim opacity */
   z-index: 40; /* M3のDialogのscrimと同じ値を参考に */
 }
 
