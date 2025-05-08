@@ -1,89 +1,140 @@
 .segmentedButtons {
-  display: flex;
-  border-radius: var(--shape-corner-extra-small, 4px); /* M3 spec, or adjust as needed */
-  overflow: hidden; /* Ensures child borders don't stick out */
-  border: 1px solid var(--color-outline, #79747e); /* M3 Outline color */
+  width: 100%;
+  display: inline-flex;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--md-sys-color-outline);
+  height: 40px;
+  background-color: var(--md-sys-color-surface-container-highest);
 }
 
 .button {
   flex-grow: 1;
-  padding: 8px 12px; /* Adjust padding as needed */
-  border: none; /* Individual borders handled by the group or specific states */
-  background-color: var(--color-surface-container-highest, #e6e0e9); /* M3 Surface Container Highest */
-  color: var(--color-on-surface, #1d1b20); /* M3 On Surface */
+  border: none;
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface);
   cursor: pointer;
   text-align: center;
-  font-size: 0.875rem; /* M3 Label Large */
-  line-height: 1.25rem;
-  font-weight: 500;
+  font-family: var(--md-sys-typescale-label-large-font-family-name);
+  font-size: var(--md-sys-typescale-label-large-font-size);
+  font-weight: var(--md-sys-typescale-label-large-font-weight);
+  line-height: 40px;
+  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
   outline: none;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+  justify-content: center; /* Default to center for content */
+  position: relative;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  min-width: 48px; /* Ensure a minimum width */
+  user-select: none;
+  padding: 0 12px; /* Consistent padding regardless of icon */
+  gap: 8px; /* Restore gap for button layout */
 }
 
-/* Add a separator between buttons, except for the last one */
+/* Class for buttons that will have an icon (either user-provided or checkmark) */
+.hasIcon {
+  /* padding: 0 12px; /* Default padding is fine */
+  /* gap: 8px; /* Default gap is fine */
+}
+
+/* Class for buttons that have no icon */
+.noIcon {
+  /* padding: 0 26px; /* icon_width (18) + gap (8) = 26. This aims to center the label. */
+  /* gap: 0; /* No gap needed if there's no icon */
+  /* This class is no longer needed for padding/gap adjustments due to the hidden icon spacer */
+}
+
+/* State Layers */
+.button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: currentColor;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.button[data-hovered]::before {
+  opacity: var(--md-sys-state-hover-state-layer-opacity);
+}
+
+.button[data-focused]::before {
+  opacity: var(--md-sys-state-focus-state-layer-opacity);
+}
+
+.button[data-pressed]::before {
+  opacity: var(--md-sys-state-pressed-state-layer-opacity);
+}
+
+/* Separator Line */
 .button:not(:last-child) {
-  border-right: 1px solid var(--color-outline, #79747e);
+  border-right: 1px solid var(--md-sys-color-outline);
 }
 
-.button[data-hovered] {
-  background-color: var(--color-surface-container-high, #f0eaf2); /* Slightly lighter for hover */
-}
-
-.button[data-pressed] {
-  background-color: var(--color-surface-container, #f5eff7); /* Even lighter for pressed */
-}
-
+/* Selected State */
 .button[data-selected] {
-  background-color: var(--color-secondary-container, #e8def8); /* M3 Secondary Container */
-  color: var(--color-on-secondary-container, #1d192b); /* M3 On Secondary Container */
-  border-color: transparent; /* Selected item might not need a border if bg is distinct */
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
 }
 
-.button[data-selected][data-hovered] {
-  background-color: color-mix(
-    in srgb,
-    var(--color-secondary-container, #e8def8) 90%,
-    var(--color-on-secondary-container, #1d192b) 10%
-  );
-}
-.button[data-selected][data-pressed] {
-  background-color: color-mix(
-    in srgb,
-    var(--color-secondary-container, #e8def8) 80%,
-    var(--color-on-secondary-container, #1d192b) 20%
-  );
-}
-
+/* Disabled State */
 .button[data-disabled] {
-  background-color: color-mix(
-    in srgb,
-    var(--color-surface-container-highest, #e6e0e9) 50%,
-    var(--color-on-surface, #1d1b20) 12%
-  ); /* Disabled state with opacity */
-  color: color-mix(in srgb, var(--color-on-surface, #1d1b20) 38%, transparent);
+  color: color-mix(in srgb, var(--md-sys-color-on-surface) 38%, transparent);
   cursor: not-allowed;
-  border-color: color-mix(
+  background-color: transparent;
+}
+.button[data-disabled]:not(:last-child) {
+  border-right-color: color-mix(
     in srgb,
-    var(--color-outline, #79747e) 12%,
+    var(--md-sys-color-outline) 38%,
     transparent
   );
 }
 
+/* Disabled State Layer for unselected buttons */
+.button[data-disabled]:not([data-selected])::before {
+  background-color: var(--md-sys-color-on-surface);
+  opacity: 0.12;
+}
+
+/* Selected and Disabled State */
 .button[data-disabled][data-selected] {
   background-color: color-mix(
     in srgb,
-    var(--color-on-surface, #1d1b20) 12%,
+    var(--md-sys-color-on-surface) 12%,
     transparent
   );
-  color: color-mix(in srgb, var(--color-on-surface, #1d1b20) 38%, transparent);
+  color: color-mix(in srgb, var(--md-sys-color-on-surface) 38%, transparent);
 }
 
-/* Icon styling within the button if needed */
+.button[data-disabled][data-selected]::before {
+  opacity: 0;
+}
+
+/* Icon and Label Styling */
+.icon,
 .button svg {
   width: 18px;
   height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  fill: currentColor;
+  flex-shrink: 0;
+  /* margin-right: 8px; /* Ensure no specific margin here, rely on button gap */
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  flex-grow: 1; /* Allow label to take available space, part of Attempt 1 */
+  text-align: center; /* Center text within its available space, part of Attempt 1 */
 }

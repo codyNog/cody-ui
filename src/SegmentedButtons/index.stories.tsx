@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { SegmentedButtons } from ".";
-import { MdHome, MdSettings, MdSearch, MdFavorite, MdInfo } from "../Icons"; // Using Material Design Icons from src/Icons
+import { MdFavorite, MdHome, MdInfo, MdSearch, MdSettings } from "../Icons"; // Using Material Design Icons from src/Icons
 
 const meta = {
   component: SegmentedButtons,
@@ -36,20 +36,29 @@ export const Default: Story = {
   args: {
     items: defaultItems,
     mode: "single",
-    // defaultValue: "opt1", // Use controlled component for interactivity
+    value: "opt1", // Added for type consistency
+    defaultValue: "opt1",
   },
   render: function Render(args) {
-    const [value, setValue] = useState("opt1");
-    return (
-      <SegmentedButtons
-        {...args}
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-          console.log("Single select changed:", newValue);
-        }}
-      />
-    );
+    if (args.mode === "single") {
+      const initialValue =
+        typeof args.defaultValue === "string" ? args.defaultValue : "opt1";
+      const [value, setValue] = useState(initialValue);
+      return (
+        <SegmentedButtons
+          {...args}
+          mode="single" // Explicitly pass mode
+          value={value}
+          defaultValue={initialValue} // Pass defaultValue consistent with mode
+          onChange={(newValue: string) => {
+            setValue(newValue);
+            console.log("Single select changed:", newValue);
+          }}
+        />
+      );
+    }
+    // Should not happen based on story args, but as a fallback or for type safety:
+    return <div>Invalid mode for this story setup.</div>;
   },
 };
 
@@ -57,21 +66,29 @@ export const SingleSelect: Story = {
   args: {
     items: defaultItems,
     mode: "single",
+    value: "opt2", // Added for type consistency
+    defaultValue: "opt2",
     "aria-label": "Single Select Segmented Buttons",
-    // defaultValue: "opt2", // Use controlled component for interactivity
   },
   render: function Render(args) {
-    const [value, setValue] = useState("opt2");
-    return (
-      <SegmentedButtons
-        {...args}
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-          console.log("Single select changed:", newValue);
-        }}
-      />
-    );
+    if (args.mode === "single") {
+      const initialValue =
+        typeof args.defaultValue === "string" ? args.defaultValue : "opt2";
+      const [value, setValue] = useState(initialValue);
+      return (
+        <SegmentedButtons
+          {...args}
+          mode="single"
+          value={value}
+          defaultValue={initialValue}
+          onChange={(newValue: string) => {
+            setValue(newValue);
+            console.log("Single select changed:", newValue);
+          }}
+        />
+      );
+    }
+    return <div>Invalid mode for this story setup.</div>;
   },
 };
 
@@ -79,21 +96,30 @@ export const MultipleSelect: Story = {
   args: {
     items: defaultItems,
     mode: "multiple",
+    value: ["opt1", "opt3"], // Added for type consistency
+    defaultValue: ["opt1", "opt3"],
     "aria-label": "Multiple Select Segmented Buttons",
-    // defaultValue: ["opt1", "opt3"], // Use controlled component for interactivity
   },
   render: function Render(args) {
-    const [values, setValues] = useState<string[]>(["opt1", "opt3"]);
-    return (
-      <SegmentedButtons
-        {...args}
-        value={values}
-        onChange={(newValues) => {
-          setValues(newValues);
-          console.log("Multiple select changed:", newValues);
-        }}
-      />
-    );
+    if (args.mode === "multiple") {
+      const initialValues = Array.isArray(args.defaultValue)
+        ? args.defaultValue
+        : ["opt1", "opt3"];
+      const [values, setValues] = useState<string[]>(initialValues);
+      return (
+        <SegmentedButtons
+          {...args}
+          mode="multiple"
+          value={values}
+          defaultValue={initialValues}
+          onChange={(newValues: string[]) => {
+            setValues(newValues);
+            console.log("Multiple select changed:", newValues);
+          }}
+        />
+      );
+    }
+    return <div>Invalid mode for this story setup.</div>;
   },
 };
 
@@ -101,21 +127,29 @@ export const WithIcons: Story = {
   args: {
     items: itemsWithIcons,
     mode: "single",
+    value: "home", // Added for type consistency
+    defaultValue: "home",
     "aria-label": "Segmented Buttons With Icons",
-    // defaultValue: "home", // Use controlled component for interactivity
   },
   render: function Render(args) {
-    const [value, setValue] = useState("home");
-    return (
-      <SegmentedButtons
-        {...args}
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-          console.log("WithIcons changed:", newValue);
-        }}
-      />
-    );
+    if (args.mode === "single") {
+      const initialValue =
+        typeof args.defaultValue === "string" ? args.defaultValue : "home";
+      const [value, setValue] = useState(initialValue);
+      return (
+        <SegmentedButtons
+          {...args}
+          mode="single"
+          value={value}
+          defaultValue={initialValue}
+          onChange={(newValue: string) => {
+            setValue(newValue);
+            console.log("WithIcons changed:", newValue);
+          }}
+        />
+      );
+    }
+    return <div>Invalid mode for this story setup.</div>;
   },
 };
 
@@ -123,21 +157,30 @@ export const WithIconsMultiple: Story = {
   args: {
     items: itemsWithIcons,
     mode: "multiple",
+    value: ["search", "settings"], // Added for type consistency
+    defaultValue: ["search", "settings"],
     "aria-label": "Multiple Select Segmented Buttons With Icons",
-    // defaultValue: ["search", "settings"], // Use controlled component for interactivity
   },
   render: function Render(args) {
-    const [values, setValues] = useState<string[]>(["search", "settings"]);
-    return (
-      <SegmentedButtons
-        {...args}
-        value={values}
-        onChange={(newValues) => {
-          setValues(newValues);
-          console.log("WithIconsMultiple changed:", newValues);
-        }}
-      />
-    );
+    if (args.mode === "multiple") {
+      const initialValues = Array.isArray(args.defaultValue)
+        ? args.defaultValue
+        : ["search", "settings"];
+      const [values, setValues] = useState<string[]>(initialValues);
+      return (
+        <SegmentedButtons
+          {...args}
+          mode="multiple"
+          value={values}
+          defaultValue={initialValues}
+          onChange={(newValues: string[]) => {
+            setValues(newValues);
+            console.log("WithIconsMultiple changed:", newValues);
+          }}
+        />
+      );
+    }
+    return <div>Invalid mode for this story setup.</div>;
   },
 };
 
@@ -180,21 +223,30 @@ export const FiveOptionsWithIcons: Story = {
       { label: "Info", value: "info", icon: <MdInfo /> },
     ],
     mode: "multiple",
+    value: ["home", "favorite"], // Added for type consistency
+    defaultValue: ["home", "favorite"],
     "aria-label": "Segmented Buttons with Five Options and Icons",
-    // defaultValue: ["home", "favorite"], // Use controlled component for interactivity
   },
   render: function Render(args) {
-    const [values, setValues] = useState<string[]>(["home", "favorite"]);
-    return (
-      <SegmentedButtons
-        {...args}
-        value={values}
-        onChange={(newValues) => {
-          setValues(newValues);
-          console.log("FiveOptionsWithIcons changed:", newValues);
-        }}
-      />
-    );
+    if (args.mode === "multiple") {
+      const initialValues = Array.isArray(args.defaultValue)
+        ? args.defaultValue
+        : ["home", "favorite"];
+      const [values, setValues] = useState<string[]>(initialValues);
+      return (
+        <SegmentedButtons
+          {...args}
+          mode="multiple"
+          value={values}
+          defaultValue={initialValues}
+          onChange={(newValues: string[]) => {
+            setValues(newValues);
+            console.log("FiveOptionsWithIcons changed:", newValues);
+          }}
+        />
+      );
+    }
+    return <div>Invalid mode for this story setup.</div>;
   },
 };
 
@@ -205,20 +257,28 @@ export const TwoOptions: Story = {
       { label: "No", value: "no" },
     ],
     mode: "single",
+    value: "yes", // Added for type consistency
+    defaultValue: "yes",
     "aria-label": "Two Option Segmented Buttons",
-    // defaultValue: "yes", // Use controlled component for interactivity
   },
   render: function Render(args) {
-    const [value, setValue] = useState("yes");
-    return (
-      <SegmentedButtons
-        {...args}
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-          console.log("TwoOptions changed:", newValue);
-        }}
-      />
-    );
+    if (args.mode === "single") {
+      const initialValue =
+        typeof args.defaultValue === "string" ? args.defaultValue : "yes";
+      const [value, setValue] = useState(initialValue);
+      return (
+        <SegmentedButtons
+          {...args}
+          mode="single"
+          value={value}
+          defaultValue={initialValue}
+          onChange={(newValue: string) => {
+            setValue(newValue);
+            console.log("TwoOptions changed:", newValue);
+          }}
+        />
+      );
+    }
+    return <div>Invalid mode for this story setup.</div>;
   },
 };
