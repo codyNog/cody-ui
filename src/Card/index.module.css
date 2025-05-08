@@ -1,0 +1,93 @@
+.base {
+  border-radius: 0.75rem; /* 12px */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.elevated {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px 1px rgb(0 0 0 / 0.1);
+  background-color: var(--md-sys-color-surface-container-low);
+}
+
+.outlined {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface);
+}
+
+.filled {
+  background-color: var(--md-sys-color-surface-container-highest);
+}
+
+.header {
+  padding: 1rem; /* 16px */
+}
+
+.headline {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 400;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+.subhead {
+  font-size: 0.875rem; /* 14px */
+  font-weight: 400;
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 0;
+  margin-top: 0.25rem; /* 4px */
+}
+
+.media {
+  .mediaContainer {
+    width: 100%;
+    /* Add any specific container styling if needed, e.g., aspect ratio */
+  }
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.supportingText {
+  padding: 1rem; /* 16px */
+  font-size: 0.875rem; /* 14px */
+  font-weight: 400;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.actions {
+  padding: 0.5rem 1rem 1rem; /* 8px 16px 16px */
+  display: flex;
+  gap: 0.5rem; /* 8px */
+  justify-content: flex-end;
+}
+
+/* TODO: Button component styles will be used here */
+.actionButton {
+  /* Placeholder for button styles */
+  padding: 0.5rem 1rem;
+  border-radius: 1.25rem; /* 20px */
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem; /* 14px */
+  letter-spacing: 0.00714em; /* 0.1px */
+  text-transform: none;
+  border: 1px solid transparent;
+}
+
+.actionButtonPrimary {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.actionButtonSecondary {
+  border-color: var(--md-sys-color-outline);
+  color: var(--md-sys-color-primary);
+}

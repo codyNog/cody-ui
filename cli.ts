@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 import * as fs from "node:fs/promises";
-import * as path from "node:path";
-import { Octokit } from "@octokit/rest";
-// @ts-ignore
-import AdmZip from "adm-zip";
-import * as dotenv from "dotenv";
 import { EOL } from "node:os";
+import * as path from "node:path";
 import {
   argbFromHex,
   themeFromSourceColor,
 } from "@material/material-color-utilities";
 import type { TonalPalette } from "@material/material-color-utilities"; // TonalPalette を型としてインポート
+import { Octokit } from "@octokit/rest";
+// @ts-ignore
+import AdmZip from "adm-zip";
+import * as dotenv from "dotenv";
 
 dotenv.config();
 
