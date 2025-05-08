@@ -39,7 +39,9 @@ const preview: Preview = {
 
       return (
         <Provider locale="ja-JP">
-          <Story />
+          <div style={{ backgroundColor: "var(--md-sys-color-background)" }}>
+            <Story />
+          </div>
         </Provider>
       );
     },

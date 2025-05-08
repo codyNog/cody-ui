@@ -16,7 +16,7 @@
 }
 
 .table th {
-  background-color: #f2f2f2; /* ヘッダー背景色 */
+  background-color: var(--md-sys-color-surface-container); /* ヘッダー背景色 */
   position: relative; /* DraggableHeader の z-index のため */
 }
 
@@ -36,7 +36,7 @@
    [data-dragging="true"] のようなセレクタでスタイルを当てることも可能 */
 /* 例: ドラッグ中の影など
 .table [data-dragging="true"] {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--md-sys-elevation-level3);
 }
 */
 

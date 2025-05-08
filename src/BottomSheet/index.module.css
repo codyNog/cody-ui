@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--md-sys-color-scrim);
   z-index: 40; /* M3のDialogのscrimと同じ値を参考に */
 }
 

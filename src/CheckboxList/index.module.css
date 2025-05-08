@@ -33,7 +33,7 @@
 /* Group全体の説明テキストスタイル */
 .groupDescription {
   font-size: 14px;
-  color: #666; /* 例: 少し薄めの色 */
+  color: var(--md-sys-color-on-surface-variant); /* 例: 少し薄めの色 */
   margin-bottom: 4px; /* 説明とリスト本体の間隔調整 */
 }
 

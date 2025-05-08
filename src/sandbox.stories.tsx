@@ -92,10 +92,9 @@ export const FormExample: Story = {
               onChangeChecked={(checked) =>
                 setFormState({ ...formState, termsAccepted: checked })
               }
+              label="I accept the terms and conditions"
               required
-            >
-              I accept the terms and conditions
-            </Checkbox>
+            />
           </GridRow>
           {/* 送信ボタンを右寄せ */}
           <GridItem colSpan={12}>

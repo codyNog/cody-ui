@@ -28,7 +28,7 @@
 .icon {
   width: 16px;
   height: 16px;
-  color: var(--cui-primary-text-color); /* アイコンの色など調整 */
+  color: var(--md-sys-color-on-primary); /* アイコンの色など調整 */
   display: block; /* SVGがインライン要素にならないように */
   fill: var(--md-sys-color-on-primary); /* チェックマークの色 (選択時) */
   opacity: 0;
@@ -116,6 +116,6 @@
 /* ★ labelTextのスタイルを追加 */
 .labelText {
   font-size: 14px; /* 例: フォントサイズ */
-  color: var(--cui-text-color); /* 例: テキストカラー */
+  color: var(--md-sys-color-on-surface); /* 例: テキストカラー */
   user-select: none; /* テキスト選択を無効に */
 }

@@ -75,7 +75,7 @@
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* 半透明の黒背景 */
+  background-color: var(--md-sys-color-scrim); /* 半透明の黒背景 */
   display: flex;
   align-items: center;
   justify-content: center;

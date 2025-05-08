@@ -1,5 +1,23 @@
 @import "./theme.css";
 
+body {
+  margin: 0;
+  padding: 0;
+  /* 必要に応じて他のリセットも追加 */
+  /* 例: font-family: sans-serif; (これは既に :root で設定されてるかもだけど) */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 1.15; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+
 :root {
   color-scheme: light dark;
   /* --md-sys-color-link はM3の標準トークンではないため、カスタムとして定義 */
