@@ -1,5 +1,5 @@
-import { withThemeByClassName } from "@storybook/addon-themes"; // インポート追加
 import type { Preview } from "@storybook/react";
+import "../src/theme.css"; // Import theme.css
 import "../src/global.css"; // Add this line to import global styles
 import "./custom-theme.css"; // Import custom theme styles
 import { Provider } from "../src/Provider";
@@ -26,21 +26,29 @@ const preview: Preview = {
   tags: ["autodocs"],
   decorators: [
     // withThemeByClassName を decorators の最初に追加
-    withThemeByClassName({
-      themes: {
-        // デフォルトテーマ（クラスなし）
-        light: "",
-        // カスタムテーマ（例: custom-theme クラス）
-        custom: "custom-theme",
-      },
-      defaultTheme: "light",
-    }),
+    (Story, context) => {
+      const { theme } = context.globals;
+
+      // Set color-scheme based on theme
+      if (theme === "light" || theme === "dark") {
+        document.documentElement.style.colorScheme = theme;
+      } else {
+        // For 'custom' or other themes, you might want to remove or set a default
+        document.documentElement.style.colorScheme = "";
+      }
+
+      return (
+        <Provider locale="ja-JP">
+          <Story />
+        </Provider>
+      );
+    },
     // 既存の Provider decorator
-    (Story) => (
-      <Provider locale="ja-JP">
-        <Story />
-      </Provider>
-    ),
+    // (Story) => (
+    //   <Provider locale="ja-JP">
+    //     <Story />
+    //   </Provider>
+    // ),
   ],
   // globalTypes を追加してツールバーにテーマ選択を表示
   globalTypes: {
@@ -53,6 +61,7 @@ const preview: Preview = {
         // ドロップダウンの選択肢
         items: [
           { value: "light", title: "Light (Default)" },
+          { value: "dark", title: "Dark" }, // Darkテーマの選択肢を追加
           { value: "custom", title: "Custom" },
         ],
         showName: true,

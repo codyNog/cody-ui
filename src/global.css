@@ -1,6 +1,7 @@
 @import "./theme.css";
 
 :root {
+  color-scheme: light dark;
   /* --md-sys-color-link はM3の標準トークンではないため、カスタムとして定義 */
   /* TODO: Consider aliasing from theme colors e.g. var(--md-sys-color-primary) */
   --custom-color-link: #3269e9;

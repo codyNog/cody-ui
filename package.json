@@ -79,6 +79,7 @@
     "postinstall": "if [ \"$CI\" = \"true\" ]; then npm run postinstall:ci; else npm run postinstall:non-ci; fi",
     "postinstall:ci": "npm run gen",
     "postinstall:non-ci": "npm run gen && npx @codynog/ai-rules",
+    "cli:local": "npm run build && node dist/index.js --output ./dist",
     "plop": "plop",
     "lint": "run-p lint:*",
     "lint:script": "npx biome check .",

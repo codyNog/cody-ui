@@ -188,3 +188,6 @@ storybook-static/
 
 # CSS type definition files
 *.css.d.ts
+
+# version
+.ui-version.json
