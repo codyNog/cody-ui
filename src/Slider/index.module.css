@@ -1,0 +1,245 @@
+.slider {
+  display: flex;
+  align-items: center;
+  width: 100%; /* M3 Slider is typically full width or constrained by parent */
+  min-width: 120px; /* Minimum width for usability */
+  height: 48px; /* Includes touch target area */
+  position: relative;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.slider[data-disabled] {
+  cursor: default;
+}
+
+.label {
+  /* M3 doesn't typically have a separate label element like this for Slider */
+  /* This might be for an external label, styling depends on context */
+  /* For now, let's keep it simple or remove if not used by react-aria */
+  display: none; /* Assuming react-aria handles labels differently or it's external */
+}
+
+.output {
+  /* This is for the value label tooltip */
+  position: absolute;
+  bottom: calc(100% + 8px); /* Position above the thumb */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--md-sys-color-inverse-surface, #313033);
+  color: var(--md-sys-color-inverse-on-surface, #f4eff4);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem; /* 14sp */
+  line-height: 1.25rem; /* 20sp */
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.slider:hover .output,
+.slider[data-dragging] .output,
+.slider .thumb[data-focus-visible] ~ .output {
+  opacity: 1;
+}
+
+.trackContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.track {
+  height: 4px;
+  background-color: var(--md-sys-color-surface-container-highest, #e6e0e9);
+  /* border-radius: 2px; */ /* Remove if using dots for ends, or adjust dot positioning */
+  width: 100%;
+  position: relative;
+  /* Add padding if trackFill should be inset from dots */
+  /* padding-left: 2px; */ /* Example: half of dot width */
+  /* padding-right: 2px; */ /* Example: half of dot width */
+  /* box-sizing: border-box; */
+}
+
+/* Dots at the ends of the track line - only for discrete sliders */
+.slider[data-discrete] .track::before,
+.slider[data-discrete] .track::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px; /* Dot diameter, same as track height */
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-surface-container-highest, #e6e0e9); /* Same as inactive track */
+  /* Ensure dots are visually on top of the track line if track has its own background */
+  z-index: 0; /* Or 1 if trackFill is -1, but trackFill is usually 0 or auto */
+}
+
+.track::before {
+  left: 0px; /* Position at the very start */
+}
+
+.track::after {
+  right: 0px; /* Position at the very end */
+}
+
+.slider[data-disabled] .track {
+  background-color: var(--md-sys-color-on-surface, #1c1b1f); /* M3: On Surface, 12% opacity */
+  opacity: 0.12;
+}
+
+.trackFill {
+  position: absolute;
+  height: 100%;
+  background-color: var(--md-sys-color-primary, #6750a4);
+  /* trackFill should not have its own border-radius if it's filling a straight track with dot ends */
+  /* border-radius: 2px; */
+  left: 0;
+  /* The trackFill should visually stop before the end dots if they are always visible.
+     This requires adjusting the width calculation in JS, or using padding on .track
+     and having trackFill respect that.
+     For now, let's assume the dots are part of the track's visual ends and fill goes edge to edge.
+     If dots must be distinct and trackFill stops short, TSX needs adjustment.
+     The image implies active fill stops *before* the end dot.
+     This means trackFill width needs to be calculated considering dot width.
+     e.g. width: calc(thumbPercent% - 4px) if dot is 4px.
+     This is complex to do purely in CSS if thumbPercent is dynamic.
+
+     A simpler CSS-only way if dots are always the inactive color:
+     The trackFill will go underneath the ::after dot if it's on the right.
+     The ::before dot on the left will be covered by trackFill if value > minValue.
+     This matches image 1 where the left dot is not visible when filled.
+     The right dot (::after) in image 1 is visible and is the inactive color.
+     So, trackFill can go edge to edge, and ::after dot will overlay it if its z-index is higher.
+     Let's make dots z-index 1 to be above trackFill (default z-index 0 or auto).
+  */
+}
+
+.slider[data-disabled] .trackFill {
+  background-color: var(--md-sys-color-on-surface, #1c1b1f);
+  opacity: 0.38;
+}
+
+.thumb {
+  width: 6px; /* 棒の幅 */
+  height: 24px; /* 棒の高さ (変更) */
+  background-color: var(--md-sys-color-primary, #6750a4);
+  border-radius: 3px; /* 棒の角丸 */
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%); /* Center thumb on the track */
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(
+    --md-sys-elevation-level-1 /* M3 Elevation for consistency, might need adjustment for bar shape */,
+    0px 1px 3px 1px rgba(0, 0, 0, 0.15),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.3)
+  );
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow
+    150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms
+    cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slider[data-disabled] .thumb {
+  background-color: var(--md-sys-color-on-surface, #1c1b1f);
+  border: none;
+  width: 4px; /* Disabled時の棒の幅 */
+  height: 20px; /* Disabled時の棒の高さ (変更) */
+  border-radius: 2px; /* Disabled時の棒の角丸 */
+  opacity: 0.38;
+  box-shadow: none;
+  cursor: default;
+}
+.slider[data-disabled][data-discrete] .track::before,
+.slider[data-disabled][data-discrete] .track::after {
+  background-color: var(--md-sys-color-on-surface, #1c1b1f); /* Disabled dot color */
+  opacity: 0.38; /* Consistent with other disabled elements */
+}
+
+.slider[data-disabled] .thumb::before {
+  /* Remove hover/focus ring for disabled */
+  display: none;
+}
+
+.thumb::before {
+  /* State layer for hover/focus/pressed */
+  content: "";
+  position: absolute;
+  /* Adjust State Layer to a rounded rectangle around the bar thumb */
+  width: calc(6px + 16px); /* Thumb width (6px) + 8px padding on each side */
+  height: calc(24px + 16px); /* Thumb height (24px) + 8px padding on each side (変更) */
+  border-radius: 8px; /* Rounded corners for the state layer */
+  background-color: var(--md-sys-color-primary, #6750a4);
+  opacity: 0;
+  transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms
+    cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(0.8); /* Initial smaller scale, can be adjusted */
+}
+
+.slider:not([data-disabled]) .thumb:hover::before {
+  opacity: var(--md-sys-state-hover-state-layer-opacity, 0.08);
+  transform: scale(1);
+}
+
+.slider:not([data-disabled]) .thumb[data-focus-visible]::before {
+  opacity: var(--md-sys-state-focus-state-layer-opacity, 0.12);
+  transform: scale(1);
+  /* M3 focus often uses an outline on the thumb itself or a stronger state layer */
+  /* For simplicity, we use the state layer. An actual outline might be:
+     outline: 2px solid var(--md-sys-color-primary, #6750A4);
+     outline-offset: 2px;
+  */
+}
+
+.slider:not([data-disabled]) .thumb[data-dragging]::before {
+  opacity: var(--md-sys-state-pressed-state-layer-opacity, 0.12);
+  transform: scale(1.1); /* Slightly larger when pressed */
+}
+
+.slider:not([data-disabled]) .thumb[data-dragging] {
+  cursor: grabbing;
+  box-shadow: var(
+    --md-sys-elevation-level-2,
+    0px 2px 6px 2px rgba(0, 0, 0, 0.15),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.3)
+  );
+}
+
+/* Tick marks (optional, if your slider supports them) */
+.tickMarksContainer {
+  position: absolute;
+  width: calc(100% - 20px); /* Adjust based on thumb size to align ticks properly */
+  left: 10px; /* Half of thumb size */
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px; /* Same as track */
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none; /* So they don't interfere with dragging */
+}
+
+.tickMark {
+  width: 4px;
+  height: 4px;
+  background-color: var(--md-sys-color-on-surface-variant, #49454f); /* M3: Inactive tick is On Surface Variant */
+  border-radius: 50%;
+  /* Opacity might not be needed if using On Surface Variant directly, or adjust as needed */
+  /* opacity: 0.38; */
+}
+
+.tickMark[data-active] {
+  opacity: 1; /* Active tick mark opacity */
+  background-color: var(--md-sys-color-primary, #6750a4); /* M3: Active tick is Primary */
+}
+
+.slider[data-disabled] .tickMark {
+  background-color: var(--md-sys-color-on-surface, #1c1b1f);
+  opacity: 0.38;
+}
