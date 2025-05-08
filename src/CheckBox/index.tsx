@@ -47,6 +47,7 @@ export const Checkbox = (props: Props) => {
       {(renderProps) => (
         <>
           <div className={styles.checkbox} aria-hidden="true">
+            <span className={styles.stateLayer} />
             {renderProps.isIndeterminate ? (
               <MdRemove className={styles.icon} aria-hidden="true" />
             ) : renderProps.isSelected ? (

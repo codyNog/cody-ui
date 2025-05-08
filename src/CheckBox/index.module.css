@@ -21,6 +21,7 @@
   transition: background-color 150ms, border-color 150ms;
   flex-shrink: 0; /* サイズが縮まないように */
   background-color: var(--md-sys-color-surface); /* 背景色 */
+  position: relative; /* ステートレイヤー用 */
 }
 
 /* アイコン用のスタイル */
@@ -91,19 +92,24 @@
   outline-offset: 2px;
 }
 
-/* ホバー時のステートレイヤー */
-.root:not([data-disabled]):hover::before {
-  content: "";
+/* ステートレイヤー */
+.stateLayer {
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
+  inset: -4px; /* checkboxのpadding分を考慮して広げる */
+  border-radius: 9999px; /* checkboxの丸みに合わせる */
   background-color: var(--md-sys-color-on-surface);
-  opacity: 0.08; /* M3 hover opacity */
+  opacity: 0;
+  transition: opacity 150ms;
   pointer-events: none;
 }
 
+/* ホバー時のステートレイヤー */
+.root:not([data-disabled]):hover .stateLayer {
+  opacity: 0.08; /* M3 hover opacity */
+}
+
 /* 押下時のステートレイヤー */
-.root:not([data-disabled]):active::before {
+.root:not([data-disabled]):active .stateLayer {
   opacity: 0.12; /* M3 pressed opacity */
 }
 
