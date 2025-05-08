@@ -1,7 +1,12 @@
 "use client";
 import { forwardRef } from "react";
 import type { ReactNode } from "react";
-import type { ToggleButtonGroupProps } from "react-aria-components";
+import {
+  ToggleButtonGroup,
+  ToggleButton,
+  type ToggleButtonGroupProps,
+} from "react-aria-components";
+import styles from "./index.module.css";
 
 /**
  * Represents a single item in the SegmentedButtons component.
@@ -43,19 +48,14 @@ type MultipleSelectionProps = {
 // Also, ensure 'aria-label' or 'aria-labelledby' is provided for accessibility.
 type BaseToggleButtonGroupProps = Omit<
   ToggleButtonGroupProps,
-  // These props are handled by the conditional types or have specific logic:
-  // - value (handled by SingleSelectionProps or MultipleSelectionProps)
-  // - defaultValue (handled by SingleSelectionProps or MultipleSelectionProps)
-  // - onChange (handled by SingleSelectionProps or MultipleSelectionProps)
-  // - isDisabled (handled by `disabled` prop at the top level of SegmentedButtonsProps)
-  // - children (derived from `items` prop)
-  // - className (handled with `styles` and `userClassName`)
-  | "value"
-  | "defaultValue"
-  | "onChange"
-  | "isDisabled"
-  | "children"
-  | "className"
+  // These props are handled by the conditional types or have specific logic within SegmentedButtons:
+  | "value" // Handled by SingleSelectionProps or MultipleSelectionProps and passed conditionally
+  | "defaultValue" // Handled by SingleSelectionProps or MultipleSelectionProps and passed conditionally
+  | "onChange" // Handled by SingleSelectionProps or MultipleSelectionProps and passed conditionally
+  | "isDisabled" // Handled by `disabled` prop at the top level of SegmentedButtonsProps
+  | "children" // Derived from `items` prop
+  | "className" // Handled with `styles` and potential userClassName
+  | "selectionMode" // Determined internally by `mode` prop
   // style is kept if needed, but generally prefer CSS Modules
 >;
 
@@ -86,7 +86,110 @@ type Props = SegmentedButtonsCommonProps &
   (SingleSelectionProps | MultipleSelectionProps);
 
 export const SegmentedButtons = forwardRef<HTMLDivElement, Props>(
-  (_props, ref) => {
-    return <div ref={ref}>SegmentedButtons</div>;
+  (props, ref) => {
+    const {
+      items,
+      mode,
+      value: controlledValue,
+      defaultValue: uncontrolledDefaultValue,
+      onChange,
+      disabled: groupDisabled,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledby,
+      ...restToggleButtonGroupProps
+    } = props;
+
+    // Props not handled by conditional types or specific logic are spread directly
+    const basePropsForGroup = {
+      isDisabled: groupDisabled, // This comes from SegmentedButtonsCommonProps
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledby,
+      ...restToggleButtonGroupProps, // Spread other valid ToggleButtonGroupProps
+    };
+
+    if (mode === "single") {
+      const {
+        value: singleValue,
+        defaultValue: singleDefaultValue,
+        onChange: singleOnChange,
+      } = props as SingleSelectionProps;
+
+      const onPressButton = (value: string) => {
+        singleOnChange?.(value);
+      };
+
+      return (
+        <ToggleButtonGroup
+          {...basePropsForGroup}
+          ref={ref}
+          selectionMode="single"
+          selectedKeys={[
+            singleValue,
+          ]} /* For single selection, value is Key | null. Our prop is string. */
+          defaultSelectedKeys={[singleDefaultValue]} /* ditto */
+          className={styles.segmentedButtons}
+        >
+          {items.map((item) => (
+            <ToggleButton
+              key={item.value}
+              id={item.value}
+              isDisabled={groupDisabled || item.disabled}
+              className={styles.button}
+              onPress={() => onPressButton(item.value)}
+            >
+              {item.icon}
+              {item.label}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      );
+    }
+
+    // mode === "multiple"
+    const {
+      value: multipleValue,
+      defaultValue: multipleDefaultValue,
+      onChange: multipleOnChange,
+    } = props as MultipleSelectionProps;
+
+    // valueがselectedKeyに含まれている時はselectedKeyからvalueを削除し、
+    // 含まれていない時はselectedKeyにvalueを追加する
+    const onPressButton = (value: string) => {
+      if (multipleOnChange) {
+        let updatedValues: string[];
+        if (multipleValue.includes(value)) {
+          updatedValues = multipleValue.filter((v) => v !== value);
+        } else {
+          updatedValues = [...multipleValue, value];
+        }
+        multipleOnChange(updatedValues);
+      }
+    };
+
+    return (
+      <ToggleButtonGroup
+        {...basePropsForGroup}
+        ref={ref}
+        selectionMode="multiple"
+        selectedKeys={
+          multipleValue
+        } /* For multiple selection, value is Key[]. Our prop is string[]. */
+        defaultSelectedKeys={multipleDefaultValue} /* ditto */
+        className={styles.segmentedButtons}
+      >
+        {items.map((item) => (
+          <ToggleButton
+            key={item.value}
+            id={item.value} // id is used by ToggleButtonGroup to identify the item
+            isDisabled={groupDisabled || item.disabled}
+            className={styles.button}
+            onPress={() => onPressButton(item.value)}
+          >
+            {item.icon}
+            {item.label}
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
+    );
   },
 );

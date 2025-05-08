@@ -1,0 +1,89 @@
+.segmentedButtons {
+  display: flex;
+  border-radius: var(--shape-corner-extra-small, 4px); /* M3 spec, or adjust as needed */
+  overflow: hidden; /* Ensures child borders don't stick out */
+  border: 1px solid var(--color-outline, #79747e); /* M3 Outline color */
+}
+
+.button {
+  flex-grow: 1;
+  padding: 8px 12px; /* Adjust padding as needed */
+  border: none; /* Individual borders handled by the group or specific states */
+  background-color: var(--color-surface-container-highest, #e6e0e9); /* M3 Surface Container Highest */
+  color: var(--color-on-surface, #1d1b20); /* M3 On Surface */
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.875rem; /* M3 Label Large */
+  line-height: 1.25rem;
+  font-weight: 500;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+/* Add a separator between buttons, except for the last one */
+.button:not(:last-child) {
+  border-right: 1px solid var(--color-outline, #79747e);
+}
+
+.button[data-hovered] {
+  background-color: var(--color-surface-container-high, #f0eaf2); /* Slightly lighter for hover */
+}
+
+.button[data-pressed] {
+  background-color: var(--color-surface-container, #f5eff7); /* Even lighter for pressed */
+}
+
+.button[data-selected] {
+  background-color: var(--color-secondary-container, #e8def8); /* M3 Secondary Container */
+  color: var(--color-on-secondary-container, #1d192b); /* M3 On Secondary Container */
+  border-color: transparent; /* Selected item might not need a border if bg is distinct */
+}
+
+.button[data-selected][data-hovered] {
+  background-color: color-mix(
+    in srgb,
+    var(--color-secondary-container, #e8def8) 90%,
+    var(--color-on-secondary-container, #1d192b) 10%
+  );
+}
+.button[data-selected][data-pressed] {
+  background-color: color-mix(
+    in srgb,
+    var(--color-secondary-container, #e8def8) 80%,
+    var(--color-on-secondary-container, #1d192b) 20%
+  );
+}
+
+.button[data-disabled] {
+  background-color: color-mix(
+    in srgb,
+    var(--color-surface-container-highest, #e6e0e9) 50%,
+    var(--color-on-surface, #1d1b20) 12%
+  ); /* Disabled state with opacity */
+  color: color-mix(in srgb, var(--color-on-surface, #1d1b20) 38%, transparent);
+  cursor: not-allowed;
+  border-color: color-mix(
+    in srgb,
+    var(--color-outline, #79747e) 12%,
+    transparent
+  );
+}
+
+.button[data-disabled][data-selected] {
+  background-color: color-mix(
+    in srgb,
+    var(--color-on-surface, #1d1b20) 12%,
+    transparent
+  );
+  color: color-mix(in srgb, var(--color-on-surface, #1d1b20) 38%, transparent);
+}
+
+/* Icon styling within the button if needed */
+.button svg {
+  width: 18px;
+  height: 18px;
+}
