@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
+import { useState } from "react";
 import { Slider as Component } from ".";
 import { getCanvas } from "../libs/storybook";
-import { useState } from "react";
 
 const meta: Meta<typeof Component> = {
   component: Component,
