@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
+import { useState, type ComponentProps } from "react";
 import { Button } from "../Button"; // Modal を開くトリガーとして使用
 import {
   MdArchive,
@@ -14,7 +14,7 @@ import {
   MdSettings,
   MdStar,
 } from "../Icons"; // react-icons/md から Md プレフィックス付きでインポート
-import { NavigationDrawer, type NavigationDrawerItem } from "./index";
+import { NavigationDrawer } from ".";
 
 const meta = {
   component: NavigationDrawer,
@@ -29,7 +29,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const sampleItems: NavigationDrawerItem[] = [
+const sampleItems: ComponentProps<typeof NavigationDrawer>["items"] = [
   {
     id: "inbox",
     type: "link",
@@ -224,7 +224,9 @@ export const AllVariants: Story = {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [selectedId, setSelectedId] = useState<string | undefined>("inbox");
 
-    const handleItemClick = (item: NavigationDrawerItem<"link">) => {
+    const handleItemClick = (
+      item: ComponentProps<typeof NavigationDrawer>["items"][number],
+    ) => {
       // eslint-disable-next-line no-console
       console.log("Item clicked:", item);
       setSelectedId(item.id);
