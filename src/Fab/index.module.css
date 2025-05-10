@@ -1,0 +1,73 @@
+.fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: none;
+  /* Default border-radius for standard and extended FAB */
+  border-radius: var(--md-sys-shape-corner-large); /* Now defined in global.css as 16px */
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  width: 56px;
+  height: 56px;
+  box-shadow: var(--md-sys-elevation-level3);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-out, background-color 0.2s ease-out;
+  -webkit-tap-highlight-color: transparent; /* for iOS */
+}
+
+.fab:hover {
+  box-shadow: var(--md-sys-elevation-level4);
+}
+
+.fab:focus {
+  box-shadow: var(--md-sys-elevation-level2); /* M3ではfocusでelevationが下がる場合もあるが、ここではhoverより少し下げる */
+  outline: none;
+}
+
+.fab:active {
+  box-shadow: var(--md-sys-elevation-level2);
+}
+
+.icon {
+  font-size: 24px; /* Material Symbolsの標準サイズ */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Variants */
+.small {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--md-sys-shape-corner-medium); /* Now defined in global.css as 12px */
+}
+
+.large {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--md-sys-shape-corner-extra-large); /* Now defined in global.css as 28px */
+}
+
+.large .icon {
+  font-size: 36px;
+}
+
+.extended {
+  width: auto;
+  height: 56px;
+  padding: 0 20px; /* アイコンとラベルの間のスペースを考慮 */
+  /* border-radius is already var(--md-sys-shape-corner-large) from .fab */
+}
+
+.extended .icon {
+  margin-right: 12px;
+}
+
+.label {
+  font-family: var(--md-sys-typescale-label-large-font-family-name);
+  font-weight: var(--md-sys-typescale-label-large-font-weight);
+  font-size: var(--md-sys-typescale-label-large-font-size);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+}

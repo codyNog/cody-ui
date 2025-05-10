@@ -85,6 +85,8 @@ html {
   /* Border radius */
   --md-sys-shape-corner-extra-small: 4px;
   --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px; /* For Standard and Extended FAB */
+  --md-sys-shape-corner-extra-large: 28px; /* For Large FAB */
   --md-sys-shape-corner-large-start: 16px 0 0 16px;
   --md-sys-shape-corner-full: 59%;
 

@@ -1,5 +1,5 @@
 "use client";
-import { forwardRef, type ForwardedRef } from "react"; // ReactElement と Ref を削除し、ForwardedRef を追加
+import { type ForwardedRef, forwardRef } from "react"; // ReactElement と Ref を削除し、ForwardedRef を追加
 import { ProgressBar } from "react-aria-components";
 import styles from "./index.module.css";
 
