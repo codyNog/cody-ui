@@ -1,0 +1,173 @@
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--md-sys-shape-corner-full);
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border: none;
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  overflow: hidden; /* for ripple effect */
+  -webkit-tap-highlight-color: transparent; /* remove tap highlight on mobile */
+}
+
+.iconButton:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-on-surface-variant) 12%,
+    transparent
+  );
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+.iconButton:active::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-on-surface-variant) 12%,
+    transparent
+  );
+  opacity: 0.6; /* Adjust for desired ripple intensity */
+}
+
+/* Variants */
+.filled {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+.filled:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 88%,
+    var(--md-sys-color-on-primary) 12%
+  );
+}
+.filled:active::before {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 80%,
+    var(--md-sys-color-on-primary) 20%
+  );
+}
+
+.tonal {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+.tonal:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-secondary-container) 88%,
+    var(--md-sys-color-on-secondary-container) 12%
+  );
+}
+.tonal:active::before {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-secondary-container) 80%,
+    var(--md-sys-color-on-secondary-container) 20%
+  );
+}
+
+.outlined {
+  border: 1px solid var(--md-sys-color-outline);
+  color: var(--md-sys-color-primary);
+}
+.outlined:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 8%,
+    transparent
+  );
+}
+.outlined:active::before {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 12%,
+    transparent
+  );
+}
+.outlined:focus-visible {
+  border-color: var(--md-sys-color-primary);
+}
+
+/* Disabled state */
+.iconButton[data-disabled] {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-on-surface) 12%,
+    transparent
+  );
+  color: color-mix(in srgb, var(--md-sys-color-on-surface) 38%, transparent);
+  cursor: not-allowed;
+  border-color: transparent; /* Reset border for outlined disabled */
+}
+
+.outlined[data-disabled] {
+  border: 1px solid
+    color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+  background-color: transparent;
+}
+
+/* Toggle states */
+.iconButton[data-selected] {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+.iconButton[data-selected]:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 88%,
+    var(--md-sys-color-on-primary) 12%
+  );
+}
+
+.tonal[data-selected] {
+  background-color: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+}
+.tonal[data-selected]:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-secondary) 88%,
+    var(--md-sys-color-on-secondary) 12%
+  );
+}
+
+.outlined[data-selected] {
+  background-color: var(--md-sys-color-inverse-surface);
+  color: var(--md-sys-color-inverse-on-surface);
+  border-color: var(--md-sys-color-inverse-surface); /* or primary, depending on M3 spec */
+}
+.outlined[data-selected]:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-inverse-surface) 88%,
+    var(--md-sys-color-inverse-on-surface) 12%
+  );
+}
+
+.iconContainer {
+  display: flex; /* アイコンを中央揃えにしやすくするため */
+  align-items: center;
+  justify-content: center;
+  width: 24px; /* M3 の標準的なアイコンサイズ */
+  height: 24px; /* M3 の標準的なアイコンサイズ */
+}
+
+.iconContainer > svg {
+  /* アイコンが SVG の場合を想定 */
+  width: 100%;
+  height: 100%;
+}
