@@ -1,11 +1,5 @@
 "use client";
-import {
-  type ReactNode,
-  forwardRef,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import { type ReactNode, forwardRef, useCallback, useRef } from "react";
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
@@ -13,6 +7,7 @@ import {
 } from "react-aria-components";
 import { Typography } from "../Typography";
 import styles from "./index.module.css";
+import { useRipple, type RippleType } from "../Ripple";
 
 type ButtonVariant = "filled" | "outlined" | "text" | "elevated" | "tonal";
 
@@ -51,13 +46,6 @@ type Props = BaseProps & {
   // onPress は削除
 };
 
-type Ripple = {
-  key: number;
-  x: number;
-  y: number;
-  size: number;
-};
-
 export const Button = forwardRef<HTMLButtonElement, Props>(
   (
     {
@@ -71,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     ref,
   ) => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
-    const [ripples, setRipples] = useState<Ripple[]>([]); // Initialize state here
+    const { setRipples, component: Ripple } = useRipple();
 
     // onClick が指定されていれば、それを onPress として react-aria-components に渡す
     const handlePress = useCallback(
@@ -99,7 +87,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         const x = e.x;
         const y = e.y;
 
-        const newRipple: Ripple = {
+        const newRipple: RippleType = {
           key: Date.now(), // Simple key generation
           x,
           y,
@@ -109,14 +97,17 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         setRipples((prevRipples) => [...prevRipples, newRipple]);
         // Removed the misplaced closing brace from here
       },
-      [props.isDisabled],
+      [props.isDisabled, setRipples],
     ); // Correctly placed dependency array
 
-    const handleAnimationEnd = useCallback((key: number) => {
-      setRipples((prevRipples) =>
-        prevRipples.filter((ripple) => ripple.key !== key),
-      );
-    }, []);
+    const handleAnimationEnd = useCallback(
+      (key: number) => {
+        setRipples((prevRipples) =>
+          prevRipples.filter((ripple) => ripple.key !== key),
+        );
+      },
+      [setRipples],
+    );
 
     return (
       <AriaButton
@@ -126,7 +117,9 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
           // Handle both forwardRef and local ref
           if (typeof ref === "function") {
             ref(el);
-          } else if (ref) {
+            return;
+          }
+          if (ref) {
             ref.current = el;
           }
           buttonRef.current = el; // Assign to local ref as well
@@ -169,22 +162,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
             {trailingIcon && (
               <span className={styles.iconWrapper}>{trailingIcon}</span>
             )}
-            {/* Render ripples */}
-            <span className={styles.rippleContainer}>
-              {ripples.map((ripple) => (
-                <span
-                  key={ripple.key}
-                  className={styles.ripple}
-                  style={{
-                    left: ripple.x,
-                    top: ripple.y,
-                    width: ripple.size,
-                    height: ripple.size,
-                  }}
-                  onAnimationEnd={() => handleAnimationEnd(ripple.key)}
-                />
-              ))}
-            </span>
+            <Ripple handleAnimationEnd={handleAnimationEnd} />
           </>
         )}
       </AriaButton>

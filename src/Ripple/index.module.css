@@ -1,0 +1,30 @@
+.rippleContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit; /* Match button's border radius */
+  pointer-events: none; /* Allow clicks to pass through */
+  z-index: 0; /* Ensure ripples are behind the content but above the background */
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: currentcolor; /* Use text color for ripple */
+  opacity: var(--md-sys-state-pressed-state-layer-opacity, 0.12); /* Match pressed state opacity */
+  transform: scale(0);
+  animation: ripple-effect 1000ms ease-out; /* Changed timing function to ease-out */
+  /* Center the ripple on the click coordinates */
+  transform-origin: center;
+  /* Adjust positioning based on transform origin */
+  margin-left: -50%;
+  margin-top: -50%;
+  pointer-events: none;
+}
+
+@keyframes ripple-effect {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
