@@ -1,0 +1,136 @@
+.root {
+  --track-height: 4px;
+  --indicator-height: 4px;
+  --track-color: var(--md-sys-color-surface-container-highest);
+  --indicator-color: var(--md-sys-color-primary);
+  --track-shape: var(--md-sys-shape-corner-full);
+  --indicator-shape: var(--md-sys-shape-corner-full);
+
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--track-height);
+  background-color: var(--track-color);
+  overflow: hidden; /* fill がはみ出ないように */
+}
+
+.fill {
+  height: var(--indicator-height);
+  background-color: var(--indicator-color);
+  border-radius: 0; /* indeterminate 関係なく、常に角丸なしの均一な太さに */
+  transition: width 0.2s ease-in-out; /* 確定的な場合の幅変更を滑らかに */
+}
+
+/* 不確定な線形プログレスバーのアニメーション */
+.fill[data-indeterminate="true"] {
+  width: 50%; /* アニメーションの基準幅 */
+  animation: indeterminate-linear 2s infinite linear;
+}
+
+@keyframes indeterminate-linear {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%); /* fillの幅の2倍分移動して画面外へ */
+  }
+}
+
+/* TODO: circular のスタイルもここに追加していく */
+
+.circularRoot {
+  --circular-size: 48px; /* デフォルトサイズ */
+  --circular-stroke-width: 4px;
+  --circular-track-color: var(--md-sys-color-surface-container-highest);
+  --circular-indicator-color: var(--md-sys-color-primary);
+  --circular-indeterminate-rotate-duration: 2s; /* 回転アニメーションの時間 */
+  --circular-indeterminate-stroke-duration: 5.332s; /* ストロークアニメーションの時間 (MDC Web参考) */
+  --circular-determinate-transition-duration: 0.3s;
+
+  width: var(--circular-size);
+  height: var(--circular-size);
+  position: relative; /* アニメーション要素の基準点 */
+  display: inline-block; /* 他の要素と並べやすくする */
+}
+
+.circularSvg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* 12時の位置から開始するため */
+}
+
+.circularTrack {
+  fill: none;
+  stroke: var(--circular-track-color);
+  stroke-width: var(--circular-stroke-width);
+}
+
+.circularIndicator {
+  fill: none;
+  stroke: var(--circular-indicator-color);
+  stroke-width: var(--circular-stroke-width);
+  stroke-linecap: round; /* 先端を丸く */
+  transition: stroke-dashoffset var(--circular-determinate-transition-duration)
+    ease-out;
+}
+
+/* 不確定な円形プログレスバーのアニメーション */
+.circularIndicator[data-indeterminate="true"] {
+  animation: circular-stroke-cycle var(--circular-indeterminate-stroke-duration)
+    cubic-bezier(0.4, 0, 0.2, 1) infinite, circular-rotate
+    var(--circular-indeterminate-rotate-duration) linear infinite;
+  /* stroke-dasharray と stroke-dashoffset は circular-stroke-cycle で設定 */
+  /* transform は circular-rotate で設定 */
+  transform-origin: center; /* 回転の中心を明示 */
+}
+
+/* 回転用アニメーション */
+@keyframes circular-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ストロークの伸び縮みと出現/消滅用アニメーション */
+/* pathLength=200 を前提とする */
+/* stroke-dashoffset を負の方向に変化させることで、線が時計回りに進むように見せる */
+@keyframes circular-stroke-cycle {
+  0% {
+    stroke-dasharray: 2.5, 200; /* 短い線で開始 */
+    stroke-dashoffset: 0;
+  }
+  25% {
+    /* 線が伸びながら進む */
+    stroke-dasharray: 150, 200; /* 長い線 (円周の75%) */
+    stroke-dashoffset: -25; /* 時計回りに25ユニット進む */
+  }
+  50% {
+    /* 線が縮みながらさらに進む */
+    stroke-dasharray: 2.5, 200; /* 短い線に戻る */
+    stroke-dashoffset: -100; /* 時計回りに合計100ユニット進む */
+  }
+  75% {
+    /* 線が再び伸びながら進む */
+    stroke-dasharray: 150, 200;
+    stroke-dashoffset: -125; /* 時計回りに合計125ユニット進む */
+  }
+  100% {
+    /* 線が縮んでほぼ一周 */
+    stroke-dasharray: 2.5, 200;
+    stroke-dashoffset: -197.5; /* ほぼ一周して開始点近くに戻る (200 - 2.5) */
+  }
+}
+
+/* TODO: fourColor のスタイル */
+.circularIndicator[data-four-color="true"] {
+  /*
+    TODO: 4色アニメーションの実装。
+    複数の arc を重ねるか、gradient を使うなどの工夫が必要。
+    M3 の仕様では、各色が順番に表示されるようなアニメーション。
+  */
+  animation: none; /* 一旦無効化 */
+  /* stroke: conic-gradient(red, yellow, green, blue); とかは単純すぎる */
+}
