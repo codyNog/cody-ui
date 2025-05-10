@@ -28,8 +28,8 @@
   transform: translateX(-50%);
   background-color: var(--md-sys-color-inverse-surface, #313033);
   color: var(--md-sys-color-inverse-on-surface, #f4eff4);
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 6px 12px; /* Increased padding for a more rounded look */
+  border-radius: 16px; /* More rounded corners */
   font-size: 0.875rem; /* 14sp */
   line-height: 1.25rem; /* 20sp */
   white-space: nowrap;
@@ -39,9 +39,12 @@
   z-index: 1;
 }
 
+/* .output::after was removed as per user feedback */
+
 .slider:hover .output,
 .slider[data-dragging] .output,
-.slider .thumb[data-focus-visible] ~ .output {
+.slider .thumb[data-focus-visible] .output {
+  /* Adjusted selector for output inside thumb */
   opacity: 1;
 }
 

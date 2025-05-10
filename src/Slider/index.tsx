@@ -98,12 +98,6 @@ export const Slider = forwardRef<HTMLDivElement, Props>(
       >
         {/* Label is styled as display:none in CSS for M3, but kept for prop compatibility */}
         {label && <Label className={styles.label}>{label}</Label>}
-        {/* SliderOutput is used for the value tooltip */}
-        <SliderOutput className={styles.output}>
-          {({ state }) =>
-            state.values.map((_, i) => state.getThumbValueLabel(i)).join(" – ")
-          }
-        </SliderOutput>
         {/* trackContainer for positioning track and thumbs */}
         <div className={styles.trackContainer}>
           <SliderTrack className={styles.track}>
@@ -159,7 +153,14 @@ export const Slider = forwardRef<HTMLDivElement, Props>(
                       index={i}
                       className={styles.thumb}
                       // data-focus-visible, data-dragging are automatically applied by RAC
-                    />
+                    >
+                      {/* SliderOutput is used for the value tooltip, now inside Thumb */}
+                      <SliderOutput className={styles.output}>
+                        {({ state: thumbState }) =>
+                          thumbState.getThumbValueLabel(i)
+                        }
+                      </SliderOutput>
+                    </SliderThumb>
                   );
                 })}
               </>
