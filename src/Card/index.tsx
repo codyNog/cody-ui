@@ -1,6 +1,7 @@
 "use client";
-import { type HTMLAttributes, forwardRef } from "react";
+import { type HTMLAttributes, forwardRef, useRef } from "react";
 import { Button } from "../Button"; // Assuming Button component exists
+import { useRipple } from "../Ripple";
 import styles from "./index.module.css";
 
 type Props = {
@@ -37,6 +38,9 @@ export const Card = forwardRef<HTMLDivElement, Props>(
     },
     ref,
   ) => {
+    const { component: Ripple, handleClick } = useRipple();
+    const cardRef = useRef<HTMLDivElement>(null);
+
     const mediaContent =
       media?.image || image ? (
         <img
@@ -48,10 +52,22 @@ export const Card = forwardRef<HTMLDivElement, Props>(
 
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          if (typeof ref === "function") {
+            ref(node);
+          } else if (ref) {
+            ref.current = node;
+          }
+          cardRef.current = node;
+        }}
         className={`${styles.base} ${styles[variant]} ${className || ""}`}
+        onClick={(e) => {
+          handleClick(e, cardRef);
+          rest.onClick?.(e); // Call original onClick if it exists
+        }}
         {...rest}
       >
+        <Ripple />
         {mediaContent && (
           <div className={styles.mediaContainer}>{mediaContent}</div>
         )}

@@ -1,6 +1,7 @@
 "use client";
-import { type ReactNode, forwardRef } from "react";
+import { type ReactNode, forwardRef, useRef } from "react"; // MouseEvent のインポートを削除
 import { type PressEvent, Button as RACButton } from "react-aria-components";
+import { useRipple } from "../Ripple"; // useRipple, RippleType をインポート
 import { MdCheck } from "../Icons"; // Import MdCheck
 import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
@@ -41,7 +42,8 @@ export type ChipProps<V extends ChipVariant = "assist"> = ChipBaseProps & {
 // forwardRef の型引数を更新
 export const Chip = forwardRef<HTMLButtonElement, ChipProps<ChipVariant>>(
   // Use the new ChipProps type
-  (props, ref) => {
+  (props, _ref) => {
+    // ref を _ref に変更 (未使用のため)
     // Destructure props based on the specific variant type
     const {
       // デフォルトの variant を 'assist' に設定
@@ -76,11 +78,19 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps<ChipVariant>>(
     // trailingIcon is now correctly typed based on variant, check directly
     const hasTrailingIcon = trailingIcon != null;
 
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const { component: Ripple, handleClick } = useRipple(); // setRipples を setRipple に変更
+
+    const onPress = (e: PressEvent) => {
+      handleClick(e, buttonRef);
+      onClick?.(e);
+    };
+
     return (
       <RACButton
-        ref={ref}
+        ref={buttonRef} // ref を buttonRef に変更
         isDisabled={isDisabled}
-        onPress={onClick} // onPress を onClick に変更 (RACButton は onPress を期待するので、内部的には onPress のまま)
+        onPress={onPress} // onPress を handleClick に変更
         aria-label={ariaLabel}
         className={[
           styles.chip,
@@ -110,6 +120,7 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps<ChipVariant>>(
         {hasTrailingIcon && (
           <span className={styles.closeIcon}>{trailingIcon}</span>
         )}
+        <Ripple /> {/* handleAnimationEnd を削除 */}
       </RACButton>
     );
   },

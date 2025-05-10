@@ -3,6 +3,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden; /* リップル効果がコンポーネントの境界を越えないようにする */
   border: none;
   /* Default border-radius for standard and extended FAB */
   border-radius: var(--md-sys-shape-corner-large); /* Now defined in global.css as 16px */

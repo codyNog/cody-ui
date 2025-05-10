@@ -4,8 +4,11 @@ import {
   type ForwardedRef,
   type ReactNode,
   forwardRef,
+  // useState, // useState は useRipple 内で使われるため、ここでは不要
+  useRef, // useRef をインポート
 } from "react";
 import { Typography } from "../Typography"; // Typography をインポート
+import { useRipple } from "../Ripple"; // useRipple をインポート
 import styles from "./index.module.css";
 
 type FabVariantValue = "standard" | "extended";
@@ -57,6 +60,10 @@ export const Fab = forwardRef(
       // All other props, including variant-specific ones like icon/label, are in restRootProps
       ...restRootProps
     } = props;
+
+    const { handleClick: handleRippleClick, component: RippleVisuals } =
+      useRipple();
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     // Determine the variant, defaulting to 'standard'
     // props.variant can be undefined if V is "standard" (due to `variant?: "standard"`)
@@ -112,10 +119,21 @@ export const Fab = forwardRef(
 
     return (
       <button
-        ref={ref}
+        ref={(node) => {
+          if (typeof ref === "function") {
+            ref(node);
+          } else if (ref) {
+            ref.current = node;
+          }
+          buttonRef.current = node;
+        }}
         type="button"
         className={fabClasses}
         aria-label={getAccessibleName()}
+        onMouseDown={(e) => {
+          handleRippleClick(e, buttonRef);
+          props.onMouseDown?.(e);
+        }}
         {...restRootProps} // Spread the cleaned buttonProps
       >
         {hasIcon && <span className={styles.icon}>{iconNode}</span>}
@@ -124,6 +142,7 @@ export const Fab = forwardRef(
             {labelText}
           </Typography>
         )}
+        <RippleVisuals />
       </button>
     );
   },

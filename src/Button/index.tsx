@@ -7,7 +7,7 @@ import {
 } from "react-aria-components";
 import { Typography } from "../Typography";
 import styles from "./index.module.css";
-import { useRipple, type RippleType } from "../Ripple";
+import { useRipple } from "../Ripple";
 
 type ButtonVariant = "filled" | "outlined" | "text" | "elevated" | "tonal";
 
@@ -59,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     ref,
   ) => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
-    const { setRipples, component: Ripple } = useRipple();
+    const { component: Ripple, handleClick: handleRippleClick } = useRipple();
 
     // onClick が指定されていれば、それを onPress として react-aria-components に渡す
     const handlePress = useCallback(
@@ -73,41 +73,18 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     // Rename to handlePressStart and use PressEvent
     const handlePressStart = useCallback(
       (e: PressEvent) => {
-        // Check if disabled within the handler as onPressStart might fire even if disabled
         if (props.isDisabled) return;
 
-        // Use e.x and e.y directly from PressEvent for coordinates relative to the target
-        const button = buttonRef.current;
-        if (!button) return;
-
-        const rect = button.getBoundingClientRect();
-        // Calculate ripple size based on the button's diagonal
-        const size = Math.sqrt(rect.width ** 2 + rect.height ** 2) * 2;
-        // Use coordinates directly from PressEvent
-        const x = e.x;
-        const y = e.y;
-
-        const newRipple: RippleType = {
-          key: Date.now(), // Simple key generation
-          x,
-          y,
-          size,
-        };
-
-        setRipples((prevRipples) => [...prevRipples, newRipple]);
-        // Removed the misplaced closing brace from here
+        if (buttonRef.current) {
+          handleRippleClick(e, buttonRef);
+        }
+        // react-aria-components の PressEvent はデフォルトで伝播を止めるため、
+        // stopPropagation は通常不要ですが、意図しない動作を防ぐために明示的に呼ぶことも検討できます。
       },
-      [props.isDisabled, setRipples],
-    ); // Correctly placed dependency array
-
-    const handleAnimationEnd = useCallback(
-      (key: number) => {
-        setRipples((prevRipples) =>
-          prevRipples.filter((ripple) => ripple.key !== key),
-        );
-      },
-      [setRipples],
+      [props.isDisabled, handleRippleClick],
     );
+
+    // handleAnimationEnd は不要なので削除
 
     return (
       <AriaButton
@@ -162,7 +139,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
             {trailingIcon && (
               <span className={styles.iconWrapper}>{trailingIcon}</span>
             )}
-            <Ripple handleAnimationEnd={handleAnimationEnd} />
+            <Ripple />
           </>
         )}
       </AriaButton>
