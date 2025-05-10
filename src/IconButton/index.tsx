@@ -1,9 +1,9 @@
 "use client";
-import { forwardRef, type ReactElement, useRef } from "react"; // useRef をインポート
+import { type ReactElement, forwardRef, useRef } from "react"; // useRef をインポート
 import {
+  type PressEvent, // PressEvent もインポート
   ToggleButton,
   type ToggleButtonProps,
-  type PressEvent, // PressEvent もインポート
 } from "react-aria-components";
 import styles from "./index.module.css";
 

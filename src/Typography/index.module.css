@@ -1,0 +1,45 @@
+.displayLarge {
+  composes: typescale-display-large from global;
+}
+.displayMedium {
+  composes: typescale-display-medium from global;
+}
+.displaySmall {
+  composes: typescale-display-small from global;
+}
+.headlineLarge {
+  composes: typescale-headline-large from global;
+}
+.headlineMedium {
+  composes: typescale-headline-medium from global;
+}
+.headlineSmall {
+  composes: typescale-headline-small from global;
+}
+.titleLarge {
+  composes: typescale-title-large from global;
+}
+.titleMedium {
+  composes: typescale-title-medium from global;
+}
+.titleSmall {
+  composes: typescale-title-small from global;
+}
+.bodyLarge {
+  composes: typescale-body-large from global;
+}
+.bodyMedium {
+  composes: typescale-body-medium from global;
+}
+.bodySmall {
+  composes: typescale-body-small from global;
+}
+.labelLarge {
+  composes: typescale-label-large from global;
+}
+.labelMedium {
+  composes: typescale-label-medium from global;
+}
+.labelSmall {
+  composes: typescale-label-small from global;
+}

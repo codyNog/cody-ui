@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
-import { MdFavorite } from "../Icons";
 import { IconButton as Component } from ".";
+import { MdFavorite } from "../Icons";
 import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
