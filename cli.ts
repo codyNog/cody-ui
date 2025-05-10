@@ -47,7 +47,7 @@ function argbToHex(argb: number): string {
 }
 
 // CSSカラーカスタムプロパティを生成する関数
-function generateThemeCssFromColor(sourceColorHex = "#131313"): string {
+function generateThemeCssFromColor(sourceColorHex = "#6750A4"): string {
   const sourceColorArgb = argbFromHex(sourceColorHex);
   const theme = themeFromSourceColor(sourceColorArgb);
 
@@ -463,7 +463,7 @@ const GitHubFileExtractor = (token: string) => {
       // --- テーマカラー生成処理 ---
       console.log("🎨 Generating theme colors for src/theme.css...");
       try {
-        const keyColor = process.env.THEME_KEY_COLOR || "#131313";
+        const keyColor = process.env.THEME_KEY_COLOR || "#6750A4";
         const newThemeColorProperties = generateThemeCssFromColor(keyColor);
         const themeCssPath = path.join(options.outputPath, "theme.css"); // 書き込み先を outputPath の中の theme.css に変更
         const replacementComment = "/* m3 theme generated from source color */";
