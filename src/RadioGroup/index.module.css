@@ -3,21 +3,13 @@
   display: flex;
   flex-direction: column;
   gap: 0; /* Remove explicit gap between items */
-  font-family: var(--md-sys-typescale-body-large-font-family-name);
-  font-weight: var(--md-sys-typescale-body-large-font-weight);
-  font-size: var(--md-sys-typescale-body-large-font-size);
-  line-height: var(--md-sys-typescale-body-large-line-height);
-  letter-spacing: var(--md-sys-typescale-body-large-letter-spacing);
-  color: var(--md-sys-color-on-surface); /* Default text color */
+  /* Font styles are now handled by Typography component */
+  /* color: var(--md-sys-color-on-surface); Default text color - Handled by Typography */
 }
 
 .groupLabel {
-  color: var(--md-sys-color-on-surface-variant); /* Group label color */
-  font-family: var(--md-sys-typescale-body-small-font-family-name);
-  font-weight: var(--md-sys-typescale-body-small-font-weight);
-  font-size: var(--md-sys-typescale-body-small-font-size);
-  line-height: var(--md-sys-typescale-body-small-line-height);
-  letter-spacing: var(--md-sys-typescale-body-small-letter-spacing);
+  /* color: var(--md-sys-color-on-surface-variant); Group label color - Handled by Typography */
+  /* Font styles are now handled by Typography component */
   margin-bottom: 8px; /* Space below the group label */
 }
 

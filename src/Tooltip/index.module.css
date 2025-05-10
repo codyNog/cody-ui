@@ -1,6 +1,6 @@
 /* Base styles for Tooltip Action Button */
 .tooltipAction {
-  composes: typescale-label-large from global; /* Use M3 Label Large */
+  /* composes: typescale-label-large from global; Font styles are now handled by Typography component */
   position: relative; /* Needed for state layer */
   overflow: hidden; /* Needed for state layer */
   border-radius: var(--space-5); /* 20px, using space variable */
@@ -16,7 +16,7 @@
   outline: none; /* react-aria handles focus */
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
   background-color: transparent; /* From .text variant */
-  color: var(--md-sys-color-primary); /* From .text variant */
+  /* color: var(--md-sys-color-primary); Color is now handled by Typography component */
 }
 
 /* State Layer for Tooltip Action Button */
@@ -90,7 +90,7 @@
 
 /* Styles for Plain Tooltip */
 .tooltipPopupPlain {
-  composes: typescale-body-small from global;
+  /* composes: typescale-body-small from global; Font styles are now handled by Typography component */
   composes: tooltipPopupBase;
   background-color: var(--md-sys-color-inverse-surface);
   /* color for supporting text will be handled by .tooltipContent in .tooltipPopupPlain .tooltipContent */
@@ -114,16 +114,17 @@
 
 /* Styles for Rich Tooltip Title */
 .richTitle {
-  composes: typescale-body-medium from global;
-  color: var(--md-sys-color-on-surface); /* M3 Title color */
-  /* margin-bottom: var(--space-1); */ /* Gap is handled by parent flex container */
+  /* composes: typescale-body-medium from global; Font styles are now handled by Typography component */
+  /* color: var(--md-sys-color-on-surface); Color is now handled by Typography component */
+  /* margin-bottom: var(--space-1); */
+  /* Gap is handled by parent flex container */
 }
 
 /* Styles for Tooltip Content (Supporting Text) */
 .tooltipContent {
-  composes: typescale-body-small from global;
+  /* composes: typescale-body-small from global; Font styles are now handled by Typography component */
   /* Default color, will be overridden for plain tooltip */
-  color: var(--md-sys-color-on-surface-variant);
+  /* color: var(--md-sys-color-on-surface-variant); Color is now handled by Typography component */
 }
 
 .tooltipPopupPlain .tooltipContent {

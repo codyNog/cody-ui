@@ -11,11 +11,11 @@ import {
   TextField as AriaTextField,
   Input,
   Label,
-  Text,
   TextArea,
   type ValidationResult,
 } from "react-aria-components";
 // ReactNode is only used in the imported type, no need to import here directly
+import { Typography } from "../../Typography";
 import type { Props } from "../types";
 import styles from "./index.module.css";
 
@@ -116,12 +116,26 @@ export const OutlinedTextField = forwardRef<
           style={multiline ? { height: "auto", minHeight: "56px" } : {}}
           {...props}
         >
-          {label && <Label className={styles.label}>{label}</Label>}
+          {label && (
+            <Label className={styles.label}>
+              <Typography
+                variant="bodyLarge"
+                color={isInvalid ? "error" : "onSurfaceVariant"}
+              >
+                {label}
+              </Typography>
+            </Label>
+          )}
 
           {/* Fieldset/Legend are purely for the border notch effect */}
           <fieldset aria-hidden="true" className={styles.fieldset}>
             <legend className={styles.legend}>
-              <span>{label ? label : "\u00A0"}</span>
+              <Typography
+                variant="bodyLarge"
+                color={isInvalid ? "error" : "onSurfaceVariant"}
+              >
+                {label ? label : "\u00A0"}
+              </Typography>
             </legend>
           </fieldset>
 
@@ -159,18 +173,22 @@ export const OutlinedTextField = forwardRef<
         {/* Container for supporting text like FilledTextField */}
         <div className={styles.supportingTextContainer}>
           {!isInvalid && description && (
-            <Text slot="description" className={styles.description}>
+            <Typography
+              variant="bodySmall"
+              color="onSurfaceVariant"
+              slot="description"
+            >
               {description}
-            </Text>
+            </Typography>
           )}
           {isInvalid && (
-            <Text slot="errorMessage" className={styles.error}>
+            <Typography variant="bodySmall" color="error" slot="errorMessage">
               {typeof errorMessage === "string"
                 ? errorMessage
                 : (errorMessage as ValidationResult)?.validationErrors?.join(
                     " ",
                   ) || "Invalid input"}
-            </Text>
+            </Typography>
           )}
         </div>
       </div>

@@ -43,8 +43,7 @@
 
 /* Input element styles */
 .input {
-  font-family: inherit;
-  font-size: 1rem;
+  composes: typescale-body-large from global;
   color: var(--text-field-input-color);
   border: none;
   background-color: transparent;
@@ -53,15 +52,13 @@
   width: 100%;
   height: 100%; /* Fill the inputContainer height */
   box-sizing: border-box;
-  line-height: 1.5;
   position: relative; /* Keep relative positioning */
   z-index: 1; /* Keep above fieldset */
 }
 
 /* Styles specific to the textarea element when multiline is true */
 .textarea {
-  font-family: inherit; /* Ensure font consistency */
-  font-size: 1rem; /* Ensure font consistency */
+  composes: typescale-body-large from global;
   color: var(--text-field-input-color); /* Ensure color consistency */
   border: none; /* Ensure border consistency */
   background-color: transparent; /* Ensure background consistency */
@@ -73,7 +70,6 @@
   min-height: calc(56px - 32px); /* Adjust min-height based on vertical padding */
   resize: none;
   padding: 16px 0; /* Vertical padding only */
-  line-height: 1.5;
 }
 
 /* Adornment styles */
@@ -109,7 +105,6 @@
   left: 12px; /* Initial position */
   top: 50%; /* Center vertically */
   transform: translateY(-50%); /* Precise vertical centering */
-  font-size: 1rem;
   color: var(--text-field-label-color);
   pointer-events: none;
   transform-origin: top left;
@@ -144,8 +139,7 @@
 .legend {
   padding: 0;
   margin-left: 4px; /* Align with input padding start */
-  font-size: 0.75rem;
-  line-height: normal;
+  line-height: normal; /* Keep for layout */
   visibility: hidden;
   max-width: 0.01px;
   transform: scaleX(0);
@@ -239,19 +233,7 @@
 }
 
 /* Supporting text (description/error) styles */
-.description,
-.error {
-  font-size: 0.75rem;
-  line-height: 1.33;
-}
-
-.description {
-  color: var(--text-field-supporting-text-color);
-}
-
-.error {
-  color: var(--text-field-error-text-color);
-}
+/* Typography component handles styling for description and error text */
 
 /* --- Outlined Variant Specific Styles --- */
 .outlined {

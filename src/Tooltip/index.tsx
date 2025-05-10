@@ -1,6 +1,7 @@
 "use client";
 import { type ReactNode, forwardRef } from "react";
 import { Tooltip as AriaTooltip, TooltipTrigger } from "react-aria-components";
+import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 
 type Action = {
@@ -49,11 +50,21 @@ export const Tooltip = forwardRef<HTMLDivElement, Props>(
       <TooltipTrigger delay={100}>
         {children}
         <AriaTooltip ref={ref} className={tooltipPopupClasses}>
-          {!isRich && <span className={styles.tooltipContent}>{content}</span>}
+          {!isRich && (
+            <Typography variant="bodySmall" color="inverseOnSurface">
+              {content}
+            </Typography>
+          )}
           {isRich && (
             <>
-              {title && <span className={styles.richTitle}>{title}</span>}
-              <div className={styles.richContent}>{content}</div>
+              {title && (
+                <Typography variant="bodyMedium" color="onSurface">
+                  {title}
+                </Typography>
+              )}
+              <Typography variant="bodySmall" color="onSurfaceVariant">
+                {content}
+              </Typography>
               {actions && actions.length > 0 && (
                 <div className={styles.actions}>
                   {actions.map((action) => (
@@ -66,7 +77,9 @@ export const Tooltip = forwardRef<HTMLDivElement, Props>(
                       disabled={action.isDisabled}
                       className={styles.tooltipAction}
                     >
-                      {action.label}
+                      <Typography variant="labelLarge" color="primary">
+                        {action.label}
+                      </Typography>
                     </button>
                   ))}
                 </div>

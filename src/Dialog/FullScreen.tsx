@@ -6,6 +6,7 @@ import {
   Modal,
   ModalOverlay,
 } from "react-aria-components";
+import { Typography } from "../Typography"; // Typography をインポート
 import { MdClose } from "react-icons/md"; // 閉じるボタン用にアイコンを直接インポート
 import { Button } from "../Button";
 import styles from "./index.module.css"; // 基本のスタイルを共有しつつ、必要なら専用スタイルも作る
@@ -46,8 +47,10 @@ export const FullScreenDialog = ({
             >
               <MdClose />
             </Button>
-            <Heading slot="title" className={styles.fullScreenHeadline}>
-              {headline}
+            <Heading slot="title">
+              <Typography variant="titleLarge" color="onSurface">
+                {headline}
+              </Typography>
             </Heading>
             <div className={styles.fullScreenHeaderActions}>
               {headerActions?.map((action, index) => (

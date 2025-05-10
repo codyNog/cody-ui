@@ -15,11 +15,8 @@
   color: var(--md-sys-color-on-surface);
   cursor: pointer;
   text-align: center;
-  font-family: var(--md-sys-typescale-label-large-font-family-name);
-  font-size: var(--md-sys-typescale-label-large-font-size);
-  font-weight: var(--md-sys-typescale-label-large-font-weight);
-  line-height: 40px;
-  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+  composes: typescale-label-large from global;
+  line-height: 40px; /* Keep line-height for vertical centering */
   outline: none;
   display: flex;
   align-items: center;

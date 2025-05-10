@@ -1,6 +1,5 @@
 /* Base styles */
 .button {
-  composes: typescale-label-large from global; /* Use M3 Label Large */
   /* MD3 Base styles */
   position: relative; /* Needed for state layer */
   overflow: hidden; /* Needed for state layer */
@@ -173,10 +172,6 @@
   justify-content: center;
   width: 18px; /* Keep specific size for now */
   height: 18px;
-}
-
-.label {
-  /* Inherits typography from .button */
 }
 
 /* Ripple styles */

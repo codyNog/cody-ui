@@ -28,48 +28,11 @@
   margin-bottom: 16px; /* M3 Spacing */
 }
 
-.headline {
-  font: var(--md-sys-typescale-headline-small-font); /* M3 Headline Small */
-  letter-spacing: var(--md-sys-typescale-headline-small-tracking);
-  color: var(--md-sys-color-on-surface); /* M3 On Surface */
-  margin: 0;
-  text-align: center;
-}
-
-.supportingText {
-  font: var(--md-sys-typescale-body-medium-font); /* M3 Body Medium */
-  letter-spacing: var(--md-sys-typescale-body-medium-tracking);
-  color: var(--md-sys-color-on-surface-variant); /* M3 On Surface Variant */
-  margin: 0;
-}
-
 .actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   margin-top: 24px; /* M3 Spacing */
-}
-
-/* Basic button styling, assuming Button component will be used later */
-.actions button {
-  padding: 10px 24px;
-  border-radius: 20px; /* M3 Button corner radius */
-  border: none;
-  cursor: pointer;
-  font: var(--md-sys-typescale-label-large-font);
-  letter-spacing: var(--md-sys-typescale-label-large-tracking);
-}
-
-/* Example for a primary action button */
-.actions button:last-child {
-  background-color: var(--md-sys-color-primary); /* M3 Primary */
-  color: var(--md-sys-color-on-primary); /* M3 On Primary */
-}
-
-/* Example for a secondary/text action button */
-.actions button:not(:last-child) {
-  background-color: transparent;
-  color: var(--md-sys-color-primary); /* M3 Primary */
 }
 
 .modalOverlay {
@@ -134,15 +97,6 @@
   border-bottom: 1px solid var(--md-sys-color-outline-variant); /* M3 Divider */
   flex-shrink: 0; /* Prevent header from shrinking */
   background-color: var(--md-sys-color-surface-container-low); /* Optional: Header background */
-}
-
-.fullScreenHeadline {
-  font: var(--md-sys-typescale-title-large-font); /* M3 Title Large */
-  letter-spacing: var(--md-sys-typescale-title-large-tracking);
-  color: var(--md-sys-color-on-surface);
-  margin: 0 16px; /* Spacing around title */
-  flex-grow: 1; /* Allow title to take available space if actions are few */
-  text-align: left; /* Align to left, not center like basic dialog */
 }
 
 .fullScreenHeaderActions {

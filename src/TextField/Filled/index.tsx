@@ -11,10 +11,10 @@ import {
   TextField as AriaTextField,
   Input,
   Label,
-  Text,
   TextArea,
   type ValidationResult,
 } from "react-aria-components";
+import { Typography } from "../../Typography";
 import type { Props } from "../types";
 import styles from "./index.module.css";
 
@@ -115,7 +115,16 @@ export const FilledTextField = forwardRef<
           style={multiline ? { height: "auto", minHeight: "56px" } : {}}
           {...props}
         >
-          {label && <Label className={styles.label}>{label}</Label>}
+          {label && (
+            <Label className={styles.label}>
+              <Typography
+                variant="bodyLarge"
+                color={isInvalid ? "error" : "onSurfaceVariant"}
+              >
+                {label}
+              </Typography>
+            </Label>
+          )}
 
           {/* Container for input and adornments */}
           <div className={styles.inputContainer}>
@@ -151,18 +160,22 @@ export const FilledTextField = forwardRef<
         {/* Container for supporting text to reserve space */}
         <div className={styles.supportingTextContainer}>
           {!isInvalid && description && (
-            <Text slot="description" className={styles.description}>
+            <Typography
+              variant="bodySmall"
+              color="onSurfaceVariant"
+              slot="description"
+            >
               {description}
-            </Text>
+            </Typography>
           )}
           {isInvalid && (
-            <Text slot="errorMessage" className={styles.error}>
+            <Typography variant="bodySmall" color="error" slot="errorMessage">
               {typeof errorMessage === "string"
                 ? errorMessage
                 : (errorMessage as ValidationResult)?.validationErrors?.join(
                     " ",
                   ) || "Invalid input"}
-            </Text>
+            </Typography>
           )}
         </div>
       </div>

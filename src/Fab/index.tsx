@@ -5,6 +5,7 @@ import {
   type ReactNode,
   forwardRef,
 } from "react";
+import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 
 type FabVariantValue = "standard" | "extended";
@@ -119,7 +120,9 @@ export const Fab = forwardRef(
       >
         {hasIcon && <span className={styles.icon}>{iconNode}</span>}
         {isExtendedLayout && labelText && (
-          <span className={styles.label}>{labelText}</span>
+          <Typography variant="labelLarge" color="onPrimaryContainer">
+            {labelText}
+          </Typography>
         )}
       </button>
     );

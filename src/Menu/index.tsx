@@ -8,6 +8,7 @@ import {
   SubmenuTrigger,
   composeRenderProps,
 } from "react-aria-components";
+import { Typography } from "../Typography"; // Typography をインポート
 import type {
   Key, // Key も react-aria-components からインポート (react-aria からでも良いが統一)
   PopoverProps,
@@ -118,7 +119,9 @@ const InternalMenuItem = ({ item, ...props }: InternalMenuItemProps) => {
       {item.leadingIcon && (
         <span className={styles.leadingIcon}>{item.leadingIcon}</span>
       )}
-      <span className={styles.label}>{item.label}</span>
+      <Typography variant="bodyLarge" color="onSurface" slot="label">
+        {item.label}
+      </Typography>
       {item.trailingIcon && (
         <span className={styles.trailingIcon}>{item.trailingIcon}</span>
       )}

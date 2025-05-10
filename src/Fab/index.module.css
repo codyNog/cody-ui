@@ -63,11 +63,3 @@
 .extended .icon {
   margin-right: 12px;
 }
-
-.label {
-  font-family: var(--md-sys-typescale-label-large-font-family-name);
-  font-weight: var(--md-sys-typescale-label-large-font-weight);
-  font-size: var(--md-sys-typescale-label-large-font-size);
-  line-height: var(--md-sys-typescale-label-large-line-height);
-  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
-}

@@ -51,8 +51,7 @@
 
 /* Input element styles */
 .input {
-  font-family: inherit;
-  font-size: 1rem;
+  composes: typescale-body-large from global;
   color: var(--text-field-input-color);
   border: none;
   background-color: transparent;
@@ -60,14 +59,12 @@
   outline: none;
   width: 100%;
   box-sizing: border-box;
-  line-height: 1.5;
   z-index: 1;
 }
 
 /* Styles specific to the textarea element when multiline is true */
 .textarea {
-  font-family: inherit; /* Ensure font consistency */
-  font-size: 1rem; /* Ensure font consistency */
+  composes: typescale-body-large from global;
   color: var(--text-field-input-color); /* Ensure color consistency */
   border: none; /* Ensure border consistency */
   background-color: transparent; /* Ensure background consistency */
@@ -79,7 +76,6 @@
   min-height: calc(56px - 16px); /* Adjust min-height based on container padding */
   resize: none;
   padding: 8px 0; /* Vertical padding inside inputContainer */
-  line-height: 1.5;
 }
 
 /* Adornment styles */
@@ -118,9 +114,7 @@
   transform: translateY(-50%);
   color: var(--text-field-label-color);
   pointer-events: none;
-  transition: top 0.2s ease, transform 0.2s ease, font-size 0.2s ease, color
-    0.2s ease;
-  font-size: 1rem;
+  transition: top 0.2s ease, transform 0.2s ease, color 0.2s ease;
   z-index: 2;
   /* Adjust position based on start adornment */
   /* This might need JS or :has() selector if adornment width varies */
@@ -141,9 +135,8 @@
   )
   .label {
   top: 8px; /* Float to the top padding area */
-  transform: translateY(0) scale(0.75);
+  transform: translateY(0) scale(0.75); /* Keep scale for floating effect */
   transform-origin: top left;
-  font-size: 0.75rem;
 }
 
 .container:focus-within .label {
@@ -162,19 +155,7 @@
 }
 
 /* Supporting text (description/error) styles */
-.description,
-.error {
-  font-size: 0.75rem;
-  line-height: 1.33;
-}
-
-.description {
-  color: var(--text-field-supporting-text-color);
-}
-
-.error {
-  color: var(--text-field-error-text-color);
-}
+/* Typography component handles styling for description and error text */
 
 /* --- Filled Variant Specific Styles --- */
 .filled {

@@ -51,13 +51,9 @@
 
 .headline {
   /* M3 Title Small */
-  font-family: var(--md-sys-typescale-title-small-font-family-name, Roboto);
-  font-weight: var(--md-sys-typescale-title-small-font-weight, 500);
-  font-size: var(--md-sys-typescale-title-small-font-size, 14px);
-  line-height: var(--md-sys-typescale-title-small-line-height, 20px);
-  letter-spacing: var(--md-sys-typescale-title-small-letter-spacing, 0.1px);
+  /* Font styles are now handled by Typography component */
   padding: 16px; /* 上下左右のpaddingはM3に従う, 特に上は28pxだが、ここでは16pxで統一 */
-  color: var(--md-sys-color-on-surface-variant, #49454f);
+  /* color: var(--md-sys-color-on-surface-variant, #49454f); Color is now handled by Typography component */
   margin-top: 12px; /* M3 modal drawerのheadlineの上部スペース */
 }
 
@@ -81,13 +77,9 @@
   box-sizing: border-box; /* border-radius の問題を解決するため */
   position: relative; /* State layer 用 */
   overflow: hidden; /* State layer 用 */
-  color: var(--md-sys-color-on-surface-variant, #49454f);
+  /* color: var(--md-sys-color-on-surface-variant, #49454f); Color is now handled by Typography component */
   /* M3 Label Large */
-  font-family: var(--md-sys-typescale-label-large-font-family-name, Roboto);
-  font-weight: var(--md-sys-typescale-label-large-font-weight, 500);
-  font-size: var(--md-sys-typescale-label-large-font-size, 14px);
-  line-height: var(--md-sys-typescale-label-large-line-height, 20px);
-  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing, 0.1px);
+  /* Font styles are now handled by Typography component */
   text-decoration: none; /* a タグのデフォルトスタイルをリセット */
 }
 
@@ -162,13 +154,9 @@
 
 .itemBadge {
   /* M3 Label Large (ユーザーの要望によりラベルと同じサイズに) */
-  font-family: var(--md-sys-typescale-label-large-font-family-name, Roboto);
-  font-weight: var(--md-sys-typescale-label-large-font-weight, 500);
-  font-size: var(--md-sys-typescale-label-large-font-size, 14px);
-  line-height: var(--md-sys-typescale-label-large-line-height, 20px); /* アイテムのテキストとベースラインを合わせる */
-  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing, 0.1px);
+  /* Font styles are now handled by Typography component */
   margin-left: 12px; /* ラベルとの間隔 */
-  color: var(--md-sys-color-on-surface-variant, #49454f); /* 通常のアイテムテキストに色を合わせる */
+  /* color: var(--md-sys-color-on-surface-variant, #49454f); Color is now handled by Typography component */
   /* 背景色、パディング、固定サイズ、角丸を削除してシンプルなテキスト表示に */
   /* padding: 0 4px; */
   /* min-width: 16px; */
@@ -187,12 +175,8 @@
 
 .sectionHeader {
   /* M3 Title Small */
-  font-family: var(--md-sys-typescale-title-small-font-family-name, Roboto);
-  font-weight: var(--md-sys-typescale-title-small-font-weight, 500);
-  font-size: var(--md-sys-typescale-title-small-font-size, 14px);
-  line-height: var(--md-sys-typescale-title-small-line-height, 20px);
-  letter-spacing: var(--md-sys-typescale-title-small-letter-spacing, 0.1px);
-  color: var(--md-sys-color-on-surface-variant, #49454f);
+  /* Font styles are now handled by Typography component */
+  /* color: var(--md-sys-color-on-surface-variant, #49454f); Color is now handled by Typography component */
   height: 48px; /* M3 Section Header height */
   padding: 0 16px;
   display: flex;
@@ -216,12 +200,8 @@
   justify-content: space-between; /* アイコンと展開アイコンを両端に配置 */
   height: 56px;
   padding: 0 16px 0 12px; /* item と同様のpadding */
-  color: var(--md-sys-color-on-surface-variant, #49454f);
-  font-family: var(--md-sys-typescale-label-large-font-family-name, Roboto);
-  font-weight: var(--md-sys-typescale-label-large-font-weight, 500);
-  font-size: var(--md-sys-typescale-label-large-font-size, 14px);
-  line-height: var(--md-sys-typescale-label-large-line-height, 20px);
-  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing, 0.1px);
+  /* color: var(--md-sys-color-on-surface-variant, #49454f); Color is now handled by Typography component */
+  /* Font styles are now handled by Typography component */
   cursor: pointer; /* クリック可能であることを示す */
   position: relative; /* State Layer 用 */
   overflow: hidden; /* State Layer 用 */

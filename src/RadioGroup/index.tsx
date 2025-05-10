@@ -1,4 +1,5 @@
 import type { ComponentProps, ReactNode } from "react";
+import { Typography } from "../Typography"; // Typography をインポート
 import {
   Label as RACLabel,
   Radio as RACRadio,
@@ -38,7 +39,13 @@ export const RadioGroup = ({
       {...props}
       className={className ? `${styles.root} ${className}` : styles.root}
     >
-      {label && <RACLabel className={styles.groupLabel}>{label}</RACLabel>}
+      {label && (
+        <RACLabel>
+          <Typography variant="bodySmall" color="onSurfaceVariant">
+            {label}
+          </Typography>
+        </RACLabel>
+      )}
       {options.map((option) => (
         <Radio
           key={option.value}
@@ -74,7 +81,11 @@ export const Radio = ({ children, className, ...props }: RadioProps) => {
       {/* Custom visual indicator */}
       <div className={styles.indicator} />
       {/* Label */}
-      <RACLabel className={styles.radioLabel}>{children}</RACLabel>
+      <RACLabel>
+        <Typography variant="bodyLarge" color="onSurface">
+          {children}
+        </Typography>
+      </RACLabel>
       {/* Input is handled internally by RACRadio */}
     </RACRadio>
   );

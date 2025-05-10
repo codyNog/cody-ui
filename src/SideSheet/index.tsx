@@ -1,4 +1,5 @@
 "use client";
+import { Typography } from "../Typography";
 import { type ReactNode, forwardRef } from "react";
 import { Drawer } from "vaul";
 import { Button } from "../Button";
@@ -44,9 +45,15 @@ export const SideSheet = forwardRef<HTMLDivElement, Props>(
           <Drawer.Overlay className={styles.overlay} />
           <Drawer.Content className={styles.content} ref={ref}>
             <div className={styles.header}>
-              <Drawer.Title className={styles.title}>{headline}</Drawer.Title>
+              <Drawer.Title>
+                <Typography variant="headlineSmall" color="onSurface">
+                  {headline}
+                </Typography>
+              </Drawer.Title>
             </div>
-            <div className={styles.body}>{content}</div>
+            <Typography variant="bodyMedium" color="onSurfaceVariant">
+              {content}
+            </Typography>
             {actions && actions.length > 0 && (
               <div className={styles.footer}>
                 {actions.map((action) => (

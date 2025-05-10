@@ -1,6 +1,7 @@
 "use client";
 import { type ReactNode, forwardRef, useEffect, useState } from "react";
 import { Drawer } from "vaul";
+import { Typography } from "../Typography"; // Typography をインポート
 import { MdChevronRight, MdExpandMore } from "../Icons"; // アイコンをインポート
 import styles from "./index.module.css";
 
@@ -61,9 +62,19 @@ const LinkItemComponent = ({ item, isActive, onClick }: LinkItemProps) => (
     >
       <div className={styles.stateLayer} />
       {item.icon && <span className={styles.itemIcon}>{item.icon}</span>}
-      <span className={styles.itemLabel}>{item.label}</span>
+      <Typography
+        variant="labelLarge"
+        color={isActive ? "onSecondaryContainer" : "onSurfaceVariant"}
+      >
+        {item.label}
+      </Typography>
       {item.badge != null && (
-        <span className={styles.itemBadge}>{item.badge}</span>
+        <Typography
+          variant="labelLarge"
+          color={isActive ? "onSecondaryContainer" : "onSurfaceVariant"}
+        >
+          {item.badge}
+        </Typography>
       )}
     </a>
   </li>
@@ -74,7 +85,9 @@ type HeaderItemProps = {
 };
 const HeaderItemComponent = ({ item }: HeaderItemProps) => (
   <li key={item.id} className={styles.sectionHeader}>
-    {item.label}
+    <Typography variant="titleSmall" color="onSurfaceVariant">
+      {item.label}
+    </Typography>
   </li>
 );
 
@@ -114,7 +127,9 @@ const GroupItemComponent = ({
       aria-controls={`group-content-${item.id}`}
     >
       {item.icon && <span className={styles.itemIcon}>{item.icon}</span>}
-      <span className={styles.itemLabel}>{item.label}</span>
+      <Typography variant="labelLarge" color="onSurfaceVariant">
+        {item.label}
+      </Typography>
       <span className={styles.groupExpandIcon}>
         {isExpanded ? <MdExpandMore /> : <MdChevronRight />}
       </span>
@@ -240,8 +255,10 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
             <Drawer.Overlay className={styles.modalOverlay} />
             <Drawer.Content ref={ref} className={styles.modalContent}>
               {headline && (
-                <Drawer.Title className={styles.headline}>
-                  {headline}
+                <Drawer.Title>
+                  <Typography variant="titleSmall" color="onSurfaceVariant">
+                    {headline}
+                  </Typography>
                 </Drawer.Title>
               )}
               <ul className={styles.list}>
@@ -262,7 +279,11 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
     // Standard Navigation Drawer
     return (
       <div ref={ref} className={`${styles.root} ${styles.standard}`}>
-        {headline && <h2 className={styles.headline}>{headline}</h2>}
+        {headline && (
+          <Typography variant="titleSmall" color="onSurfaceVariant">
+            {headline}
+          </Typography>
+        )}
         <ul className={styles.list}>
           <Component
             items={items}

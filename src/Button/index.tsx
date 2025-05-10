@@ -12,6 +12,7 @@ import {
   type ButtonProps as AriaButtonProps,
   type PressEvent,
 } from "react-aria-components";
+import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
 type ButtonVariant = "filled" | "outlined" | "text" | "elevated" | "tonal";
@@ -145,20 +146,40 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
           buttonRef.current = el; // Assign to local ref as well
         }}
         onPress={handlePress}
-        className={(renderProps) =>
-          `${styles.button} ${styles[variant]} ${
-            renderProps.isPressed ? styles.pressed : ""
-          } ${renderProps.isFocused ? styles.focused : ""} ${
-            renderProps.isHovered ? styles.hovered : ""
-          } ${props.isDisabled ? styles.disabled : ""}`.trim()
-        }
+        className={({ isPressed, isFocused, isHovered }) => {
+          const classNames = [styles.button, styles[variant]];
+          if (isPressed) {
+            classNames.push(styles.pressed);
+          }
+          if (isFocused) {
+            classNames.push(styles.focused);
+          }
+          if (isHovered) {
+            classNames.push(styles.hovered);
+          }
+          if (props.isDisabled) {
+            classNames.push(styles.disabled);
+          }
+          return classNames.filter(Boolean).join(" ");
+        }}
       >
         {/* Render children directly or via render prop */}
         {(_renderProps) => (
           <>
             {/* Render existing content */}
             {icon && <span className={styles.iconWrapper}>{icon}</span>}
-            <span className={styles.label}>{children}</span>
+            <Typography
+              variant="labelLarge"
+              color={
+                variant === "filled"
+                  ? "onPrimary"
+                  : variant === "tonal"
+                    ? "onSecondaryContainer"
+                    : "primary"
+              }
+            >
+              {children}
+            </Typography>
             {trailingIcon && (
               <span className={styles.iconWrapper}>{trailingIcon}</span>
             )}

@@ -39,11 +39,6 @@
   cursor: pointer;
   outline: none;
   color: var(--md-sys-color-on-surface); /* M3 On Surface - Fallback removed */
-  font-family: var(--md-sys-typescale-body-large-font-family-name), sans-serif; /* Fallback removed */
-  font-size: var(--md-sys-typescale-body-large-font-size); /* Fallback removed */
-  font-weight: var(--md-sys-typescale-body-large-font-weight); /* Removed fallback */
-  line-height: var(--md-sys-typescale-body-large-line-height); /* Removed fallback */
-  letter-spacing: var(--md-sys-typescale-body-large-tracking); /* Removed fallback */
 }
 
 .menuItem.focused {
@@ -59,11 +54,6 @@
   display: flex;
   align-items: center;
   color: var(--md-sys-color-on-surface-variant); /* M3 On Surface Variant - Fallback removed */
-}
-
-.label {
-  flex-grow: 1;
-  /* Text styles are already applied to menuItem */
 }
 
 .trailingIcon {

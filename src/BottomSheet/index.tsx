@@ -1,4 +1,5 @@
 "use client";
+import { Typography } from "../Typography";
 import { type ReactNode, forwardRef } from "react";
 import { Drawer } from "vaul";
 import styles from "./index.module.css";
@@ -41,10 +42,16 @@ export const BottomSheet = forwardRef<HTMLDivElement, Props>(
             {showHandle && <div className={styles.handle} />}
             {headline && (
               <div className={styles.header}>
-                <Drawer.Title className={styles.title}>{headline}</Drawer.Title>
+                <Drawer.Title>
+                  <Typography variant="headlineSmall" color="onSurface">
+                    {headline}
+                  </Typography>
+                </Drawer.Title>
               </div>
             )}
-            <div className={styles.body}>{content}</div>
+            <Typography variant="bodyMedium" color="onSurfaceVariant">
+              {content}
+            </Typography>
           </Drawer.Content>
         </Drawer.Portal>
       </Drawer.Root>

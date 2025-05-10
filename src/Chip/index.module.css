@@ -8,12 +8,8 @@
   border-radius: 8px; /* M3 spec */
   border: 1px solid var(--md-sys-color-outline); /* Default: Flat style border */
   background-color: transparent; /* Default: Flat style background */
-  color: var(--md-sys-color-on-surface-variant); /* Default text color */
-  font-family: var(--md-sys-typescale-label-large-font-family-name);
-  font-weight: var(--md-sys-typescale-label-large-font-weight);
-  font-size: var(--md-sys-typescale-label-large-font-size);
-  line-height: var(--md-sys-typescale-label-large-line-height);
-  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+  /* color: var(--md-sys-color-on-surface-variant); Default text color - Removed as variant specific or handled by Typography */
+  /* Font styles are now handled by Typography component */
   cursor: pointer;
   transition:
     background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,

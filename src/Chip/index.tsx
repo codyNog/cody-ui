@@ -1,6 +1,7 @@
 "use client";
 import { type ReactNode, forwardRef } from "react";
 import { type PressEvent, Button as RACButton } from "react-aria-components";
+import { Typography } from "../Typography"; // Typography をインポート
 import { MdCheck } from "../Icons"; // Import MdCheck
 import styles from "./index.module.css";
 
@@ -104,7 +105,7 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps<ChipVariant>>(
             {actualLeadingIcon}
           </span>
         )}
-        {children}
+        <Typography variant="labelLarge">{children}</Typography>
         {/* Render trailingIcon only if it exists (type system ensures it's not for assist) */}
         {hasTrailingIcon && (
           <span className={styles.closeIcon}>{trailingIcon}</span>
