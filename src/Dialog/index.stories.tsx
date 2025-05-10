@@ -27,8 +27,8 @@ const commonDialogProps = {
 };
 
 const basicDialogActions = [
-  { label: "Cancel", onPress: () => console.log("Cancel pressed") },
-  { label: "OK", onPress: () => console.log("OK pressed") },
+  { label: "Cancel", onClick: () => console.log("Cancel clicked") }, // onPress を onClick に変更
+  { label: "OK", onClick: () => console.log("OK clicked") }, // onPress を onClick に変更
 ];
 
 export const Default: Story = {
@@ -61,10 +61,11 @@ export const FullScreen: Story = {
     headerActions: [
       {
         label: "Save",
-        onPress: async () => {
+        onClick: async () => {
+          // onPress を onClick に変更
           // Simulate async operation (e.g., API call, validation)
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          console.log("Save pressed and async operation completed!");
+          console.log("Save clicked and async operation completed!"); // メッセージも変更
           // To simulate a failure, you could throw an error:
           // throw new Error("Simulated save failure");
         },

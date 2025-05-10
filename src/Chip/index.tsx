@@ -1,8 +1,8 @@
 "use client";
 import { type ReactNode, forwardRef } from "react";
 import { type PressEvent, Button as RACButton } from "react-aria-components";
-import { Typography } from "../Typography"; // Typography をインポート
 import { MdCheck } from "../Icons"; // Import MdCheck
+import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 
 // --- Type Definitions ---
@@ -12,7 +12,7 @@ type ChipBaseProps = {
   children: ReactNode;
   leadingIcon?: ReactNode;
   isDisabled?: boolean;
-  onPress?: (e: PressEvent) => void;
+  onClick?: (e: PressEvent) => void; // onPress を onClick に変更
   "aria-label"?: string;
 };
 
@@ -49,7 +49,7 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps<ChipVariant>>(
       children,
       leadingIcon,
       isDisabled = false,
-      onPress,
+      onClick, // onPress を onClick に変更
       "aria-label": ariaLabel,
     } = props;
 
@@ -80,7 +80,7 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps<ChipVariant>>(
       <RACButton
         ref={ref}
         isDisabled={isDisabled}
-        onPress={onPress}
+        onPress={onClick} // onPress を onClick に変更 (RACButton は onPress を期待するので、内部的には onPress のまま)
         aria-label={ariaLabel}
         className={[
           styles.chip,

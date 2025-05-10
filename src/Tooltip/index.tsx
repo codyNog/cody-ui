@@ -8,7 +8,7 @@ type Action = {
   /** The text label for the action button. */
   label: string;
   /** Function called when the button is pressed. */
-  onPress?: () => void;
+  onClick?: () => void; // onPress を onClick に変更
   /** Whether the button is disabled. */
   isDisabled?: boolean;
 };
@@ -72,7 +72,7 @@ export const Tooltip = forwardRef<HTMLDivElement, Props>(
                       key={action.label}
                       type="button"
                       onClick={() => {
-                        action.onPress?.();
+                        action.onClick?.(); // action.onPress を action.onClick に変更
                       }}
                       disabled={action.isDisabled}
                       className={styles.tooltipAction}

@@ -17,10 +17,10 @@ const meta = {
       alt: "Placeholder image",
     },
     actions: [
-      { label: "Action 1", onPress: () => alert("Action 1 pressed") },
+      { label: "Action 1", onClick: () => alert("Action 1 clicked") }, // onPress を onClick に変更
       {
         label: "Action 2",
-        onPress: () => alert("Action 2 pressed"),
+        onClick: () => alert("Action 2 clicked"), // onPress を onClick に変更
         variant: "primary",
       },
     ],
@@ -97,10 +97,10 @@ export const WithMediaAndActions: Story = {
     actions: [
       {
         label: "Confirm",
-        onPress: () => alert("Confirmed"),
+        onClick: () => alert("Confirmed"), // onPress を onClick に変更
         variant: "primary",
       },
-      { label: "Cancel", onPress: () => alert("Cancelled") },
+      { label: "Cancel", onClick: () => alert("Cancelled") }, // onPress を onClick に変更
     ],
     image: undefined,
   },

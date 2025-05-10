@@ -6,8 +6,8 @@ import {
   Modal,
   ModalOverlay,
 } from "react-aria-components";
-import { Typography } from "../Typography"; // Typography をインポート
 import { Button } from "../Button";
+import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 import type { BasicDialogProps } from "./types";
 
@@ -39,7 +39,7 @@ export const BasicDialog = ({
                 <Button
                   key={`${action.label}-${index}`}
                   variant="text"
-                  onPress={action.onPress}
+                  onClick={action.onClick}
                   slot={"close"}
                 >
                   {action.label}

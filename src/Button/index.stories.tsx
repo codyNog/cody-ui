@@ -31,12 +31,12 @@ const meta = {
       description: "ボタンのラベルテキスト",
       defaultValue: "Button",
     },
-    onPress: {
-      action: "pressed",
-      description: "ボタンが押されたときのイベント",
+    onClick: {
+      action: "clicked", // "pressed" から "clicked" に変更
+      description: "ボタンがクリックされたときのイベント", // 説明も変更
     },
   },
-  args: { onPress: fn() },
+  args: { onClick: fn() }, // onPress を onClick に変更
 } satisfies Meta<typeof Button>;
 
 export default meta;

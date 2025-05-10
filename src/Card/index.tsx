@@ -11,7 +11,7 @@ type Props = {
   image?: string;
   actions?: Array<{
     label: string;
-    onPress: () => void;
+    onClick: () => void; // onPress を onClick に変更
     variant?: "primary" | "secondary"; // Add variant for button
   }>;
   media?: {
@@ -71,7 +71,7 @@ export const Card = forwardRef<HTMLDivElement, Props>(
               <Button
                 key={`${action.label}-${index}`} // Use a more unique key
                 variant={action.variant === "primary" ? "filled" : "outlined"} // Map to Button's variants
-                onClick={action.onPress}
+                onClick={action.onClick} // action.onPress を action.onClick に変更
               >
                 {action.label}
               </Button>

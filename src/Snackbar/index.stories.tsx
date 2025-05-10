@@ -64,7 +64,7 @@ export const Default: Story = {
     supportingText: "This is a default snackbar message.",
     action: {
       label: "Action",
-      onPress: () => alert("Action pressed!"),
+      onClick: () => alert("Action clicked!"), // onPress を onClick に変更
     },
     closeable: true,
   },
@@ -97,7 +97,8 @@ export const WithAction: Story = {
     supportingText: "Press the action button.",
     action: {
       label: "Retry",
-      onPress: () => {
+      onClick: () => {
+        // onPress を onClick に変更
         alert("Retry button clicked!");
       },
     },
@@ -113,7 +114,8 @@ export const NotCloseable: Story = {
       "This snackbar cannot be closed by the user directly (unless an action closes it or timeout).",
     action: {
       label: "Okay",
-      onPress: () => {
+      onClick: () => {
+        // onPress を onClick に変更
         /* 何もしないか、特定の処理 */
       },
     },
@@ -153,7 +155,8 @@ export const MultipleSnackbars: Story = {
         <p>
           Click the button to show multiple Snackbars with different timeouts.
         </p>
-        <Button onPress={showMultiple}>Show Multiple Snackbars</Button>
+        <Button onClick={showMultiple}>Show Multiple Snackbars</Button>{" "}
+        {/* onPress を onClick に変更 */}
       </div>
     );
   },

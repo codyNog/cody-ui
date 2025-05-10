@@ -52,7 +52,7 @@ export const Search = forwardRef<HTMLDivElement, Props>(
         className={styles.search}
       >
         <div className={styles.inputWrapper}>
-          <Button onPress={onClickLeadingIcon} className={styles.leadingIcon}>
+          <Button onClick={onClickLeadingIcon} className={styles.leadingIcon}>
             {leadingIcon || <SearchIcon />}
           </Button>
           <Input className={styles.input} placeholder={supportingText} />

@@ -1,5 +1,4 @@
 import type { ComponentProps, ReactNode } from "react";
-import { Typography } from "../Typography"; // Typography をインポート
 import {
   Label as RACLabel,
   Radio as RACRadio,
@@ -7,6 +6,7 @@ import {
   type RadioGroupProps as RACRadioGroupProps,
   type RadioProps as RACRadioProps,
 } from "react-aria-components";
+import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 
 // --- RadioGroup ---

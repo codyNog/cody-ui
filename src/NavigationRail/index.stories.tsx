@@ -9,19 +9,19 @@ const meta: Meta<typeof Component> = {
   component: Component,
   args: {
     items: [
-      { id: "home", label: "Home", icon: <MdHome />, onPressMenu: fn() },
+      { id: "home", label: "Home", icon: <MdHome />, onClickMenu: fn() }, // onPressMenu を onClickMenu に変更
       {
         id: "favorite",
         label: "Favorite",
         icon: <MdFavorite />,
         badge: 3,
-        onPressMenu: fn(),
+        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
       },
       {
         id: "settings",
         label: "Settings",
         icon: <MdSettings />,
-        onPressMenu: fn(),
+        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
         href: "/settings",
       },
       {
@@ -29,21 +29,21 @@ const meta: Meta<typeof Component> = {
         label: "Info",
         icon: <MdInfo />,
         disabled: true,
-        onPressMenu: fn(),
+        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
       },
       {
         id: "small_badge",
         label: "Small",
         icon: <MdFavorite />,
         badge: "small",
-        onPressMenu: fn(),
+        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
       },
       {
         id: "large_badge",
         label: "Large",
         icon: <MdFavorite />,
         badge: "large",
-        onPressMenu: fn(),
+        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
       },
     ],
     defaultSelectedId: "home",
@@ -104,19 +104,21 @@ export const Behavior: Story = {
     expect(homeItem).toHaveAttribute("aria-pressed", "false");
     expect(favoriteItem).toHaveAttribute("aria-pressed", "true");
 
-    const settingsPressMenu = args.items?.find(
+    const settingsClickMenu = args.items?.find(
+      // settingsPressMenu を settingsClickMenu に変更
       (item) => item.id === "settings",
-    )?.onPressMenu;
+    )?.onClickMenu; // onPressMenu を onClickMenu に変更
     await settingsLink.click();
-    expect(settingsPressMenu).toHaveBeenCalled();
+    expect(settingsClickMenu).toHaveBeenCalled(); // settingsPressMenu を settingsClickMenu に変更
 
     const infoItem = canvas.getByRole("button", { name: "Info" });
     expect(infoItem).toHaveAttribute("aria-disabled", "true");
-    const infoPressMenu = args.items?.find(
+    const infoClickMenu = args.items?.find(
+      // infoPressMenu を infoClickMenu に変更
       (item) => item.id === "info",
-    )?.onPressMenu;
+    )?.onClickMenu; // onPressMenu を onClickMenu に変更
     await infoItem.click();
-    expect(infoPressMenu).not.toHaveBeenCalled();
+    expect(infoClickMenu).not.toHaveBeenCalled(); // infoPressMenu を infoClickMenu に変更
     expect(favoriteItem).toHaveAttribute("aria-pressed", "true");
   },
 };

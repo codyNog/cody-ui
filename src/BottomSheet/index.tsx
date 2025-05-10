@@ -1,7 +1,7 @@
 "use client";
-import { Typography } from "../Typography";
 import { type ReactNode, forwardRef } from "react";
 import { Drawer } from "vaul";
+import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
 type Props = {

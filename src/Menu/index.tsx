@@ -8,7 +8,6 @@ import {
   SubmenuTrigger,
   composeRenderProps,
 } from "react-aria-components";
-import { Typography } from "../Typography"; // Typography をインポート
 import type {
   Key, // Key も react-aria-components からインポート (react-aria からでも良いが統一)
   PopoverProps,
@@ -16,6 +15,7 @@ import type {
   Selection, // Selection を react-aria-components からインポート
   SeparatorProps,
 } from "react-aria-components";
+import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 
 // --- Type Definitions based on docs/components/Menu.md ---

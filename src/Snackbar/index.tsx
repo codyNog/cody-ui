@@ -16,7 +16,7 @@ export type SnackbarContent = {
   supportingText?: string;
   action?: {
     label: string;
-    onPress: () => void;
+    onClick: () => void; // onPress を onClick に変更
   };
   closeable?: boolean; // デフォルトはtrue
 };
@@ -51,7 +51,7 @@ export const SnackbarProvider = ({
               <div className={styles.actions}>
                 {action && (
                   <Button
-                    onPress={action.onPress}
+                    onClick={action.onClick} // onPress を onClick に変更
                     className={styles.actionButton}
                   >
                     {action.label}

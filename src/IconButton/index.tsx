@@ -18,9 +18,9 @@ type Props = {
    * ボタンが押されたときの処理だよ。
    * 第1引数にトグル後の選択状態、第2引数にプレスイベントが渡るよ。
    */
-  onPress?: (newSelectedState: boolean, pressEvent: PressEvent) => void;
+  onClick?: (newSelectedState: boolean, pressEvent: PressEvent) => void; // onPress を onClick に変更
   icon: ReactElement;
-} & Omit<ToggleButtonProps, "children" | "onPress">; // ToggleButtonProps の onPress は使わないので Omit
+} & Omit<ToggleButtonProps, "children" | "onPress" | "onClick">; // ToggleButtonProps の onPress は使わないので Omit
 
 export const IconButton = forwardRef<HTMLButtonElement, Props>(
   (
@@ -29,7 +29,7 @@ export const IconButton = forwardRef<HTMLButtonElement, Props>(
       className,
       variant = "standard",
       isSelected, // isSelected は Props から受け取る
-      onPress: propsOnPress, // Props で受け取る onPress
+      onClick: propsOnClick, // onPress を onClick に、propsOnPress を propsOnClick に変更
       onChange: propsOnChange, // Props で受け取る onChange (親が状態管理する場合)
       ...otherProps // isDisabled などが含まれる
     },
@@ -41,16 +41,16 @@ export const IconButton = forwardRef<HTMLButtonElement, Props>(
     const handlePress = (e: PressEvent) => {
       // 押されたときのイベントを保存しておく
       pressEventRef.current = e;
-      // ここではまだ propsOnPress は呼ばないよ
+      // ここではまだ propsOnClick は呼ばないよ
     };
 
     const handleChange = (newlySelected: boolean) => {
       // まず、親コンポーネントに状態変更を通知する (もし propsOnChange があれば)
       propsOnChange?.(newlySelected);
 
-      // 次に、保存しておいたプレスイベントと一緒に、新しい選択状態を propsOnPress で通知する
-      if (propsOnPress && pressEventRef.current) {
-        propsOnPress(newlySelected, pressEventRef.current);
+      // 次に、保存しておいたプレスイベントと一緒に、新しい選択状態を propsOnClick で通知する
+      if (propsOnClick && pressEventRef.current) {
+        propsOnClick(newlySelected, pressEventRef.current); // propsOnPress を propsOnClick に変更
       }
       // 使ったらクリアしておく
       pressEventRef.current = null;

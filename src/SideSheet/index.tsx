@@ -1,8 +1,8 @@
 "use client";
-import { Typography } from "../Typography";
 import { type ReactNode, forwardRef } from "react";
 import { Drawer } from "vaul";
 import { Button } from "../Button";
+import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
   actions?: {
     label: string;
     variant?: "filled" | "outlined";
-    onPress: () => void;
+    onClick: () => void;
   }[];
 };
 
@@ -60,7 +60,7 @@ export const SideSheet = forwardRef<HTMLDivElement, Props>(
                   <Button
                     key={action.label}
                     variant={action.variant}
-                    onPress={action.onPress}
+                    onClick={action.onClick}
                   >
                     {action.label}
                   </Button>

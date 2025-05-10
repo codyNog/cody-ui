@@ -6,9 +6,9 @@ import {
   Modal,
   ModalOverlay,
 } from "react-aria-components";
-import { Typography } from "../Typography"; // Typography をインポート
 import { MdClose } from "react-icons/md"; // 閉じるボタン用にアイコンを直接インポート
 import { Button } from "../Button";
+import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css"; // 基本のスタイルを共有しつつ、必要なら専用スタイルも作る
 import type { FullScreenDialogProps } from "./types";
 
@@ -42,7 +42,7 @@ export const FullScreenDialog = ({
           <header className={styles.fullScreenHeader}>
             <Button
               variant="text"
-              onPress={onDismiss}
+              onClick={onDismiss}
               aria-label="Close dialog"
             >
               <MdClose />
@@ -56,7 +56,7 @@ export const FullScreenDialog = ({
               {headerActions?.map((action, index) => (
                 <Button
                   key={`${action.label}-${index}`}
-                  onPress={action.onPress}
+                  onClick={action.onClick}
                   variant="text" // M3のText Buttonを想定
                 >
                   {action.label}

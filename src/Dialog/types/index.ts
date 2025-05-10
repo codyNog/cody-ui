@@ -10,7 +10,7 @@ export type BasicDialogProps = Omit<AriaDialogProps, "children"> & {
   supportingText?: ReactNode;
   actions?: {
     label: string;
-    onPress: () => void;
+    onClick: () => void;
   }[];
 };
 
@@ -25,7 +25,7 @@ export type FullScreenDialogProps = Omit<AriaDialogProps, "children"> & {
   onDismiss?: () => void; // 閉じるボタンのアクション
   headerActions?: {
     label: string;
-    onPress: () => Promise<void>; // voidを返すPromiseに変更
+    onClick: () => Promise<void>; // voidを返すPromiseに変更
   }[];
 };
 

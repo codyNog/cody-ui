@@ -1,5 +1,4 @@
 "use client";
-import type React from "react";
 import {
   type ReactNode,
   forwardRef,
@@ -20,7 +19,7 @@ type ButtonVariant = "filled" | "outlined" | "text" | "elevated" | "tonal";
 // react-aria-components の ButtonProps から不要なものを除外し、
 // 独自のプロパティを追加する
 // (className は module css で管理するため除外, children は独自に定義するため除外)
-// onPressはonClickに置き換えるため除外
+// onPress は onClick に置き換えるため AriaButtonProps からも除外
 type BaseProps = Omit<
   AriaButtonProps,
   "className" | "style" | "children" | "onPress"
@@ -46,13 +45,10 @@ type Props = BaseProps & {
   children: ReactNode;
   /**
    * クリック時のコールバック関数
+   * react-aria-components の PressEvent を受け取ります
    */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  /**
-   * @private
-   * 内部的に使用するプロパティ
-   */
-  onPress?: (e: PressEvent) => void;
+  onClick?: (e: PressEvent) => void;
+  // onPress は削除
 };
 
 type Ripple = {
@@ -77,23 +73,13 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [ripples, setRipples] = useState<Ripple[]>([]); // Initialize state here
 
-    // Pass through the onClick handler to onPress
+    // onClick が指定されていれば、それを onPress として react-aria-components に渡す
     const handlePress = useCallback(
       (e: PressEvent) => {
-        // Convert PressEvent to MouseEvent for onClick
-        if (onClick && e.target instanceof HTMLButtonElement) {
-          // Create a synthetic MouseEvent
-          const mouseEvent = new MouseEvent("click", {
-            bubbles: true,
-            cancelable: true,
-            view: window,
-          }) as unknown as React.MouseEvent<HTMLButtonElement>;
-
-          // Call onClick with the synthetic event
-          onClick(mouseEvent);
-        }
+        if (props.isDisabled) return; // 無効な場合は何もしない
+        onClick?.(e);
       },
-      [onClick],
+      [onClick, props.isDisabled],
     );
 
     // Rename to handlePressStart and use PressEvent
@@ -145,7 +131,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
           }
           buttonRef.current = el; // Assign to local ref as well
         }}
-        onPress={handlePress}
+        onPress={onClick ? handlePress : undefined} // onClick があれば handlePress を、なければ undefined を渡す
         className={({ isPressed, isFocused, isHovered }) => {
           const classNames = [styles.button, styles[variant]];
           if (isPressed) {

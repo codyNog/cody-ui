@@ -27,7 +27,7 @@ export const Default: Story = {
         title="Edit"
         content="Edit"
         variant="rich"
-        actions={[{ label: "Edit", onPress: () => {} }]}
+        actions={[{ label: "Edit", onClick: () => {} }]} // onPress を onClick に変更
       >
         <Button>Edit</Button>
       </Component>
@@ -35,7 +35,7 @@ export const Default: Story = {
         title="Edit"
         content={<TextField />}
         variant="rich"
-        actions={[{ label: "Edit", onPress: () => {} }]}
+        actions={[{ label: "Edit", onClick: () => {} }]} // onPress を onClick に変更
       >
         <Chip>chip</Chip>
       </Component>

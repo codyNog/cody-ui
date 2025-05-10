@@ -1,8 +1,8 @@
 "use client";
 import { type ReactNode, forwardRef, useEffect, useState } from "react";
 import { Drawer } from "vaul";
-import { Typography } from "../Typography"; // Typography をインポート
 import { MdChevronRight, MdExpandMore } from "../Icons"; // アイコンをインポート
+import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 
 // ItemType を定義

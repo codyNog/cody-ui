@@ -17,7 +17,7 @@ type NavigationItem = {
   icon: ReactNode;
   badge?: number | "large" | "small";
   disabled?: boolean;
-  onPressMenu?: () => void;
+  onClickMenu?: () => void; // onPressMenu を onClickMenu に変更
   href?: string;
 };
 
@@ -129,7 +129,7 @@ export const NavigationRail = forwardRef<HTMLDivElement, Props>(
           return;
         }
         setActiveId(item.id);
-        item.onPressMenu?.();
+        item.onClickMenu?.(); // onPressMenu を onClickMenu に変更
         onSelectionChange?.(item.id);
       },
       [onSelectionChange],

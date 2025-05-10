@@ -27,9 +27,9 @@ const meta: Meta<typeof Component> = {
       {
         label: "キャンセル",
         variant: "outlined",
-        onPress: () => alert("キャンセルしたよ"),
+        onClick: () => alert("キャンセルしたよ"),
       },
-      { label: "OK", onPress: () => alert("OKしたよ") },
+      { label: "OK", onClick: () => alert("OKしたよ") },
     ],
     children: <Button>サイドシートを開く</Button>,
   },
@@ -140,7 +140,7 @@ export const VariantsComparison: Story = {
       <StatefulSideSheet
         headline="右から標準"
         content={<p>これは右から出てくる標準的なサイドシートだよ。</p>}
-        actions={[{ label: "閉じる", onPress: () => {} }]}
+        actions={[{ label: "閉じる", onClick: () => {} }]}
         // childrenをJSXの子要素として渡すように修正
       >
         <Button>右から標準</Button>

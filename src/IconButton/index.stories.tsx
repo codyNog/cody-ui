@@ -8,9 +8,11 @@ const meta: Meta<typeof Component> = {
   component: Component,
   args: {
     icon: <MdFavorite />,
-    // onPress のシグネチャに合わせて修正
-    onPress: (newSelectedState, pressEvent) => {
-      console.log("IconButton pressed!", {
+    // onPress を onClick に変更
+    onClick: (newSelectedState, pressEvent) => {
+      // onPress を onClick に変更
+      console.log("IconButton clicked!", {
+        // pressed を clicked に変更
         newSelectedState,
         type: pressEvent.type,
         pointerType: pressEvent.pointerType,
@@ -29,6 +31,10 @@ const meta: Meta<typeof Component> = {
       control: "boolean",
     },
     // icon: { control: false },
+    onClick: {
+      // action: "clicked", // action を指定すると型エラーになるためコメントアウト
+      description: "アイコンボタンがクリックされたときのイベント",
+    },
   },
   decorators: [
     (Story) => (

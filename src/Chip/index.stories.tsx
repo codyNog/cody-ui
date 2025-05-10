@@ -136,8 +136,8 @@ export const Behavior: Story = {
     children: "Click or Remove",
     leadingIcon: <MdPerson />,
     trailingIcon: <MdClose />,
-    onPress: () => alert("Chip pressed!"),
-    // Note: Clicking the close icon itself doesn't trigger onPress by default
+    onClick: () => alert("Chip clicked!"), // onPress を onClick に変更
+    // Note: Clicking the close icon itself doesn't trigger onClick by default
     // You might need a separate handler for the trailingIcon if it's interactive
   },
   render: (args) => <Component {...args} />,
