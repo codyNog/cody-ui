@@ -1,3 +1,10 @@
+export interface CliOptions {
+  force?: boolean;
+  skipDependencies?: boolean;
+  color?: string;
+  outputPath?: string;
+}
+
 export interface VersionInfo {
   lastTag: string;
   lastUpdate: string;

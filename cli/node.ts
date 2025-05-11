@@ -1,11 +1,12 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import { Command } from "commander";
 import { Octokit } from "@octokit/rest";
 import AdmZip from "adm-zip";
 import * as dotenv from "dotenv";
 import { CONFIG } from "./constants.js";
 import { generateThemeCssFromColor } from "./theme.js";
-import type { PackageJson, VersionInfo } from "./types.js";
+import type { CliOptions, PackageJson, VersionInfo } from "./types.js";
 
 if (typeof Deno === "undefined") {
   // Deno実行時以外でdotenvを有効にする
@@ -193,12 +194,13 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
     }
   };
 
-  const extract = async (options: {
-    force?: boolean;
-    skipDependencies?: boolean;
-    color?: string;
-  }): Promise<PackageJson | null> => {
-    const { force = false, skipDependencies = false, color } = options;
+  const extract = async (options: CliOptions): Promise<PackageJson | null> => {
+    const {
+      force = false,
+      skipDependencies = false,
+      color,
+      outputPath,
+    } = options;
     console.log(
       `🚀 Starting extraction for ${CONFIG.org}/${CONFIG.repo} (branch: ${CONFIG.branch})`,
     );
@@ -234,9 +236,10 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
       const zipData = await downloadZip();
       console.log("✅ Download complete.");
 
-      const destinationPath = path.resolve(process.cwd(), CONFIG.path);
+      const actualOutputPath = outputPath || CONFIG.path;
+      const destinationPath = path.resolve(process.cwd(), actualOutputPath);
       console.log(`⏳ Extracting to ${destinationPath}...`);
-      await extractSpecificDirectory(zipData, CONFIG.path, destinationPath);
+      await extractSpecificDirectory(zipData, CONFIG.path, destinationPath); // CONFIG.path はZip内のパスなのでそのまま
       console.log("✅ Extraction complete.");
 
       if (latestTag) {
@@ -275,12 +278,34 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
   return { extract, getLatestTag, getCurrentVersion };
 };
 
-export const main = async (): Promise<PackageJson | null> => {
-  const args = process.argv.slice(2);
-  const force = args.includes("--force");
-  const skipDependencies = args.includes("--skip-dependencies");
-  const colorArg = args.find((arg) => arg.startsWith("--color="));
-  const color = colorArg ? colorArg.split("=")[1] : undefined;
+export const main = async (
+  optionsFromCli?: Partial<CliOptions>,
+): Promise<PackageJson | null> => {
+  let cliOptions: CliOptions = { ...optionsFromCli };
+
+  if (typeof Deno === "undefined") {
+    const program = new Command();
+    program
+      .option("-f, --force", "Force re-download even if up to date")
+      .option("-s, --skip-dependencies", "Skip merging dependencies")
+      .option("-c, --color <hex>", "Specify custom theme color (e.g., #RRGGBB)")
+      .option(
+        "-o, --output <path>",
+        "Output directory for extracted files",
+        CONFIG.path,
+      ); // デフォルト値をCONFIG.pathに
+
+    program.parse(process.argv);
+    const commanderOptions = program.opts();
+
+    cliOptions = {
+      force: commanderOptions.force || cliOptions.force,
+      skipDependencies:
+        commanderOptions.skipDependencies || cliOptions.skipDependencies,
+      color: commanderOptions.color || cliOptions.color,
+      outputPath: commanderOptions.output || cliOptions.outputPath, // commanderのoutputを優先
+    };
+  }
 
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
@@ -291,5 +316,5 @@ export const main = async (): Promise<PackageJson | null> => {
   }
 
   const extractor = GitHubFileExtractor(token, typeof Deno !== "undefined");
-  return extractor.extract({ force, skipDependencies, color });
+  return extractor.extract(cliOptions);
 };
