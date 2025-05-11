@@ -121,10 +121,9 @@ export async function updateDenoJsonImportsIfNeeded(
     }
 
     if (!denoJsonPath) {
-      console.warn(
-        "[updateDenoJsonImports] deno.json or deno.jsonc not found in the current directory or any parent directories. Skipping update.",
+      throw new Error(
+        "[updateDenoJsonImports] deno.json or deno.jsonc not found in the current directory or any parent directories. Cannot update imports.",
       );
-      return;
     }
 
     console.log(

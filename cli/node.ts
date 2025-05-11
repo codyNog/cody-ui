@@ -283,7 +283,8 @@ export const main = async (
 ): Promise<PackageJson | null> => {
   let cliOptions: CliOptions = { ...optionsFromCli };
 
-  if (typeof Deno === "undefined") {
+  // optionsFromCliが渡されておらず、かつNode.js環境の場合のみcommanderを使用
+  if (!optionsFromCli && typeof Deno === "undefined") {
     const program = new Command();
     program
       .option("-f, --force", "Force re-download even if up to date")
@@ -299,11 +300,18 @@ export const main = async (
     const commanderOptions = program.opts();
 
     cliOptions = {
-      force: commanderOptions.force || cliOptions.force,
-      skipDependencies:
-        commanderOptions.skipDependencies || cliOptions.skipDependencies,
-      color: commanderOptions.color || cliOptions.color,
-      outputPath: commanderOptions.output || cliOptions.outputPath, // commanderのoutputを優先
+      force: commanderOptions.force,
+      skipDependencies: commanderOptions.skipDependencies,
+      color: commanderOptions.color,
+      outputPath: commanderOptions.output,
+    };
+  } else if (optionsFromCli) {
+    // Deno環境など、外部からオプションが渡された場合はそれを使用
+    cliOptions = {
+      force: optionsFromCli.force,
+      skipDependencies: optionsFromCli.skipDependencies,
+      color: optionsFromCli.color,
+      outputPath: optionsFromCli.outputPath || CONFIG.path, // outputがない場合はデフォルト値
     };
   }
 
