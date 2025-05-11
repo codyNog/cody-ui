@@ -1,4 +1,5 @@
 import esbuild from "esbuild";
+import fs from "node:fs";
 
 esbuild
   .build({
@@ -6,7 +7,7 @@ esbuild
     bundle: true,
     outfile: "dist/index.js",
     platform: "node",
-    format: "esm", // "cjs" から "esm" に戻す
+    format: "cjs",
     external: [
       "@octokit/rest",
       "adm-zip",
@@ -21,5 +22,14 @@ esbuild
     logLevel: "info",
     // minify: true,
     // sourcemap: true,
+  })
+  .then(() => {
+    // ビルドが成功したら、dist/package.json を作成
+    // ディレクトリが存在しない場合があるので作成する
+    if (!fs.existsSync("dist")) {
+      fs.mkdirSync("dist");
+    }
+    fs.writeFileSync("dist/package.json", '{ "type": "commonjs" }\\n');
+    console.log("✅ Successfully created dist/package.json");
   })
   .catch(() => process.exit(1));
