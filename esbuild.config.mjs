@@ -13,6 +13,7 @@ esbuild
       "dotenv",
       "@material/material-color-utilities",
       "commander", // commander を external に追加
+      "https://deno.land/std/flags/mod.ts", // Denoの標準ライブラリをexternalに追加
     ],
     banner: {
       js: "#!/usr/bin/env node",
