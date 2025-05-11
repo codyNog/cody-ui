@@ -157,7 +157,8 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
 
   const extractSpecificDirectory = async (
     zipData: Uint8Array,
-    targetDir: string,
+    targetDir: string, // ダウンロード・展開するリモートのディレクトリパス (例: "src")
+    packageJsonBaseDir: string, // リモートの package.json がある基準ディレクトリパス (例: "")
     destination: string,
   ): Promise<void> => {
     const zip = new AdmZip(Buffer.from(zipData)); // AdmZipはBufferを期待
@@ -165,32 +166,69 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
 
     // リポジトリルートのディレクトリ名を取得 (通常は <owner>-<repo>-<commit_sha> のような形式)
     const repoRootDir = zipEntries[0].entryName.split("/")[0];
-    const sourceDirInZip = `${repoRootDir}/${targetDir}/`; // Zip内の正しいソースディレクトリパス
+    // targetDir が空文字の場合も考慮して sourceDirPrefix を作成
+    const sourceDirPrefix = targetDir
+      ? `${repoRootDir}/${targetDir}/`
+      : `${repoRootDir}/`;
 
     await fs.mkdir(destination, { recursive: true });
 
+    // リポジトリのどの package.json を参照するかを明確にする
+    const expectedRepoPackageJsonPath = packageJsonBaseDir
+      ? `${repoRootDir}/${packageJsonBaseDir}/package.json`
+      : `${repoRootDir}/package.json`;
+    let foundRepoPackageJson = false;
+
     for (const zipEntry of zipEntries) {
+      // targetDir が指定されている場合はその中身を、指定されていなければルート直下を処理
+      // ただし、ルート直下の場合は .git やその他の不要なファイルを除外するフィルタリングが別途必要になる可能性があるが、
+      // ここではまず targetDir が空の場合の基本的なファイル展開と package.json の取得を実装する。
       if (
-        zipEntry.entryName.startsWith(sourceDirInZip) &&
+        zipEntry.entryName.startsWith(sourceDirPrefix) &&
         !zipEntry.isDirectory
       ) {
+        // sourceDirPrefix が "repo-root/" の場合、entryName が "repo-root/file.txt" なら relativePath は "file.txt"
+        // entryName が "repo-root/subdir/file.txt" なら relativePath は "subdir/file.txt"
         const relativePath = zipEntry.entryName.substring(
-          sourceDirInZip.length,
+          sourceDirPrefix.length,
         );
+        if (!relativePath && targetDir) {
+          // targetDir が指定されていて、かつ entryName が sourceDirPrefix そのものの場合 (例: targetDir="src", entryName="repo-root/src/")
+          // これはディレクトリなのでスキップ (実際には上の !zipEntry.isDirectory で弾かれるはずだが念のため)
+          continue;
+        }
+
         const destPath = path.join(destination, relativePath);
         const dirName = path.dirname(destPath);
 
         await fs.mkdir(dirName, { recursive: true });
         await fs.writeFile(destPath, zipEntry.getData());
 
-        if (destPath.endsWith("package.json")) {
+        // 期待するパスの package.json かどうかをチェック
+        if (zipEntry.entryName === expectedRepoPackageJsonPath) {
           try {
             repoPackageJson = JSON.parse(zipEntry.getData().toString("utf-8"));
+            foundRepoPackageJson = true;
+            console.log(
+              `[extractSpecificDirectory] Found and parsed repository package.json at: ${zipEntry.entryName}`,
+            );
           } catch (e) {
-            console.error("Failed to parse repository package.json:", e);
+            console.error(
+              `[extractSpecificDirectory] Failed to parse repository package.json at ${zipEntry.entryName}:`,
+              e,
+            );
           }
         }
       }
+    }
+    if (
+      !foundRepoPackageJson &&
+      expectedRepoPackageJsonPath.endsWith("package.json")
+    ) {
+      // expectedRepoPackageJsonPath が実際に package.json を指している場合のみ警告
+      console.warn(
+        `[extractSpecificDirectory] Expected repository package.json not found at: ${expectedRepoPackageJsonPath}`,
+      );
     }
   };
 
@@ -239,7 +277,13 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
       const actualOutputPath = outputPath || CONFIG.path;
       const destinationPath = path.resolve(process.cwd(), actualOutputPath);
       console.log(`⏳ Extracting to ${destinationPath}...`);
-      await extractSpecificDirectory(zipData, CONFIG.path, destinationPath); // CONFIG.path はZip内のパスなのでそのまま
+      // extractSpecificDirectory に remoteSrcPath と path を渡すように変更
+      await extractSpecificDirectory(
+        zipData,
+        CONFIG.remoteSrcPath,
+        CONFIG.path,
+        destinationPath,
+      );
       console.log("✅ Extraction complete.");
 
       if (latestTag) {

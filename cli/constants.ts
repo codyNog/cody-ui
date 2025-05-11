@@ -1,8 +1,9 @@
 export const CONFIG = {
   org: "codyNog",
   repo: "cody-ui",
-  path: "src",
+  path: "", // "src" から空文字に変更 (ルートを参照するため)
   branch: "main",
+  remoteSrcPath: "src", // ダウンロード・展開するリモートのソースパス
   versionFile: ".ui-version.json",
 } as const;
 
