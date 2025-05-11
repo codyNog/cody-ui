@@ -63,7 +63,7 @@ type IndeterminateCircularProgressIndicatorProps =
 /**
  * プログレスインジケーターコンポーネントの Props です。
  */
-export type ProgressIndicatorProps =
+type ProgressIndicatorProps =
   | DeterminateLinearProgressIndicatorProps
   | IndeterminateLinearProgressIndicatorProps
   | DeterminateCircularProgressIndicatorProps

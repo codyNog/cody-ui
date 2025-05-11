@@ -8,12 +8,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
-    "@babel/preset-env": "^7.25.4",
     "@babel/preset-typescript": "^7.26.0",
     "@biomejs/biome": "^1.9.4",
     "@chromatic-com/storybook": "^3.2.6",
     "@material/material-color-utilities": "^0.3.0",
     "@octokit/types": "^13.8.0",
+    "@react-types/shared": "^3.29.0",
+    "@storybook/addon-actions": "^8.6.12",
     "@storybook/addon-essentials": "^8.6.12",
     "@storybook/addon-onboarding": "^8.6.12",
     "@storybook/addon-themes": "^8.6.12",
@@ -35,6 +36,7 @@
     "cross-env": "^7.0.3",
     "cspell": "^8.17.3",
     "esbuild": "^0.25.0",
+    "knip": "^5.55.1",
     "npm-check-updates": "^17.1.15",
     "npm-run-all": "^4.1.5",
     "playwright": "^1.51.1",
@@ -63,6 +65,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "papaparse": "^5.5.2",
+    "react-aria": "^3.39.0",
     "react-aria-components": "^1.7.1",
     "react-icons": "^5.5.0",
     "react-stately": "^3.37.0",
@@ -91,6 +94,7 @@
     "watch:css": "tcm src --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "dev": "npm run storybook & npm run watch:css"
+    "dev": "npm run storybook & npm run watch:css",
+    "knip": "knip"
   }
 }

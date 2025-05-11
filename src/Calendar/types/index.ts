@@ -9,7 +9,7 @@ import type {
 // --- Common Type Definitions ---
 
 // 外部インターフェース用の日付型
-export type ExternalDateValue = Date;
+type ExternalDateValue = Date;
 export type ExternalDateRange = Date[]; // Changed from { start: Date; end: Date }
 export type ExternalDateArray = Date[];
 
@@ -21,7 +21,7 @@ export type InternalDateArray = CalendarDate[];
 // --- Calendar Component Type Definitions ---
 
 // react-aria-components から共通で使用するプロパティ
-export type CommonAriaProps = Omit<
+type CommonAriaProps = Omit<
   AriaCalendarPropsBase<DateValue>,
   "value" | "defaultValue" | "onChange" | "className" | "children"
 > &
@@ -34,14 +34,14 @@ export type CommonAriaProps = Omit<
 export type CalendarVariant = "single" | "range" | "multiple";
 
 // variantに基づいて値の型を決定
-export type ValueType<T extends CalendarVariant | undefined> = T extends "range"
+type ValueType<T extends CalendarVariant | undefined> = T extends "range"
   ? ExternalDateRange // Now Date[]
   : T extends "multiple"
     ? ExternalDateArray
     : ExternalDateValue;
 
 // variantに基づいてonChangeの型を決定
-export type OnChangeType<T extends CalendarVariant | undefined> =
+type OnChangeType<T extends CalendarVariant | undefined> =
   T extends "range"
     ? (dateRange: ExternalDateRange | null) => void // Now (dates: Date[] | null) => void
     : T extends "multiple"
@@ -67,7 +67,7 @@ export type IsVariant<T extends CalendarVariant> = (
   props: CalendarProps<CalendarVariant>,
 ) => props is CalendarProps<T>;
 
-export type MultipleSelectionCalendarProps = Omit<
+type MultipleSelectionCalendarProps = Omit<
   ComponentProps<typeof AriaCalendar>,
   "value" | "defaultValue" | "onChange"
 > & {

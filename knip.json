@@ -1,0 +1,25 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": ["src/**/*.{ts,tsx}"],
+  "project": ["src/**/*.{ts,tsx}"],
+  "ignore": ["**/*.stories.{ts,tsx}", "**/*.test.{ts,tsx}", "cli/**"],
+  "ignoreDependencies": [
+    "@babel/core",
+    "@babel/preset-typescript",
+    "@material/material-color-utilities",
+    "@octokit/types",
+    "@storybook/blocks",
+    "@types/adm-zip",
+    "@types/deno",
+    "@types/dotenv",
+    "@vitest/coverage-v8",
+    "babel-plugin-module-resolver",
+    "babel-plugin-react-docgen-typescript",
+    "commander",
+    "cross-env",
+    "playwright",
+    "@octokit/rest",
+    "adm-zip",
+    "dotenv"
+  ]
+}

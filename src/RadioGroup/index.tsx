@@ -72,7 +72,7 @@ type RadioProps = {
  * Radio component based on react-aria-components.
  * Represents a single option within a RadioGroup.
  */
-export const Radio = ({ children, className, ...props }: RadioProps) => {
+const Radio = ({ children, className, ...props }: RadioProps) => {
   return (
     <RACRadio
       {...props}
@@ -94,6 +94,6 @@ export const Radio = ({ children, className, ...props }: RadioProps) => {
 // --- Prop Types for Storybook/External Use ---
 
 /** Props for the RadioGroup component */
-export type RadioGroupComponentProps = ComponentProps<typeof RadioGroup>;
+type RadioGroupComponentProps = ComponentProps<typeof RadioGroup>;
 /** Props for the Radio component */
-export type RadioComponentProps = ComponentProps<typeof Radio>;
+type RadioComponentProps = ComponentProps<typeof Radio>;

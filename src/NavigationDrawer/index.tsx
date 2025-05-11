@@ -6,7 +6,7 @@ import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 
 // ItemType を定義
-export type NavigationDrawerItemType = "link" | "header" | "divider" | "group";
+type NavigationDrawerItemType = "link" | "header" | "divider" | "group";
 
 // ベースとなる Item の型定義
 // id は React の key や選択状態の管理に使うため必須とする
@@ -20,7 +20,7 @@ type BaseNavigationDrawerItem<T extends NavigationDrawerItemType> = {
 };
 
 // Conditional Types を使って Item 型を定義
-export type NavigationDrawerItemData<
+type NavigationDrawerItemData<
   // 型名を変更して Data サフィックスを追加
   T extends NavigationDrawerItemType = NavigationDrawerItemType,
 > = T extends "link"

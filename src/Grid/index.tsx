@@ -9,7 +9,7 @@ import {
 import styles from "./index.module.css";
 
 // グリッドのバリアント
-export type GridVariant = "default" | "bento";
+type GridVariant = "default" | "bento";
 
 // 共通のGridコンポーネントのProps
 type GridProps = {

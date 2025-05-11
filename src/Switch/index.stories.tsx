@@ -1,5 +1,5 @@
 import { action } from "@storybook/addon-actions";
-import { CheckIcon, CloseIcon } from "@storybook/icons"; // Example icons
+import { MdCheck, MdClose } from "react-icons/md";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Switch } from ".";
 
@@ -35,24 +35,24 @@ export const WithIcon: Story = {
     <div style={{ display: "flex", flexDirection: "row", gap: "16px" }}>
       <Switch
         {...args}
-        icon={<CloseIcon />}
+        icon={<MdClose className="w-4 h-4" />}
         aria-label="Switch With Icon Off"
       />
       <Switch
         {...args}
-        icon={<CheckIcon />}
+        icon={<MdCheck className="w-4 h-4" />}
         defaultSelected
         aria-label="Switch With Icon On"
       />
       <Switch
         {...args}
-        icon={<CloseIcon />}
+        icon={<MdClose className="w-4 h-4" />}
         isDisabled
         aria-label="Switch With Icon Disabled Off"
       />
       <Switch
         {...args}
-        icon={<CheckIcon />}
+        icon={<MdCheck className="w-4 h-4" />}
         defaultSelected
         isDisabled
         aria-label="Switch With Icon Disabled On"

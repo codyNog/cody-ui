@@ -11,9 +11,9 @@ import type {
 } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 
-export type TableOperationMode = "client" | "server";
+type TableOperationMode = "client" | "server";
 
-export type Id = string | number;
+type Id = string | number;
 export type DataWithId = { id: Id };
 
 type Filter = {

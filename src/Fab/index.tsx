@@ -40,7 +40,7 @@ type ExtendedFabSpecificProps = {
 };
 
 // Union type for all possible FAB props, using a generic for the variant
-export type FabProps<V extends FabVariantValue = "standard"> = FabCommonProps &
+type FabProps<V extends FabVariantValue = "standard"> = FabCommonProps &
   (V extends "standard"
     ? StandardFabSpecificProps
     : V extends "extended"

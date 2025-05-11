@@ -33,7 +33,7 @@ type VariantSpecificProps<V extends ChipVariant> =
 
 // ChipProps を Conditional Type を使って定義
 // デフォルトのバリアントは 'assist' に設定
-export type ChipProps<V extends ChipVariant = "assist"> = ChipBaseProps & {
+type ChipProps<V extends ChipVariant = "assist"> = ChipBaseProps & {
   variant?: V; // variant プロパティを追加
 } & VariantSpecificProps<V>; // バリアント固有のプロパティを合成
 

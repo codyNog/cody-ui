@@ -8,7 +8,7 @@ import {
 import type { PressEvent } from "@react-types/shared"; // For PressEvent type
 import styles from "./index.module.css";
 
-export type RippleType = {
+type RippleType = {
   key: number; // key はアニメーション識別のため残しても良いが、単一なら不要になる可能性も
   x: number;
   y: number;
