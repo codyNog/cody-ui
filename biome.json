@@ -49,7 +49,7 @@
       "semicolons": "always",
       "trailingCommas": "all"
     },
-    "globals": ["test", "expect", "describe"]
+    "globals": ["test", "expect", "describe", "Deno"]
   },
   "json": {
     "formatter": {
