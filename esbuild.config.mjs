@@ -29,7 +29,7 @@ esbuild
     if (!fs.existsSync("dist")) {
       fs.mkdirSync("dist");
     }
-    fs.writeFileSync("dist/package.json", '{ "type": "commonjs" }\\n');
+    fs.writeFileSync("dist/package.json", '{ "type": "commonjs" }');
     console.log("✅ Successfully created dist/package.json");
   })
   .catch(() => process.exit(1));
