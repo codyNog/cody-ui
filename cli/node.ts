@@ -164,37 +164,57 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
     const zip = new AdmZip(Buffer.from(zipData)); // AdmZipはBufferを期待
     const zipEntries = zip.getEntries();
 
-    // リポジトリルートのディレクトリ名を取得 (通常は <owner>-<repo>-<commit_sha> のような形式)
     const repoRootDir = zipEntries[0].entryName.split("/")[0];
-    // targetDir が空文字の場合も考慮して sourceDirPrefix を作成
     const sourceDirPrefix = targetDir
       ? `${repoRootDir}/${targetDir}/`
       : `${repoRootDir}/`;
 
-    await fs.mkdir(destination, { recursive: true });
-
-    // リポジトリのどの package.json を参照するかを明確にする
     const expectedRepoPackageJsonPath = packageJsonBaseDir
       ? `${repoRootDir}/${packageJsonBaseDir}/package.json`
       : `${repoRootDir}/package.json`;
-    let foundRepoPackageJson = false;
+    let foundRepoPackageJsonInZip = false;
 
+    // まずZIP全体をスキャンしてリポジトリのpackage.jsonを探す
     for (const zipEntry of zipEntries) {
-      // targetDir が指定されている場合はその中身を、指定されていなければルート直下を処理
-      // ただし、ルート直下の場合は .git やその他の不要なファイルを除外するフィルタリングが別途必要になる可能性があるが、
-      // ここではまず targetDir が空の場合の基本的なファイル展開と package.json の取得を実装する。
+      if (zipEntry.entryName === expectedRepoPackageJsonPath) {
+        try {
+          repoPackageJson = JSON.parse(zipEntry.getData().toString("utf-8"));
+          foundRepoPackageJsonInZip = true;
+          console.log(
+            `[extractSpecificDirectory] Found and parsed repository package.json from ZIP at: ${zipEntry.entryName}`,
+          );
+        } catch (e) {
+          console.error(
+            `[extractSpecificDirectory] Failed to parse repository package.json from ZIP at ${zipEntry.entryName}:`,
+            e,
+          );
+        }
+        break; // 見つかったらループを抜ける
+      }
+    }
+
+    if (
+      !foundRepoPackageJsonInZip &&
+      expectedRepoPackageJsonPath.endsWith("package.json")
+    ) {
+      console.warn(
+        `[extractSpecificDirectory] Expected repository package.json not found in ZIP at: ${expectedRepoPackageJsonPath}`,
+      );
+    }
+
+    // 次にtargetDirの中身を展開する
+    await fs.mkdir(destination, { recursive: true });
+    for (const zipEntry of zipEntries) {
       if (
         zipEntry.entryName.startsWith(sourceDirPrefix) &&
         !zipEntry.isDirectory
       ) {
-        // sourceDirPrefix が "repo-root/" の場合、entryName が "repo-root/file.txt" なら relativePath は "file.txt"
-        // entryName が "repo-root/subdir/file.txt" なら relativePath は "subdir/file.txt"
         const relativePath = zipEntry.entryName.substring(
           sourceDirPrefix.length,
         );
         if (!relativePath && targetDir) {
-          // targetDir が指定されていて、かつ entryName が sourceDirPrefix そのものの場合 (例: targetDir="src", entryName="repo-root/src/")
-          // これはディレクトリなのでスキップ (実際には上の !zipEntry.isDirectory で弾かれるはずだが念のため)
+          // targetDirが指定されていて、かつentryNameがsourceDirPrefixそのものの場合 (例: targetDir="src", entryName="repo-root/src/")
+          // これはディレクトリなのでスキップ
           continue;
         }
 
@@ -203,32 +223,7 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
 
         await fs.mkdir(dirName, { recursive: true });
         await fs.writeFile(destPath, zipEntry.getData());
-
-        // 期待するパスの package.json かどうかをチェック
-        if (zipEntry.entryName === expectedRepoPackageJsonPath) {
-          try {
-            repoPackageJson = JSON.parse(zipEntry.getData().toString("utf-8"));
-            foundRepoPackageJson = true;
-            console.log(
-              `[extractSpecificDirectory] Found and parsed repository package.json at: ${zipEntry.entryName}`,
-            );
-          } catch (e) {
-            console.error(
-              `[extractSpecificDirectory] Failed to parse repository package.json at ${zipEntry.entryName}:`,
-              e,
-            );
-          }
-        }
       }
-    }
-    if (
-      !foundRepoPackageJson &&
-      expectedRepoPackageJsonPath.endsWith("package.json")
-    ) {
-      // expectedRepoPackageJsonPath が実際に package.json を指している場合のみ警告
-      console.warn(
-        `[extractSpecificDirectory] Expected repository package.json not found at: ${expectedRepoPackageJsonPath}`,
-      );
     }
   };
 
@@ -284,7 +279,26 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
         CONFIG.path,
         destinationPath,
       );
-      console.log("✅ Extraction complete.");
+      console.log("✅ Target directory extraction complete.");
+      // repoPackageJson は extractSpecificDirectory 内で設定されることを期待
+
+      if (!skipDependencies && repoPackageJson) {
+        const localPackageJsonPath =
+          await findNearestPackageJson(destinationPath);
+        if (localPackageJsonPath) {
+          await mergeDependencies(localPackageJsonPath, repoPackageJson);
+        } else {
+          console.warn(
+            "⚠️ Local package.json not found. Skipping dependency merge.",
+          );
+        }
+      } else if (!skipDependencies && !repoPackageJson) {
+        console.warn(
+          "📦 Repository package.json not found in ZIP or parsed incorrectly. Skipping dependency merge.",
+        );
+      } else if (skipDependencies) {
+        console.log("📦 Dependency merge skipped by option.");
+      }
 
       if (latestTag) {
         await saveVersion(latestTag);
@@ -292,31 +306,23 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
 
       if (color) {
         const themeCss = generateThemeCssFromColor(color);
-        const cssFilePath = path.join(destinationPath, "theme.css"); // src/theme.css
+        // 出力先ディレクトリ直下に theme.css を作成 (展開された src の中ではない)
+        // outputPath が指定されていればそれを使い、なければ展開先 (destinationPath) の一つ上のディレクトリを意図するか、
+        // もしくはカレントディレクトリか。ここでは、outputPath があればそれを優先し、
+        // なければ destinationPath を基準にするが、src が付与されている可能性を考慮。
+        // もし outputPath が 'src/components' のような場合、theme.css は 'src/components/theme.css' になる。
+        // これが意図通りか確認が必要だが、一旦 destinationPath 直下とする。
+        const cssFilePath = path.join(destinationPath, "theme.css");
         await fs.writeFile(cssFilePath, `:root {\n${themeCss}\n}\n`);
         console.log(`🎨 Custom theme generated and saved to ${cssFilePath}`);
       }
-
-      if (!skipDependencies && repoPackageJson) {
-        const localPackageJsonPath = await findNearestPackageJson(
-          destinationPath, // process.cwd() から変更
-        );
-        if (localPackageJsonPath) {
-          await mergeDependencies(localPackageJsonPath, repoPackageJson);
-        } else {
-          console.warn(
-            "⚠️ package.json not found in the current directory or parent directories. Skipping dependency merge.",
-          );
-        }
-      } else if (!skipDependencies) {
-        console.log(
-          "📦 No package.json found in the repository's src directory or dependencies merge skipped.",
-        );
-      }
     } catch (error) {
-      console.error("❌ An error occurred:", error);
+      console.error(
+        "❌ An error occurred during the extraction process:",
+        error,
+      );
     }
-    return repoPackageJson;
+    return repoPackageJson; // extractSpecificDirectory で設定されたものが返る
   };
 
   return { extract, getLatestTag, getCurrentVersion };
