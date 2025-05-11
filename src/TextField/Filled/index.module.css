@@ -3,7 +3,7 @@
   display: flex; /* Changed from inline-flex to allow full width */
   flex-direction: column;
   position: relative; /* Make it a positioning context for absolute children */
-  min-width: 200px; /* Keep min-width on the wrapper */
+  width: 100%;
   /* Define common text color variables here so supportingTextContainer can access them */
   --text-field-supporting-text-color: var(--md-sys-color-on-surface-variant);
   --text-field-error-text-color: var(--md-sys-color-error);
@@ -15,10 +15,10 @@
   flex-direction: column;
   position: relative;
   padding-top: 0; /* Label floats into this space */
-  height: 56px;
+  padding-bottom: 1px; /* Add small padding for non-focused state */
+  /* height: 56px; Removed to allow dynamic height for multiline */
   min-height: 56px;
   box-sizing: border-box;
-  min-width: 200px;
   background-color: var(--md-sys-color-surface-container-highest);
   border-bottom: var(--text-field-border-width) solid
     var(--md-sys-color-on-surface-variant);
@@ -34,19 +34,29 @@
   --text-field-input-color: var(--md-sys-color-on-surface);
   --text-field-disabled-opacity: 0.38;
   --text-field-border-width: 1px;
-  --text-field-border-width-focus: 2px;
+  --text-field-border-width-focus: 2px; /* Reverted to 2px */
+}
+
+.multilineContainer {
+  /* Styles for the container when multiline is true */
 }
 
 /* New container for input and adornments */
 .inputContainer {
   display: flex;
-  align-items: center; /* Vertically align items */
+  align-items: center; /* Vertically align items by default */
   padding: 0 12px; /* Horizontal padding for the container */
   flex-grow: 1; /* Take remaining vertical space */
   position: relative; /* For positioning input/textarea */
   /* Adjust top/bottom padding to align text correctly with label states */
+  /* --input-container-padding-bottom: 8px; */ /* Default bottom padding - REMOVED */
   padding-top: 8px; /* Space for floated label */
-  padding-bottom: 8px; /* Bottom space */
+  /* padding-bottom: var(--input-container-padding-bottom); */ /* REMOVED - padding-bottom is now handled by .container */
+}
+
+.inputContainer.multiline {
+  align-items: flex-start; /* Align items to the top for multiline */
+  padding-top: 16px; /* Increase top padding for multiline to ensure label is above text */
 }
 
 /* Input element styles */
@@ -55,7 +65,7 @@
   color: var(--text-field-input-color);
   border: none;
   background-color: transparent;
-  padding: 8px 0; /* Vertical padding inside inputContainer */
+  padding: 12px 0 4px; /* Adjusted vertical padding */
   outline: none;
   width: 100%;
   box-sizing: border-box;
@@ -75,7 +85,19 @@
   height: auto;
   min-height: calc(56px - 16px); /* Adjust min-height based on container padding */
   resize: none;
-  padding: 8px 0; /* Vertical padding inside inputContainer */
+  padding: 12px 0 4px; /* Adjusted vertical padding */
+  overflow-y: hidden; /* Prevent mouse scrolling when overflowing */
+}
+
+.textarea.multiline {
+  /* Specific padding adjustments for multiline textarea if needed,
+     but inputContainer padding might be enough.
+     The label floats into the inputContainer's padding.
+     Ensure textarea content starts below the floated label.
+     The inputContainer.multiline already increases padding-top.
+  */
+  /* padding-top: 0; */
+  /* Reset textarea's own top padding if inputContainer handles it - Commented out as it might not be effective due to specificity or base padding */
 }
 
 /* Adornment styles */
@@ -120,6 +142,16 @@
   /* This might need JS or :has() selector if adornment width varies */
 }
 
+.multilineLabel {
+  /* Styles for the label when multiline is true */
+  /* Adjust top position to match single-line label's perceived vertical position. */
+  /* This might cause the label to slightly overlap with the first line of multiline text
+     if the text area's content starts very high, but ensures visual consistency
+     for the initial label position across single and multiline modes.
+  */
+  top: 28px; /* Match .label's default top position */
+}
+
 /* Adjust label position if start adornment exists */
 .container:has(.startAdornment) .label {
   /* Estimate adornment width + margin */
@@ -128,15 +160,27 @@
 
 /* Floating label styles */
 .container:focus-within .label,
-.container:has(.inputContainer .input:not(:placeholder-shown):not([value=""]))
+.container:has(
+    .inputContainer .input[value]:not([value=""]):not(:placeholder-shown)
+  )
   .label,
 .container:has(
-    .inputContainer .textarea:not(:placeholder-shown):not([value=""])
+    .inputContainer .textarea[value]:not([value=""]):not(:placeholder-shown)
   )
   .label {
-  top: 8px; /* Float to the top padding area */
+  top: 4px; /* Adjusted floating label position */
   transform: translateY(0) scale(0.75); /* Keep scale for floating effect */
   transform-origin: top left;
+}
+
+/* Ensure multiline label stays at the top */
+.container.multiline:focus-within .label,
+.container.multiline:has(
+    .inputContainer .textarea[value]:not([value=""]):not(:placeholder-shown)
+  )
+  .label {
+  top: 8px; /* Adjust to be closer to the top of the inputContainer padding */
+  transform: translateY(0) scale(0.75);
 }
 
 .container:focus-within .label {
@@ -174,7 +218,16 @@
 .container:focus-within {
   border-bottom-width: var(--text-field-border-width-focus);
   border-bottom-color: var(--text-field-border-color-focus);
+  padding-bottom: 0px; /* Reduce padding to compensate for thicker border */
 }
+
+/* .container:focus-within .inputContainer { */ /* REMOVED - No longer needed as padding adjustment is on .container */
+/* Adjust padding to compensate for thicker border on the main container */
+/* --input-container-padding-bottom: calc(
+    8px -
+    (var(--text-field-border-width-focus) - var(--text-field-border-width))
+  ); */
+/* } */
 
 /* --- Invalid State --- */
 .container.invalid {

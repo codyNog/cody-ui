@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { type Dispatch, type SetStateAction, useState } from "react"; // Import React and types
+import { MdCheck, MdSearch } from "../Icons"; // Import icons
 import { TextField } from "./index"; // Import the main wrapper component
 
 const meta = {
@@ -174,7 +175,6 @@ export const MultilineInteractive: Story = {
           display: "flex",
           flexDirection: "row",
           gap: "16px",
-          width: "500px",
         }}
       >
         <TextField
@@ -200,8 +200,7 @@ export const MultilineInteractive: Story = {
     label: "Multiline Interactive",
     multiline: true, // Default multiline to true for this story
     maxLines: 3, // Default maxLines example
-    value:
-      "This is a longer text that might wrap into multiple lines.\nTry adding more lines here.\nThis line should be visible.\nThis line should make a scrollbar appear if maxLines is 3.",
+    value: "",
   },
 };
 
@@ -219,8 +218,8 @@ export const WithAdornments: Story = {
         {...args}
         variant="outlined"
         // Example using potentially different adornments
-        startAdornment={<span>🔍</span>} // Example start adornment (icon-like)
-        endAdornment={<span>✔️</span>} // Example end adornment (icon-like)
+        startAdornment={<MdSearch />} // Example start adornment (icon-like)
+        endAdornment={<MdCheck />} // Example end adornment (icon-like)
       />
     </div>
   ),

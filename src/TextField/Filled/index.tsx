@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useRef,
+  useState, // Add useState
 } from "react";
 import {
   TextField as AriaTextField,
@@ -14,6 +15,7 @@ import {
   TextArea,
   type ValidationResult,
 } from "react-aria-components";
+import { useRipple } from "../../Ripple";
 import { Typography } from "../../Typography";
 import type { Props } from "../types";
 import styles from "./index.module.css";
@@ -39,6 +41,10 @@ export const FilledTextField = forwardRef<
   ) => {
     const isInvalid = !!errorMessage;
     const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>(null);
+    const rippleRef = useRef<HTMLDivElement>(null);
+    const isInputtingRef = useRef(false); // ★キー入力中フラグ
+    const { handleClick, component: RippleEffect } = useRipple(isInputtingRef); // ★useRippleに渡す
+    const [isActuallyFocused, setIsActuallyFocused] = useState(false); // State for focus
 
     // Combine forwardedRef and localRef
     useEffect(() => {
@@ -62,29 +68,26 @@ export const FilledTextField = forwardRef<
 
         requestAnimationFrame(() => {
           const scrollHeight = textarea.scrollHeight;
-          if (maxLines) {
-            const computedStyle = window.getComputedStyle(textarea);
-            const lineHeight =
-              Number.parseFloat(computedStyle.lineHeight) || 16;
-            const paddingTop = Number.parseFloat(computedStyle.paddingTop) || 0;
-            const paddingBottom =
-              Number.parseFloat(computedStyle.paddingBottom) || 0;
-            const borderTop =
-              Number.parseFloat(computedStyle.borderTopWidth) || 0;
-            const borderBottom =
-              Number.parseFloat(computedStyle.borderBottomWidth) || 0;
-            const maxHeight =
-              lineHeight * maxLines +
-              paddingTop +
-              paddingBottom +
-              borderTop +
-              borderBottom;
+          const computedStyle = window.getComputedStyle(textarea);
+          const paddingTop = Number.parseFloat(computedStyle.paddingTop) || 0;
+          const paddingBottom =
+            Number.parseFloat(computedStyle.paddingBottom) || 0;
+          // const borderTop = Number.parseFloat(computedStyle.borderTopWidth) || 0; // Unused
+          // const borderBottom = Number.parseFloat(computedStyle.borderBottomWidth) || 0; // Unused
 
-            if (scrollHeight > maxHeight) {
-              textarea.style.height = `${maxHeight}px`;
+          if (maxLines) {
+            const lineHeight =
+              Number.parseFloat(computedStyle.lineHeight) || 24;
+            const targetContentHeight = lineHeight * maxLines;
+            const targetStyleHeight =
+              targetContentHeight + paddingBottom + paddingTop; // Include both paddings for Filled
+            textarea.style.height = `${targetStyleHeight}px`;
+
+            const currentContentHeight =
+              scrollHeight - paddingTop - paddingBottom;
+            if (currentContentHeight > targetContentHeight) {
               textarea.style.overflowY = "auto";
             } else {
-              textarea.style.height = `${scrollHeight}px`;
               textarea.style.overflowY = "hidden";
             }
           } else {
@@ -105,57 +108,107 @@ export const FilledTextField = forwardRef<
 
     return (
       <div className={styles.wrapper}>
-        <AriaTextField
-          value={controlledValue}
-          onChange={onChangeText}
-          isInvalid={isInvalid}
+        <div
+          ref={rippleRef}
+          onKeyDown={() => {}}
           className={`${styles.container} ${styles.filled} ${
             isInvalid ? styles.invalid : ""
-          } ${props.isDisabled ? styles.disabled : ""}`.trim()}
+          } ${props.isDisabled ? styles.disabled : ""} ${
+            multiline ? styles.multilineContainer : ""
+          }`.trim()}
           style={multiline ? { height: "auto", minHeight: "56px" } : {}}
-          {...props}
         >
-          {label && (
-            <Label className={styles.label}>
-              <Typography
-                variant="bodyLarge"
-                color={isInvalid ? "error" : "onSurfaceVariant"}
+          <AriaTextField
+            value={controlledValue}
+            onChange={onChangeText}
+            isInvalid={isInvalid}
+            {...props}
+          >
+            {label && (
+              <Label
+                className={`${styles.label} ${
+                  multiline ? styles.multilineLabel : ""
+                }`}
               >
-                {label}
-              </Typography>
-            </Label>
-          )}
-
-          {/* Container for input and adornments */}
-          <div className={styles.inputContainer}>
-            {/* Render start adornment if provided */}
-            {startAdornment && (
-              <div className={styles.startAdornment}>{startAdornment}</div>
+                <Typography
+                  variant="bodyLarge"
+                  color={
+                    isInvalid
+                      ? "error"
+                      : isActuallyFocused
+                        ? "primary"
+                        : "onSurfaceVariant"
+                  }
+                >
+                  {label}
+                </Typography>
+              </Label>
             )}
 
-            {/* Conditionally render Input or TextArea */}
-            {multiline ? (
-              <TextArea
-                ref={localRef as Ref<HTMLTextAreaElement>}
-                className={`${styles.input} ${styles.textarea} ${
-                  startAdornment ? styles.inputWithStartAdornment : ""
-                } ${endAdornment ? styles.inputWithEndAdornment : ""}`.trim()}
-              />
-            ) : (
-              <Input
-                ref={localRef as Ref<HTMLInputElement>}
-                className={`${styles.input} ${
-                  startAdornment ? styles.inputWithStartAdornment : ""
-                } ${endAdornment ? styles.inputWithEndAdornment : ""}`.trim()}
-              />
-            )}
+            {/* Container for input and adornments */}
+            <div
+              className={`${styles.inputContainer} ${
+                multiline ? styles.multiline : ""
+              }`}
+            >
+              {/* Render start adornment if provided */}
+              {startAdornment && (
+                <div className={styles.startAdornment}>{startAdornment}</div>
+              )}
 
-            {/* Render end adornment if provided */}
-            {endAdornment && (
-              <div className={styles.endAdornment}>{endAdornment}</div>
-            )}
-          </div>
-        </AriaTextField>
+              {/* Conditionally render Input or TextArea */}
+              {multiline ? (
+                <TextArea
+                  ref={localRef as Ref<HTMLTextAreaElement>}
+                  className={`${styles.input} ${styles.textarea} ${
+                    multiline ? styles.multiline : ""
+                  } ${
+                    startAdornment ? styles.inputWithStartAdornment : ""
+                  } ${endAdornment ? styles.inputWithEndAdornment : ""}`.trim()}
+                  onFocus={() => setIsActuallyFocused(true)}
+                  onBlur={() => setIsActuallyFocused(false)}
+                  onClick={(e) => {
+                    if (e.isTrusted) {
+                      handleClick(e, rippleRef);
+                    }
+                  }}
+                  onKeyDown={() => {
+                    isInputtingRef.current = true;
+                  }}
+                  onKeyUp={() => {
+                    isInputtingRef.current = false;
+                  }}
+                />
+              ) : (
+                <Input
+                  ref={localRef as Ref<HTMLInputElement>}
+                  className={`${styles.input} ${
+                    startAdornment ? styles.inputWithStartAdornment : ""
+                  } ${endAdornment ? styles.inputWithEndAdornment : ""}`.trim()}
+                  onFocus={() => setIsActuallyFocused(true)}
+                  onBlur={() => setIsActuallyFocused(false)}
+                  onClick={(e) => {
+                    if (e.isTrusted) {
+                      handleClick(e, rippleRef);
+                    }
+                  }}
+                  onKeyDown={() => {
+                    isInputtingRef.current = true;
+                  }}
+                  onKeyUp={() => {
+                    isInputtingRef.current = false;
+                  }}
+                />
+              )}
+
+              {/* Render end adornment if provided */}
+              {endAdornment && (
+                <div className={styles.endAdornment}>{endAdornment}</div>
+              )}
+            </div>
+          </AriaTextField>
+          <RippleEffect />
+        </div>
 
         {/* Container for supporting text to reserve space */}
         <div className={styles.supportingTextContainer}>

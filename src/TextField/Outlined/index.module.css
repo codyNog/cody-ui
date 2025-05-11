@@ -4,7 +4,7 @@
   width: 100%;
   display: flex; /* Changed from inline-flex to allow full width */
   flex-direction: column;
-  min-width: 200px;
+  flex-grow: 1; /* Allow wrapper to grow in flex container */
   --text-field-supporting-text-color: var(--md-sys-color-on-surface-variant);
   --text-field-error-text-color: var(--md-sys-color-error);
 }
@@ -12,11 +12,13 @@
 /* Styles for the AriaTextField component itself */
 .container {
   position: relative;
-  min-width: 200px;
-  height: 56px;
+  width: 100%; /* Ensure the container takes full width of its parent */
+  padding-bottom: 1px; /* Add small padding for non-focused state */
+  /* height: 56px; Removed to allow dynamic height for multiline */
+  min-height: 57px; /* Ensure minimum height, increased by 1px */
   box-sizing: border-box;
-  display: flex; /* Use flex for internal layout */
-  align-items: center; /* Align items vertically */
+  /* display: flex; Removed to allow AriaTextField to behave like a block child */
+  /* align-items: center; Removed */
   /* Define CSS variables specific to the container/input area */
   --text-field-border-color: var(--md-sys-color-on-surface-variant);
   --text-field-border-color-focus: var(--md-sys-color-primary);
@@ -30,15 +32,27 @@
   --text-field-border-width-focus: 2px;
 }
 
+.multilineContainer {
+  /* Styles for the container when multiline is true */
+  /* height: auto; Already handled by inline style in TSX */
+}
+
 /* New container for input and adornments, sits inside .container */
 .inputContainer {
   display: flex;
-  align-items: center; /* Vertically align items */
+  align-items: center; /* Vertically align items by default */
   flex-grow: 1; /* Take available space */
   height: 100%; /* Fill container height */
   position: relative; /* For positioning input/textarea */
-  padding: 0 12px; /* Horizontal padding moved here */
+  --input-container-padding-top: 0; /* For multiline adjustment */
+  /* --input-container-padding-bottom: 0; */ /* For focus adjustment - REMOVED */
+  padding: var(--input-container-padding-top) 12px 0 12px; /* Horizontal padding moved here, bottom padding set to 0 */
   z-index: 1; /* Ensure it's above fieldset */
+}
+
+.inputContainer.multiline {
+  align-items: flex-start; /* Align items to the top for multiline */
+  --input-container-padding-top: 16px; /* Increase top padding for multiline to match Filled variant */
 }
 
 /* Input element styles */
@@ -49,7 +63,7 @@
   background-color: transparent;
   padding: 16px 0; /* Vertical padding only */
   outline: none;
-  width: 100%;
+  width: 100%; /* Take full width of the flex item space allocated to it */
   height: 100%; /* Fill the inputContainer height */
   box-sizing: border-box;
   position: relative; /* Keep relative positioning */
@@ -67,9 +81,14 @@
   box-sizing: border-box; /* Ensure box-sizing consistency */
   z-index: 1; /* Ensure z-index consistency */
   height: auto;
-  min-height: calc(56px - 32px); /* Adjust min-height based on vertical padding */
+  min-height: calc(56px - 16px); /* Match Filled variant's min-height calculation */
   resize: none;
   padding: 16px 0; /* Vertical padding only */
+  overflow-y: hidden; /* Prevent mouse scrolling when overflowing */
+}
+
+.textarea.multiline {
+  padding-top: 0; /* Removed as per request */
 }
 
 /* Adornment styles */
@@ -113,6 +132,16 @@
   z-index: 2; /* Above input container but below focused fieldset */
 }
 
+.multilineLabel {
+  /* Styles for the label when multiline is true */
+  /* Adjust top position for multiline text area's initial line, similar to Filled variant.
+     This positions the label (which has transform: translateY(-50%))
+     at the vertical center of the first potential line of text in the textarea.
+     Calculation: inputContainer.multiline padding-top (16px) + (line-height / 2) (approx 12px) = 28px
+  */
+  top: 28px;
+}
+
 /* Adjust label position if start adornment exists */
 .container:has(.startAdornment) .label {
   /* Adjust left based on typical adornment size + margin + container padding */
@@ -122,7 +151,7 @@
 /* Fieldset styles for Outlined variant */
 .fieldset {
   position: absolute;
-  top: -8px; /* Align border correctly with floated label */
+  top: -12px; /* Align border correctly with floated label - Adjusted to be even higher */
   left: 0;
   right: 0;
   bottom: 0;
@@ -141,12 +170,13 @@
   margin-left: 4px; /* Align with input padding start */
   line-height: normal; /* Keep for layout */
   visibility: hidden;
-  max-width: 0.01px;
+  max-width: 0.01px; /* Default to closed notch */
   transform: scaleX(0);
   transform-origin: left;
   transition: max-width 0.15s cubic-bezier(0.4, 0, 0.6, 1) 50ms, visibility 0s
     linear 150ms, transform 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
   white-space: nowrap;
+  background-color: transparent; /* Ensure no background color on legend itself */
 }
 
 /* Span inside legend provides width for the notch */
@@ -155,14 +185,17 @@
   display: inline-block;
   opacity: 0;
   color: transparent;
+  background-color: transparent; /* Ensure no background on the inner span either */
 }
 
 /* Styles when label should float (notch opens) */
 .container:focus-within .fieldset,
-.container:has(.inputContainer .input:not(:placeholder-shown):not([value=""]))
+.container:has(
+    .inputContainer .input[value]:not([value=""]):not(:placeholder-shown)
+  )
   .fieldset,
 .container:has(
-    .inputContainer .textarea:not(:placeholder-shown):not([value=""])
+    .inputContainer .textarea[value]:not([value=""]):not(:placeholder-shown)
   )
   .fieldset {
   border-color: var(--text-field-border-color-focus);
@@ -173,6 +206,14 @@
 .container:focus-within .fieldset {
   border-width: var(--text-field-border-width-focus);
 }
+
+/* .container:focus-within .inputContainer { */ /* REMOVED - No longer needed */
+/* Adjust padding to compensate for thicker border on the fieldset */
+/* --input-container-padding-bottom: calc(
+    0px -
+    (var(--text-field-border-width-focus) - var(--text-field-border-width))
+  ); */
+/* } */
 .container.invalid:focus-within .fieldset {
   border-color: var(--text-field-border-color-error);
   border-width: var(--text-field-border-width-focus);
@@ -180,10 +221,12 @@
 
 /* Apply floating styles to the .label element */
 .container:focus-within .label,
-.container:has(.inputContainer .input:not(:placeholder-shown):not([value=""]))
+.container:has(
+    .inputContainer .input[value]:not([value=""]):not(:placeholder-shown)
+  )
   .label,
 .container:has(
-    .inputContainer .textarea:not(:placeholder-shown):not([value=""])
+    .inputContainer .textarea[value]:not([value=""]):not(:placeholder-shown)
   )
   .label {
   /* Adjust transform to move label above the border */
@@ -193,15 +236,27 @@
   left: 16px; /* Adjust left position to move further left */
   transform: translateY(-50%) scale(0.75); /* Center vertically within the notch space */
   color: var(--text-field-label-color-focus);
+  background-color: transparent !important; /* Ensure label background is transparent when floated */
+}
+
+/* Styles for floated label in multiline mode */
+.container.multiline:focus-within .label,
+.container.multiline:has(
+    .inputContainer .textarea[value]:not([value=""]):not(:placeholder-shown)
+  )
+  .label {
+  /* Ensure label stays at the top for multiline */
+  top: 8px; /* Adjust to be closer to the top border */
+  transform: translateY(0) scale(0.75); /* No Y translation, just scale */
 }
 
 /* Apply error color when floated, invalid, and not focused */
 .container.invalid:not(:focus-within):has(
-    .inputContainer .input:not(:placeholder-shown):not([value=""])
+    .inputContainer .input[value]:not([value=""]):not(:placeholder-shown)
   )
   .label,
 .container.invalid:not(:focus-within):has(
-    .inputContainer .textarea:not(:placeholder-shown):not([value=""])
+    .inputContainer .textarea[value]:not([value=""]):not(:placeholder-shown)
   )
   .label {
   color: var(--text-field-label-color-error);
@@ -212,13 +267,15 @@
 
 /* Expand the legend notch when label floats */
 .container:focus-within .legend,
-.container:has(.inputContainer .input:not(:placeholder-shown):not([value=""]))
+.container:has(
+    .inputContainer .input[value]:not([value=""]):not(:placeholder-shown)
+  )
   .legend,
 .container:has(
-    .inputContainer .textarea:not(:placeholder-shown):not([value=""])
+    .inputContainer .textarea[value]:not([value=""]):not(:placeholder-shown)
   )
   .legend {
-  max-width: 100%;
+  max-width: var(--legend-max-width, 100%); /* Use CSS var when floated, fallback for safety */
   visibility: visible;
   transform: scaleX(1);
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
@@ -234,6 +291,11 @@
 
 /* Supporting text (description/error) styles */
 /* Typography component handles styling for description and error text */
+
+/* Add this new rule set for .container:focus-within padding adjustment */
+.container:focus-within {
+  padding-bottom: 0px; /* Reduce padding to compensate for thicker border */
+}
 
 /* --- Outlined Variant Specific Styles --- */
 .outlined {

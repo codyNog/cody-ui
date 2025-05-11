@@ -17,14 +17,16 @@ export type RippleType = {
 
 type Props = {
   ripple: RippleType | null; // 単一のリップル、または null
-  // handleAnimationEnd は不要になるので削除
+  clearRipple: () => void; // リップルをクリアする関数
+  isInputtingRef?: RefObject<boolean>; // ★ isInputtingRef を Props に追加
 };
 
-const RippleComponent = ({ ripple }: Props) => {
-  // handleAnimationEnd を引数から削除
+// clearRipple と isInputtingRef を Props に追加
+const RippleComponent = ({ ripple, clearRipple, isInputtingRef }: Props) => {
   return (
     <span className={styles.rippleContainer}>
-      {ripple && ( // ripple が存在する場合のみ描画
+      {/* ripple が存在し、かつキー入力中でない場合のみ描画 */}
+      {ripple && !isInputtingRef?.current && (
         <span
           key={ripple.key} // もし key を RippleType に残すなら使う
           className={styles.ripple}
@@ -34,26 +36,38 @@ const RippleComponent = ({ ripple }: Props) => {
             width: ripple.size,
             height: ripple.size,
           }}
-          // onAnimationEnd は不要になるので削除
+          onAnimationEnd={clearRipple} // アニメーション終了時に clearRipple を呼ぶ
         />
       )}
     </span>
   );
 };
 
-export const useRipple = () => {
+export const useRipple = (isInputtingRef?: RefObject<boolean>) => {
+  // isInputtingRef を追加
   const [ripple, setRipple] = useState<RippleType | null>(null); // 単一のリップル状態
 
-  // Props の型から "ripple" と "handleAnimationEnd" (もしあれば) を Omit する
-  // RippleComponentPropsからhandleAnimationEndを除いた型を定義
+  const clearRipple = () => {
+    // リップルをクリアする関数を定義
+    setRipple(null);
+  };
+
+  // Props の型から "ripple" と "clearRipple" を Omit する
   type RippleComponentProps = Omit<
     ComponentProps<typeof RippleComponent>,
-    "ripple"
+    "ripple" | "clearRipple" | "isInputtingRef" // isInputtingRef も Omit 対象に追加
   >;
 
   const component = (props: RippleComponentProps) => {
-    // RippleComponent には単一の ripple のみを渡す
-    return <RippleComponent ripple={ripple} {...props} />;
+    // RippleComponent に ripple, clearRipple, isInputtingRef を渡す
+    return (
+      <RippleComponent
+        ripple={ripple}
+        clearRipple={clearRipple}
+        isInputtingRef={isInputtingRef}
+        {...props}
+      />
+    );
   };
 
   const handleClick = (
@@ -61,6 +75,10 @@ export const useRipple = () => {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     ref: RefObject<any>, // Temporarily changed to any to resolve RefObject<SpecificElement | null> vs RefObject<Element> issues
   ) => {
+    // If isInputtingRef is provided and its current value is true, do not create a ripple.
+    if (isInputtingRef?.current) {
+      return;
+    }
     if (ref.current) {
       const rect = ref.current.getBoundingClientRect();
       const size = Math.max(rect.width, rect.height);
@@ -94,6 +112,13 @@ export const useRipple = () => {
         size,
       };
       setRipple(newRipple);
+      // Add a timeout to clear the ripple after the animation duration
+      // This ensures the ripple is cleared even if onAnimationEnd doesn't fire as expected
+      // or if re-renders happen frequently.
+      const animationDuration = 1000; // Should match the CSS animation duration
+      setTimeout(() => {
+        setRipple(null);
+      }, animationDuration);
     }
   };
 
