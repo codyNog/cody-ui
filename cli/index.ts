@@ -23,7 +23,11 @@ async function mainCli() {
       outputPath: flags.output,
     };
     repoPackageJson = await nodeMain(cliOptions);
-    await updateDenoJsonImportsIfNeeded(true, repoPackageJson);
+    await updateDenoJsonImportsIfNeeded(
+      true,
+      repoPackageJson,
+      cliOptions.outputPath,
+    );
   } else {
     // Node.js環境 (nodeMain内でcommanderが引数を処理)
     repoPackageJson = await nodeMain();

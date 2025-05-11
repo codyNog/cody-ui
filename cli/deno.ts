@@ -6,6 +6,7 @@ import type { DenoJson, PackageJson } from "./types.js";
 export async function updateDenoJsonImportsIfNeeded(
   isDeno: boolean,
   repoPackageJson: PackageJson | null,
+  outputPath?: string, // 出力パスを引数に追加
 ): Promise<void> {
   if (!isDeno) {
     return;
@@ -15,9 +16,13 @@ export async function updateDenoJsonImportsIfNeeded(
     const dependenciesToUpdate: Record<string, string> = {};
 
     // 1. このプロジェクトの package.json を読み込む (存在すれば)
-    const projectRoot =
-      typeof Deno !== "undefined" ? Deno.cwd() : process.cwd();
-    const thisProjectPackageJsonPath = path.join(projectRoot, "package.json");
+    // deno.json の探索開始位置を outputPath があればそれを優先し、なければ Deno.cwd() を使う
+    const searchStartDir = outputPath ? path.resolve(outputPath) : Deno.cwd();
+    // projectRoot の行を削除し、thisProjectPackageJsonPath で直接 searchStartDir を使用
+    const thisProjectPackageJsonPath = path.join(
+      searchStartDir,
+      "package.json",
+    );
     let thisProjectPackageJson: PackageJson | null = null;
     try {
       const packageJsonContent = await fs.readFile(
@@ -93,7 +98,7 @@ export async function updateDenoJsonImportsIfNeeded(
 
     // 2. 実行場所の deno.json を探索・読み込み
     let denoJsonPath: string | null = null;
-    let currentDir = Deno.cwd(); // Denoモードなので Deno.cwd() を直接使
+    let currentDir = searchStartDir; // Deno.cwd() から変更
     while (true) {
       const potentialPathJson = path.join(currentDir, "deno.json");
       const potentialPathJsonc = path.join(currentDir, "deno.jsonc");

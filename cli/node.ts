@@ -255,7 +255,7 @@ export const GitHubFileExtractor = (token: string, isDeno: boolean) => {
 
       if (!skipDependencies && repoPackageJson) {
         const localPackageJsonPath = await findNearestPackageJson(
-          process.cwd(),
+          destinationPath, // process.cwd() から変更
         );
         if (localPackageJsonPath) {
           await mergeDependencies(localPackageJsonPath, repoPackageJson);
