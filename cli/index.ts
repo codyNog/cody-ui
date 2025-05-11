@@ -1,9 +1,5 @@
-#!/usr/bin/env node
-// Denoの型定義は一旦コメントアウト。VSCodeのDeno拡張機能やdeno.jsonでの解決を期待。
-// /// <reference types="https://deno.land/x/deno/cli/types.d.ts" />
-
-import { updateDenoJsonImportsIfNeeded } from "./deno.js";
-import { main as nodeMain } from "./node.js";
+import { updateDenoJsonImportsIfNeeded } from "./deno";
+import { main as nodeMain } from "./node";
 
 async function mainCli() {
   const isDeno = typeof Deno !== "undefined";

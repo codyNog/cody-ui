@@ -93,8 +93,7 @@ export async function updateDenoJsonImportsIfNeeded(
 
     // 2. 実行場所の deno.json を探索・読み込み
     let denoJsonPath: string | null = null;
-    let currentDir = Deno.cwd(); // Denoモードなので Deno.cwd() を直接使用
-    // biome-ignore lint/correctness/noConstantCondition: ルートディレクトリまで探索するため意図的なループ
+    let currentDir = Deno.cwd(); // Denoモードなので Deno.cwd() を直接使
     while (true) {
       const potentialPathJson = path.join(currentDir, "deno.json");
       const potentialPathJsonc = path.join(currentDir, "deno.jsonc");

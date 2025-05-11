@@ -73,7 +73,7 @@
   },
   "scripts": {
     "extract": "echo 'Extract functionality removed as per user request'",
-    "build": "tsc --project tsconfig.build.json && mv dist/cli.js dist/index.js",
+    "build": "node esbuild.config.mjs",
     "type-check": "tsc --noEmit",
     "format": "biome check --write .",
     "postplop": "npm run format",
