@@ -14,6 +14,7 @@
   width: 360px;
   /* background-color: var(--md-sys-color-surface, #fafdfd); */ /* .root で指定するため削除 */
   /* border-right: 1px solid var(--md-sys-color-outline-variant, #cac4d0); */ /* 角丸にするため削除 */
+  height: 100vh; /* Ensure it takes full viewport height */
   /* Animation */
   transform: translateX(-100%); /* Initially hidden */
   opacity: 0;
