@@ -120,6 +120,8 @@ const NavigationRailItem = ({
         onClick={() => {
           item.onClick?.(); // アイテム固有の onClick も実行 (もしあれば)
         }}
+        onMouseEnter={() => item.onHoverChange?.(item.id)} // onHoverChange のためのハンドラを追加
+        onMouseLeave={() => item.onHoverChange?.("")}
       />
     );
   }
@@ -198,6 +200,7 @@ export const NavigationRail = forwardRef<HTMLDivElement, Props>(
             isActive={activeId === item.id}
             onPress={() => handlePress(item)}
             linkComponent={linkComponent} // linkComponent を渡す
+            onHoverChange={onHoverChange}
           />
         ))}
       </div>
