@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, fn } from "@storybook/test";
 import { NavigationRail as Component } from ".";
-import { Button } from "../Button";
+import { Fab } from "../Fab"; // Button の代わりに Fab をインポート
 import { MdAdd, MdFavorite, MdHome, MdInfo, MdSettings } from "../Icons";
 import { getCanvas } from "../libs/storybook";
 
@@ -9,41 +9,52 @@ const meta: Meta<typeof Component> = {
   component: Component,
   args: {
     items: [
-      { id: "home", label: "Home", icon: <MdHome />, onClickMenu: fn() }, // onPressMenu を onClickMenu に変更
+      {
+        id: "home",
+        label: "Home",
+        icon: <MdHome />,
+        onClick: fn(),
+        onHoverChange: fn(),
+      }, // onHoverChange を追加
       {
         id: "favorite",
         label: "Favorite",
         icon: <MdFavorite />,
         badge: 3,
-        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
+        onClick: fn(), // onPressMenu を onClick に変更
+        onHoverChange: fn(), // onHoverChange を追加
       },
       {
         id: "settings",
         label: "Settings",
         icon: <MdSettings />,
-        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
+        onClick: fn(), // onPressMenu を onClick に変更
         href: "/settings",
+        onHoverChange: fn(), // onHoverChange を追加
       },
       {
         id: "info",
         label: "Info",
         icon: <MdInfo />,
         disabled: true,
-        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
+        onClick: fn(), // onPressMenu を onClick に変更
+        onHoverChange: fn(), // onHoverChange を追加
       },
       {
         id: "small_badge",
         label: "Small",
         icon: <MdFavorite />,
         badge: "small",
-        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
+        onClick: fn(), // onPressMenu を onClick に変更
+        onHoverChange: fn(), // onHoverChange を追加
       },
       {
         id: "large_badge",
         label: "Large",
         icon: <MdFavorite />,
         badge: "large",
-        onClickMenu: fn(), // onPressMenu を onClickMenu に変更
+        onClick: fn(), // onPressMenu を onClick に変更
+        onHoverChange: fn(), // onHoverChange を追加
       },
     ],
     defaultSelectedId: "home",
@@ -66,10 +77,9 @@ export const Default: Story = {
 export const WithFAB: Story = {
   args: {
     fab: (
-      <Button icon={<MdAdd />} onClick={fn()}>
-        <MdAdd />
-      </Button>
-    ), // icon prop を使用し、childrenにもアイコンを設定（Buttonの仕様に合わせる）
+      // Button を Fab に変更
+      <Fab icon={<MdAdd />} aria-label="Add" onClick={fn()} />
+    ),
   },
   render: (args) => (
     <div style={{ height: "400px" }}>
@@ -107,7 +117,7 @@ export const Behavior: Story = {
     const settingsClickMenu = args.items?.find(
       // settingsPressMenu を settingsClickMenu に変更
       (item) => item.id === "settings",
-    )?.onClickMenu; // onPressMenu を onClickMenu に変更
+    )?.onClick; // onPressMenu を onClick に変更
     await settingsLink.click();
     expect(settingsClickMenu).toHaveBeenCalled(); // settingsPressMenu を settingsClickMenu に変更
 
@@ -116,7 +126,7 @@ export const Behavior: Story = {
     const infoClickMenu = args.items?.find(
       // infoPressMenu を infoClickMenu に変更
       (item) => item.id === "info",
-    )?.onClickMenu; // onPressMenu を onClickMenu に変更
+    )?.onClick; // onPressMenu を onClick に変更
     await infoItem.click();
     expect(infoClickMenu).not.toHaveBeenCalled(); // infoPressMenu を infoClickMenu に変更
     expect(favoriteItem).toHaveAttribute("aria-pressed", "true");

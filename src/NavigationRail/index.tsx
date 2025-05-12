@@ -1,13 +1,14 @@
 "use client";
 import {
   type ComponentProps,
+  type ElementType, // ElementType をインポート
   type ReactNode,
   forwardRef,
   useCallback,
   useState,
 } from "react";
-import { useFocusRing } from "react-aria"; // VisuallyHidden を削除
-import { Link } from "react-aria-components";
+import { useFocusRing } from "react-aria"; // useFocusRing を再インポート
+import { Link } from "react-aria-components"; // Button のインポートを削除
 import { Badge } from "../Badge"; // Badgeコンポーネントをインポート (パス修正)
 import styles from "./index.module.css";
 
@@ -17,8 +18,9 @@ type NavigationItem = {
   icon: ReactNode;
   badge?: number | "large" | "small";
   disabled?: boolean;
-  onClickMenu?: () => void; // onPressMenu を onClickMenu に変更
+  onClick?: () => void; // onPressMenu を onClick に変更
   href?: string;
+  onHoverChange?: (isHovering: boolean) => void; // ホバー状態変更時のコールバックを追加
 };
 
 type Props = {
@@ -26,6 +28,7 @@ type Props = {
   fab?: ReactNode;
   defaultSelectedId?: string;
   onSelectionChange?: (id: string) => void;
+  linkComponent?: ElementType; // linkComponent プロパティを追加
 } & Omit<ComponentProps<"div">, "children">;
 
 // eslint-disable-next-line react/display-name
@@ -33,12 +36,14 @@ const NavigationRailItem = ({
   item,
   isActive,
   onPress,
+  linkComponent: LinkComponentProp, // linkComponent を Props から受け取る
 }: {
   item: NavigationItem;
   isActive: boolean;
   onPress: () => void;
+  linkComponent?: ElementType; // linkComponent の型定義
 }) => {
-  const { isFocused, focusProps } = item.href
+  const { isFocused, focusProps } = item.href // useFocusRing を再度使う
     ? { isFocused: false, focusProps: {} }
     : useFocusRing();
 
@@ -68,45 +73,73 @@ const NavigationRailItem = ({
   const itemClassName = `${styles.item} ${
     isActive ? styles.active : ""
   } ${item.disabled ? styles.disabled : ""} ${
-    isFocused && !item.href ? styles.focused : ""
+    // disabled クラスを適用
+    isFocused && !item.href ? styles.focused : "" // focused クラスを再度適用
   }`;
 
   if (item.href) {
+    // linkComponent が指定されていればそれを使う、なければデフォルトの Link を使う
+    const LinkComponent = LinkComponentProp || Link;
+    const commonLinkProps = {
+      className: itemClassName,
+      children: itemContent,
+      onHoverChange: item.onHoverChange,
+      // Link とカスタムコンポーネントで共通して渡せるプロパティ
+    };
+
+    if (LinkComponent === Link) {
+      // デフォルトの react-aria-components の Link を使う場合
+      return (
+        <Link
+          {...commonLinkProps}
+          href={item.href}
+          aria-disabled={item.disabled}
+          onPress={() => {
+            if (!item.disabled) {
+              onPress();
+            }
+          }}
+          // tabIndex は Link が管理
+        />
+      );
+    }
+    // カスタムの linkComponent を使う場合
+    // 注意: カスタムコンポーネントは LinkProps と互換性のある props を受け取る想定
+    // 必要に応じて onClick や aria-disabled のハンドリングが必要
     return (
-      <Link
+      <LinkComponent
+        {...commonLinkProps}
         href={item.href}
-        className={itemClassName}
-        aria-disabled={item.disabled} // isDisabled を aria-disabled に渡す
-        onPress={() => {
-          if (!item.disabled) {
-            onPress();
-          }
+        aria-disabled={item.disabled} // aria-disabled を渡す
+        onClick={() => {
+          item.onClick?.(); // アイテム固有の onClick も実行 (もしあれば)
         }}
-        // tabIndex は Link コンポーネントが自動で管理するため削除
-      >
-        {itemContent}
-      </Link>
+      />
     );
   }
 
   return (
-    <div
-      {...focusProps}
+    <div // Button を div に戻す
+      {...focusProps} // focusProps を適用
       className={itemClassName}
       onClick={() => {
+        // onPress を onClick に戻す
         if (!item.disabled) {
           onPress();
         }
       }}
       onKeyDown={(e) => {
+        // onKeyDown を戻す
         if (!item.disabled && (e.key === "Enter" || e.key === " ")) {
           onPress();
         }
       }}
-      role="button"
-      tabIndex={item.disabled ? -1 : 0}
-      aria-pressed={isActive && !item.disabled}
-      aria-disabled={item.disabled}
+      onMouseEnter={() => item.onHoverChange?.(true)} // onHoverChange のためのハンドラを追加
+      onMouseLeave={() => item.onHoverChange?.(false)} // onHoverChange のためのハンドラを追加
+      role="button" // role を戻す
+      tabIndex={item.disabled ? -1 : 0} // tabIndex を戻す
+      aria-pressed={isActive && !item.disabled} // aria-pressed を戻す
+      aria-disabled={item.disabled} // aria-disabled を戻す (isDisabled は削除)
       aria-label={item.label}
     >
       {itemContent}
@@ -116,7 +149,15 @@ const NavigationRailItem = ({
 
 export const NavigationRail = forwardRef<HTMLDivElement, Props>(
   (
-    { items, fab, defaultSelectedId, onSelectionChange, className, ...props },
+    {
+      items,
+      fab,
+      defaultSelectedId,
+      onSelectionChange,
+      linkComponent, // linkComponent を props から受け取る
+      className,
+      ...props
+    },
     ref,
   ) => {
     const [activeId, setActiveId] = useState<string | undefined>(
@@ -129,7 +170,7 @@ export const NavigationRail = forwardRef<HTMLDivElement, Props>(
           return;
         }
         setActiveId(item.id);
-        item.onClickMenu?.(); // onPressMenu を onClickMenu に変更
+        item.onClick?.(); // onPressMenu を onClick に変更
         onSelectionChange?.(item.id);
       },
       [onSelectionChange],
@@ -149,6 +190,7 @@ export const NavigationRail = forwardRef<HTMLDivElement, Props>(
             item={item}
             isActive={activeId === item.id}
             onPress={() => handlePress(item)}
+            linkComponent={linkComponent} // linkComponent を渡す
           />
         ))}
       </div>

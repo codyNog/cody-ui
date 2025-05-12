@@ -25,11 +25,14 @@
   cursor: pointer;
   user-select: none;
   text-decoration: none;
-  color: var(--md-sys-color-on-surface-variant);
+  color: inherit; /* 親要素の色を継承するように変更 */
+  background-color: transparent; /* Buttonのデフォルト背景を打ち消す */
   outline: none;
+  border: none; /* Buttonのデフォルトボーダーを打ち消す */
+  padding: 0; /* Buttonのデフォルトパディングを打ち消す */
 }
 
-/* ホバー時のスタイル */
+/* ホバー時のスタイル (:hover を使用) */
 .item:hover .iconContainer {
   background-color: var(--md-sys-color-surface-container-highest-alpha-hover);
 }
@@ -45,7 +48,7 @@
   color: var(--md-sys-color-on-surface);
 }
 
-/* Link要素のフォーカス時のスタイル (:focus-visible) */
+/* Link要素のフォーカス時のスタイル (:focus-visible を使用) */
 .item:focus-visible .iconContainer {
   background-color: var(--md-sys-color-surface-container-highest-alpha-focus); /* フォーカス用の色変数があれば使う */
   outline: 2px solid var(--md-sys-color-outline); /* M3のフォーカスリングスタイル */
@@ -59,21 +62,24 @@
   color: var(--md-sys-color-on-surface);
 }
 
+/* 無効状態のスタイル (.disabled クラスを使用) */
 .item.disabled {
   color: var(--md-sys-color-on-surface-variant-alpha-disabled);
   cursor: default;
 }
 
+/* 無効状態のホバー/フォーカススタイル */
 .item.disabled:hover .iconContainer,
 .item.disabled.focused .iconContainer,
 .item.disabled:focus-visible .iconContainer {
-  /* disabled時のfocus-visibleも考慮 */
+  /* Link要素の focus-visible も考慮 */
   background-color: transparent;
   outline: none; /* disabled時はフォーカスリングなし */
 }
 .item.disabled:hover .icon,
 .item.disabled.focused .icon,
 .item.disabled:focus-visible .icon {
+  /* Link要素の focus-visible も考慮 */
   color: var(--md-sys-color-on-surface-variant-alpha-disabled);
 }
 
@@ -91,7 +97,9 @@
 .item.active .iconContainer {
   background-color: var(--md-sys-color-secondary-container);
 }
+.item.active.focused .iconContainer /* div のフォーカス */,
 .item.active:focus-visible .iconContainer {
+  /* Link のフォーカス */
   /* activeかつfocus-visibleの時 */
   outline: 2px solid var(--md-sys-color-on-secondary-container); /* active時のフォーカスリング色 */
 }

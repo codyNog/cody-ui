@@ -1,5 +1,11 @@
 "use client";
-import { type ReactNode, forwardRef, useEffect, useState } from "react";
+import {
+  type ElementType,
+  type ReactNode,
+  forwardRef,
+  useEffect,
+  useState,
+} from "react"; // ElementType をインポート
 import { Drawer } from "vaul";
 import { MdChevronRight, MdExpandMore } from "../Icons"; // アイコンをインポート
 import { Typography } from "../Typography"; // Typography をインポート
@@ -45,16 +51,25 @@ type NavigationDrawerItemData<
 
 // --- Item Components ---
 type LinkItemProps = {
+  /** The link item data. */
   item: NavigationDrawerItemData<"link">;
+  /** Whether the item is currently active. */
   isActive: boolean;
+  /** Callback function when the item is clicked. */
   onClick?: (item: NavigationDrawerItemData<"link">) => void;
+  /** Custom component to render the link. Defaults to 'a'. */
+  linkComponent?: ElementType; // React. を削除
 };
-const LinkItemComponent = ({ item, isActive, onClick }: LinkItemProps) => (
+const LinkItemComponent = ({
+  item,
+  isActive,
+  onClick,
+  linkComponent: LinkComponent = "a",
+}: LinkItemProps) => (
   <li key={item.id}>
-    <a
+    <LinkComponent
       href={item.href}
-      onClick={(e) => {
-        e.preventDefault();
+      onClick={() => {
         onClick?.(item);
       }}
       className={`${styles.item} ${isActive ? styles.itemActive : ""}`}
@@ -76,7 +91,7 @@ const LinkItemComponent = ({ item, isActive, onClick }: LinkItemProps) => (
           {item.badge}
         </Typography>
       )}
-    </a>
+    </LinkComponent>
   </li>
 );
 
@@ -149,12 +164,14 @@ const Component = ({
   onItemClick,
   expandedGroups,
   toggleGroup,
+  linkComponent, // Pass linkComponent down
 }: {
   items: Array<NavigationDrawerItemData>;
   selectedItemId?: string;
   onItemClick?: (item: NavigationDrawerItemData<"link">) => void;
   expandedGroups: Record<string, boolean>;
   toggleGroup: (groupId: string) => void;
+  linkComponent?: ElementType; // React. を削除
 }) => {
   return (
     <>
@@ -169,6 +186,7 @@ const Component = ({
                 item={item}
                 isActive={!!isActive}
                 onClick={onItemClick}
+                linkComponent={linkComponent} // Pass linkComponent to LinkItemComponent
               />
             );
           case "header":
@@ -189,6 +207,7 @@ const Component = ({
                     onItemClick={onItemClick}
                     expandedGroups={expandedGroups}
                     toggleGroup={toggleGroup}
+                    linkComponent={linkComponent} // Pass linkComponent recursively
                   />
                 )} // 再帰的に自身を渡す
                 selectedItemId={selectedItemId} // selectedItemId を渡す
@@ -204,23 +223,47 @@ const Component = ({
   );
 };
 
-type Props = {
-  variant: "standard" | "modal";
-  items: Array<NavigationDrawerItemData>; // 型変更
+// セクションごとのデータを定義する型
+export type NavigationDrawerSection = {
+  /** Unique identifier for the section (for React key). */
+  id: string;
+  /** Optional headline for the section. */
   headline?: string;
-  // modal の場合の開閉状態を制御
+  /** The list of items within this section. */
+  items: Array<NavigationDrawerItemData>;
+};
+
+type Props = {
+  /** The variant of the navigation drawer. */
+  variant: "standard" | "modal";
+  /** The list of sections to display in the drawer. */
+  sections: Array<NavigationDrawerSection>; // items を sections に変更
+  // headline?: string; // トップレベルの headline は削除
+  /** Controls the open state for the modal variant. */
   open?: boolean;
-  // modal が閉じられたときのコールバック
+  /** Callback function when the modal drawer is closed. */
   onClose?: () => void;
-  // アイテムがクリックされたときのコールバック
+  /** Callback function when a link item is clicked. */
   onItemClick?: (item: NavigationDrawerItemData<"link">) => void; // 型変更
-  // 選択されているアイテムの id
+  /** The ID of the currently selected item. */
   selectedItemId?: string;
+  /** Custom component to render links. Defaults to 'a'. */
+  linkComponent?: ElementType; // React. を削除
 };
 
 export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
   (
-    { variant, items, headline, open, onClose, onItemClick, selectedItemId },
+    {
+      variant,
+      // items, // items を削除
+      // headline, // headline を削除
+      sections, // sections を追加
+      open,
+      onClose,
+      onItemClick,
+      selectedItemId,
+      linkComponent, // Destructure linkComponent
+    },
     ref,
   ) => {
     const [expandedGroups, setExpandedGroups] = useState<
@@ -233,20 +276,18 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
 
     useEffect(() => {
       const initialExpansionState: Record<string, boolean> = {};
-      const setupInitialExpansion = (
-        currentItems: NavigationDrawerItemData[], // 型変更
-      ) => {
-        for (const item of currentItems) {
-          if (item.type === "group") {
-            initialExpansionState[item.id] = !!item.isInitiallyExpanded;
+      // sections を走査するように変更
+      for (const section of sections) {
+        for (const item of section.items) {
+          if (item.type === "group" && item.isInitiallyExpanded) {
+            initialExpansionState[item.id] = true;
             // Note: If groups can be nested, this needs to be recursive
-            // if (item.items) setupInitialExpansion(item.items);
+            // if (item.items) setupInitialExpansion(item.items); // Group 内の Group は現状未対応
           }
         }
-      };
-      setupInitialExpansion(items);
+      }
       setExpandedGroups(initialExpansionState);
-    }, [items]);
+    }, [sections]); // items を sections に変更
 
     if (variant === "modal") {
       return (
@@ -254,21 +295,31 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
           <Drawer.Portal>
             <Drawer.Overlay className={styles.modalOverlay} />
             <Drawer.Content ref={ref} className={styles.modalContent}>
-              {headline && (
-                <Drawer.Title>
-                  <Typography variant="titleSmall" color="onSurfaceVariant">
-                    {headline}
-                  </Typography>
-                </Drawer.Title>
-              )}
+              {/* headline は削除 */}
               <ul className={styles.list}>
-                <Component
-                  items={items}
-                  selectedItemId={selectedItemId}
-                  onItemClick={onItemClick}
-                  expandedGroups={expandedGroups}
-                  toggleGroup={toggleGroup}
-                />
+                {/* sections をループして表示 */}
+                {sections.map((section) => (
+                  <li key={section.id} className={styles.section}>
+                    {section.headline && (
+                      <div className={styles.sectionHeadline}>
+                        <Typography
+                          variant="titleSmall"
+                          color="onSurfaceVariant"
+                        >
+                          {section.headline}
+                        </Typography>
+                      </div>
+                    )}
+                    <Component
+                      items={section.items} // section.items を渡す
+                      selectedItemId={selectedItemId}
+                      onItemClick={onItemClick}
+                      expandedGroups={expandedGroups}
+                      toggleGroup={toggleGroup}
+                      linkComponent={linkComponent} // Pass linkComponent to Component
+                    />
+                  </li>
+                ))}
               </ul>
             </Drawer.Content>
           </Drawer.Portal>
@@ -277,21 +328,32 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
     }
 
     // Standard Navigation Drawer
+    // Add standardVisible class when open is true for animation
+    const standardClassName = `${styles.root} ${styles.standard} ${open ? styles.standardVisible : ""}`;
+
+    // Standard Navigation Drawer
     return (
-      <div ref={ref} className={`${styles.root} ${styles.standard}`}>
-        {headline && (
-          <Typography variant="titleSmall" color="onSurfaceVariant">
-            {headline}
-          </Typography>
-        )}
+      <div ref={ref} className={standardClassName}>
         <ul className={styles.list}>
-          <Component
-            items={items}
-            selectedItemId={selectedItemId}
-            onItemClick={onItemClick}
-            expandedGroups={expandedGroups}
-            toggleGroup={toggleGroup}
-          />
+          {sections.map((section) => (
+            <li key={section.id} className={styles.section}>
+              {section.headline && (
+                <div className={styles.sectionHeadline}>
+                  <Typography variant="titleSmall" color="onSurfaceVariant">
+                    {section.headline}
+                  </Typography>
+                </div>
+              )}
+              <Component
+                items={section.items} // section.items を渡す
+                selectedItemId={selectedItemId}
+                onItemClick={onItemClick}
+                expandedGroups={expandedGroups}
+                toggleGroup={toggleGroup}
+                linkComponent={linkComponent} // Pass linkComponent to Component
+              />
+            </li>
+          ))}
         </ul>
       </div>
     );
