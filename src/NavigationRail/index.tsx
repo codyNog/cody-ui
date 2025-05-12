@@ -20,7 +20,7 @@ type NavigationItem = {
   disabled?: boolean;
   onClick?: () => void; // onPressMenu を onClick に変更
   href?: string;
-  onHoverChange?: (isHovering: boolean) => void; // ホバー状態変更時のコールバックを追加
+  onHoverChange?: (key: string) => void; // ホバー状態変更時のコールバックを追加
 };
 
 type Props = {
@@ -29,7 +29,16 @@ type Props = {
   defaultSelectedId?: string;
   onSelectionChange?: (id: string) => void;
   linkComponent?: ElementType; // linkComponent プロパティを追加
+  onHoverChange?: (key: string) => void; // ホバー状態変更時のコールバックを追加
 } & Omit<ComponentProps<"div">, "children">;
+
+type NavigationRailItemProps = {
+  item: NavigationItem;
+  isActive: boolean;
+  onPress: () => void;
+  linkComponent?: ElementType; // linkComponent の型定義
+  onHoverChange?: (key: string) => void; // ホバー状態変更時のコールバックを追加
+};
 
 // eslint-disable-next-line react/display-name
 const NavigationRailItem = ({
@@ -37,12 +46,8 @@ const NavigationRailItem = ({
   isActive,
   onPress,
   linkComponent: LinkComponentProp, // linkComponent を Props から受け取る
-}: {
-  item: NavigationItem;
-  isActive: boolean;
-  onPress: () => void;
-  linkComponent?: ElementType; // linkComponent の型定義
-}) => {
+  onHoverChange,
+}: NavigationRailItemProps) => {
   const { isFocused, focusProps } = item.href // useFocusRing を再度使う
     ? { isFocused: false, focusProps: {} }
     : useFocusRing();
@@ -83,7 +88,7 @@ const NavigationRailItem = ({
     const commonLinkProps = {
       className: itemClassName,
       children: itemContent,
-      onHoverChange: item.onHoverChange,
+      onHoverChange,
       // Link とカスタムコンポーネントで共通して渡せるプロパティ
     };
 
@@ -99,6 +104,7 @@ const NavigationRailItem = ({
               onPress();
             }
           }}
+          onHoverChange={() => onHoverChange?.(item.id)}
           // tabIndex は Link が管理
         />
       );
@@ -134,8 +140,8 @@ const NavigationRailItem = ({
           onPress();
         }
       }}
-      onMouseEnter={() => item.onHoverChange?.(true)} // onHoverChange のためのハンドラを追加
-      onMouseLeave={() => item.onHoverChange?.(false)} // onHoverChange のためのハンドラを追加
+      onMouseEnter={() => item.onHoverChange?.(item.id)} // onHoverChange のためのハンドラを追加
+      onMouseLeave={() => item.onHoverChange?.("")} // onHoverChange のためのハンドラを追加
       role="button" // role を戻す
       tabIndex={item.disabled ? -1 : 0} // tabIndex を戻す
       aria-pressed={isActive && !item.disabled} // aria-pressed を戻す
@@ -156,6 +162,7 @@ export const NavigationRail = forwardRef<HTMLDivElement, Props>(
       onSelectionChange,
       linkComponent, // linkComponent を props から受け取る
       className,
+      onHoverChange,
       ...props
     },
     ref,
