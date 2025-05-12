@@ -69,6 +69,7 @@ const LinkItemComponent = ({
   <li key={item.id}>
     <LinkComponent
       href={item.href}
+      to={item.href}
       onClick={() => {
         onClick?.(item);
       }}
