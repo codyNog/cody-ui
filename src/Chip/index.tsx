@@ -1,8 +1,8 @@
 "use client";
 import { type ReactNode, forwardRef, useRef } from "react"; // MouseEvent のインポートを削除
 import { type PressEvent, Button as RACButton } from "react-aria-components";
-import { useRipple } from "../Ripple"; // useRipple, RippleType をインポート
 import { MdCheck } from "../Icons"; // Import MdCheck
+import { useRipple } from "../Ripple"; // useRipple, RippleType をインポート
 import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 

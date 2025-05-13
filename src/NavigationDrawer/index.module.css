@@ -2,19 +2,19 @@
   /* 基本的なコンテナースタイル */
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: scroll;
   /* M3 の Elevation Level 0 (Standard) or 1 (Modal) */
   /* ベースの背景色。 */
   background-color: var(--md-sys-color-surface-container, #f0f0f0); /* M3 Standard Drawer Surface Color */
   color: var(--md-sys-color-on-surface, #1c1b1f);
-  height: 100%; /* 親要素に依存 */
+  max-height: 100%;
 }
 
 .standard {
   width: 360px;
   /* background-color: var(--md-sys-color-surface, #fafdfd); */ /* .root で指定するため削除 */
   /* border-right: 1px solid var(--md-sys-color-outline-variant, #cac4d0); */ /* 角丸にするため削除 */
-  height: 100vh; /* Ensure it takes full viewport height */
+  height: 100%; /* Ensure it takes full viewport height */
   /* Animation */
   transform: translateX(-100%); /* Initially hidden */
   opacity: 0;

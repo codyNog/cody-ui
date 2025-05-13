@@ -4,7 +4,6 @@
   align-items: center;
   justify-content: flex-start;
   width: 80px;
-  height: 100%;
   padding: 12px 0;
   background-color: var(--md-sys-color-surface-container);
   gap: 12px;

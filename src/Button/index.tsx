@@ -5,9 +5,9 @@ import {
   type ButtonProps as AriaButtonProps,
   type PressEvent,
 } from "react-aria-components";
+import { useRipple } from "../Ripple";
 import { Typography } from "../Typography";
 import styles from "./index.module.css";
-import { useRipple } from "../Ripple";
 
 type ButtonVariant = "filled" | "outlined" | "text" | "elevated" | "tonal";
 

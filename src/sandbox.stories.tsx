@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import type { FormEvent } from "react";
+import type { ComponentProps, FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "./Button";
 import { Checkbox } from "./Checkbox";
 import { Grid, GridItem, GridRow } from "./Grid";
+import { MdHouse, MdNotifications, MdSettings } from "./Icons"; // Import MD Icons
+import { Navigation } from "./Navigation"; // Add Navigation import
 import { RadioGroup } from "./RadioGroup";
 import { Switch } from "./Switch";
 import { TextField } from "./TextField";
@@ -104,6 +106,107 @@ export const FormExample: Story = {
           </GridItem>
         </form>
       </Grid>
+    );
+  },
+};
+
+export const NavigationExample: Story = {
+  render: () => {
+    const railItems: ComponentProps<typeof Navigation>["railItems"] = [
+      {
+        id: "home",
+        label: "Home",
+        icon: <MdHouse size={24} />,
+      },
+      {
+        id: "settings",
+        label: "Settings",
+        icon: <MdSettings size={24} />,
+      },
+      {
+        id: "notifications",
+        label: "Notifications",
+        icon: <MdNotifications size={24} />,
+        badge: 3, // Changed from object to number
+      },
+    ];
+
+    const drawerSections: ComponentProps<typeof Navigation>["drawerSections"] =
+      (key) => {
+        // key に基づいてセクションの内容を動的に生成する例
+        // 実際には、より複雑なロジックやデータソースから取得することが多い
+        if (key === "home") {
+          return [
+            {
+              id: "home-section",
+              headline: "Home Section",
+              items: [
+                { id: "home-1", type: "link", label: "Dashboard", href: "#" },
+                { id: "home-2", type: "link", label: "Analytics", href: "#" },
+              ],
+            },
+          ];
+        }
+        if (key === "settings") {
+          return [
+            {
+              id: "settings-section",
+              headline: "Settings Section",
+              items: [
+                { id: "settings-1", type: "link", label: "Profile", href: "#" },
+                { id: "settings-2", type: "link", label: "Account", href: "#" },
+              ],
+            },
+          ];
+        }
+        if (key === "notifications") {
+          return [
+            {
+              id: "notifications-section",
+              headline: "Notifications Section",
+              items: [
+                {
+                  id: "notifications-1",
+                  type: "link",
+                  label: "Inbox",
+                  href: "#",
+                },
+                {
+                  id: "notifications-2",
+                  type: "link",
+                  label: "Archive",
+                  href: "#",
+                },
+              ],
+            },
+          ];
+        }
+        return []; //該当するキーがなければ空のセクションを返す
+      };
+
+    return (
+      <div style={{ display: "flex", height: "100vh" }}>
+        <Navigation
+          railItems={railItems}
+          drawerSections={drawerSections}
+          // 必要に応じて他のpropsを追加
+        />
+        <div style={{ flex: 1, backgroundColor: "red" }}>
+          <Grid>
+            <GridItem colSpan={12}>
+              <h1>Content</h1>
+            </GridItem>
+            <GridRow>
+              <GridItem colSpan={6}>
+                <h1>Content</h1>
+              </GridItem>
+              <GridItem colSpan={6}>
+                <h1>Content</h1>
+              </GridItem>
+            </GridRow>
+          </Grid>
+        </div>
+      </div>
     );
   },
 };

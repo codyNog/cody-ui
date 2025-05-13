@@ -20,7 +20,6 @@ type NavigationItem = {
   disabled?: boolean;
   onClick?: () => void; // onPressMenu を onClick に変更
   href?: string;
-  onHoverChange?: (key: string) => void; // ホバー状態変更時のコールバックを追加
 };
 
 type Props = {
@@ -88,7 +87,6 @@ const NavigationRailItem = ({
     const commonLinkProps = {
       className: itemClassName,
       children: itemContent,
-      onHoverChange,
       // Link とカスタムコンポーネントで共通して渡せるプロパティ
     };
 
@@ -104,7 +102,11 @@ const NavigationRailItem = ({
               onPress();
             }
           }}
-          onHoverChange={() => onHoverChange?.(item.id)}
+          onHoverChange={(isHovering) => {
+            if (isHovering) {
+              onHoverChange?.(item.id);
+            }
+          }}
           // tabIndex は Link が管理
         />
       );
@@ -120,8 +122,9 @@ const NavigationRailItem = ({
         onClick={() => {
           item.onClick?.(); // アイテム固有の onClick も実行 (もしあれば)
         }}
-        onMouseEnter={() => item.onHoverChange?.(item.id)} // onHoverChange のためのハンドラを追加
-        onMouseLeave={() => item.onHoverChange?.("")}
+        // カスタムコンポーネントの場合、onHoverChange を直接渡せるかは不明なため、
+        // onMouseEnter/onMouseLeave を使用する
+        onMouseEnter={() => onHoverChange?.(item.id)}
       />
     );
   }
@@ -142,8 +145,7 @@ const NavigationRailItem = ({
           onPress();
         }
       }}
-      onMouseEnter={() => item.onHoverChange?.(item.id)} // onHoverChange のためのハンドラを追加
-      onMouseLeave={() => item.onHoverChange?.("")} // onHoverChange のためのハンドラを追加
+      onMouseEnter={() => onHoverChange?.(item.id)}
       role="button" // role を戻す
       tabIndex={item.disabled ? -1 : 0} // tabIndex を戻す
       aria-pressed={isActive && !item.disabled} // aria-pressed を戻す

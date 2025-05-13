@@ -7,8 +7,8 @@ import {
   // useState, // useState は useRipple 内で使われるため、ここでは不要
   useRef, // useRef をインポート
 } from "react";
-import { Typography } from "../Typography"; // Typography をインポート
 import { useRipple } from "../Ripple"; // useRipple をインポート
+import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 
 type FabVariantValue = "standard" | "extended";

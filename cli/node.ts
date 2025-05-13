@@ -1,8 +1,8 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { Command } from "commander";
 import { Octokit } from "@octokit/rest";
 import AdmZip from "adm-zip";
+import { Command } from "commander";
 import * as dotenv from "dotenv";
 import { CONFIG } from "./constants.js";
 import { generateThemeCssFromColor } from "./theme.js";

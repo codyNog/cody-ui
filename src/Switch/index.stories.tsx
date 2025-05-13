@@ -1,6 +1,6 @@
 import { action } from "@storybook/addon-actions";
-import { MdCheck, MdClose } from "react-icons/md";
 import type { Meta, StoryObj } from "@storybook/react";
+import { MdCheck, MdClose } from "react-icons/md";
 import { Switch } from ".";
 
 const meta = {

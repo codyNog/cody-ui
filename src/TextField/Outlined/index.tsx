@@ -5,9 +5,9 @@ import {
   forwardRef,
   useCallback,
   useEffect,
+  useLayoutEffect, // Add useLayoutEffect
   useRef,
   useState,
-  useLayoutEffect, // Add useLayoutEffect
 } from "react";
 import {
   TextField as AriaTextField,

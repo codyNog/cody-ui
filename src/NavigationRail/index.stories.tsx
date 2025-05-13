@@ -14,15 +14,13 @@ const meta: Meta<typeof Component> = {
         label: "Home",
         icon: <MdHome />,
         onClick: fn(),
-        onHoverChange: fn(),
-      }, // onHoverChange を追加
+      },
       {
         id: "favorite",
         label: "Favorite",
         icon: <MdFavorite />,
         badge: 3,
         onClick: fn(), // onPressMenu を onClick に変更
-        onHoverChange: fn(), // onHoverChange を追加
       },
       {
         id: "settings",
@@ -30,7 +28,6 @@ const meta: Meta<typeof Component> = {
         icon: <MdSettings />,
         onClick: fn(), // onPressMenu を onClick に変更
         href: "/settings",
-        onHoverChange: fn(), // onHoverChange を追加
       },
       {
         id: "info",
@@ -38,7 +35,6 @@ const meta: Meta<typeof Component> = {
         icon: <MdInfo />,
         disabled: true,
         onClick: fn(), // onPressMenu を onClick に変更
-        onHoverChange: fn(), // onHoverChange を追加
       },
       {
         id: "small_badge",
@@ -46,7 +42,6 @@ const meta: Meta<typeof Component> = {
         icon: <MdFavorite />,
         badge: "small",
         onClick: fn(), // onPressMenu を onClick に変更
-        onHoverChange: fn(), // onHoverChange を追加
       },
       {
         id: "large_badge",
@@ -54,11 +49,11 @@ const meta: Meta<typeof Component> = {
         icon: <MdFavorite />,
         badge: "large",
         onClick: fn(), // onPressMenu を onClick に変更
-        onHoverChange: fn(), // onHoverChange を追加
       },
     ],
     defaultSelectedId: "home",
     onSelectionChange: fn(),
+    onHoverChange: (key: string) => console.log("Hovered:", key),
   },
 };
 

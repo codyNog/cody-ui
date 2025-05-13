@@ -41,12 +41,11 @@ type ValueType<T extends CalendarVariant | undefined> = T extends "range"
     : ExternalDateValue;
 
 // variantに基づいてonChangeの型を決定
-type OnChangeType<T extends CalendarVariant | undefined> =
-  T extends "range"
-    ? (dateRange: ExternalDateRange | null) => void // Now (dates: Date[] | null) => void
-    : T extends "multiple"
-      ? (dates: ExternalDateArray) => void
-      : (date: ExternalDateValue | null) => void;
+type OnChangeType<T extends CalendarVariant | undefined> = T extends "range"
+  ? (dateRange: ExternalDateRange | null) => void // Now (dates: Date[] | null) => void
+  : T extends "multiple"
+    ? (dates: ExternalDateArray) => void
+    : (date: ExternalDateValue | null) => void;
 
 // カレンダーコンポーネントのプロパティ
 export type CalendarProps<T extends CalendarVariant = "single"> =

@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState, type ComponentProps } from "react";
+import { type ComponentProps, useState } from "react";
 import { NavigationDrawer } from ".";
-import { Button } from "../Button"; // <- ここを修正
+import { Button } from "../Button";
 import {
   MdArchive,
   MdDelete,
   MdEdit,
   MdFolder,
+  MdHome,
   MdInbox,
   MdLabel,
   MdPeople,
@@ -18,25 +19,51 @@ import {
 
 const meta = {
   component: NavigationDrawer,
-  args: {
-    // headline は削除
-  },
+  args: {},
   argTypes: {
     onClose: { action: "closed" },
     onItemClick: { action: "itemClicked" },
   },
-  parameters: {
-    // layout: "fullscreen", // Story ごとに設定
-  },
+  parameters: {},
 } satisfies Meta<typeof NavigationDrawer>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Story で再利用するために export する
-const sampleSections: ComponentProps<typeof NavigationDrawer>["sections"] = [
+// 各セクションの定義
+const homeSection: ComponentProps<typeof NavigationDrawer>["sections"] = [
   {
-    id: "main_section",
+    id: "home_section",
+    items: [
+      {
+        id: "dashboard",
+        type: "link",
+        label: "Dashboard",
+        icon: <MdHome />,
+        href: "/dashboard",
+      },
+      {
+        id: "analytics",
+        type: "link",
+        label: "Analytics",
+        icon: <MdReport />,
+        href: "/analytics",
+      },
+      { type: "divider", id: "divider_home" },
+      {
+        id: "recent",
+        type: "link",
+        label: "Recent",
+        icon: <MdStar />,
+        href: "/recent",
+      },
+    ],
+  },
+];
+
+const mailSection: ComponentProps<typeof NavigationDrawer>["sections"] = [
+  {
+    id: "mail_section",
     items: [
       {
         id: "inbox",
@@ -161,29 +188,75 @@ const sampleSections: ComponentProps<typeof NavigationDrawer>["sections"] = [
           },
         ],
       },
+    ],
+  },
+];
+
+const settingsSection: ComponentProps<typeof NavigationDrawer>["sections"] = [
+  {
+    id: "settings_section",
+    items: [
+      {
+        id: "general",
+        type: "link",
+        label: "General",
+        icon: <MdSettings />,
+        href: "/settings/general",
+      },
+      {
+        id: "account",
+        type: "link",
+        label: "Account",
+        icon: <MdPeople />,
+        href: "/settings/account",
+      },
+      {
+        id: "notifications",
+        type: "link",
+        label: "Notifications",
+        icon: <MdReport />,
+        href: "/settings/notifications",
+      },
       { type: "divider", id: "divider_settings" },
       {
-        id: "settings",
+        id: "help",
         type: "link",
-        label: "Settings",
-        icon: <MdSettings />,
-        href: "/settings",
+        label: "Help & Support",
+        icon: <MdEdit />,
+        href: "/settings/help",
       },
     ],
   },
 ];
 
+// Story で再利用するために export する
+export const sampleSections = (
+  id: string,
+): ComponentProps<typeof NavigationDrawer>["sections"] => {
+  switch (id) {
+    case "home":
+      return homeSection;
+    case "mail":
+      return mailSection;
+    case "settings":
+      return settingsSection;
+    default:
+      return homeSection;
+  }
+};
+
 export const Standard: Story = {
   args: {
     variant: "standard",
-    sections: sampleSections,
     selectedItemId: "inbox",
+    sections: homeSection,
   },
   parameters: {
     layout: "padded",
   },
   render: (args) => {
     const [open, setOpen] = useState(false);
+    const [hoveredId, setHoveredId] = useState("home");
 
     return (
       <>
@@ -192,6 +265,12 @@ export const Standard: Story = {
           {...args}
           open={open}
           onClose={() => setOpen(false)}
+          sections={sampleSections(hoveredId)}
+          selectedItemId={hoveredId}
+          onItemClick={(item) => {
+            setHoveredId(item.id);
+            args.onItemClick?.(item);
+          }}
         />
       </>
     );
@@ -200,18 +279,16 @@ export const Standard: Story = {
 
 export const Modal: Story = {
   args: {
-    // <- args を追加
-    // <- args を追加
-    variant: "modal", // <- variant を追加
-    sections: sampleSections,
+    variant: "modal",
     selectedItemId: "inbox",
-    // variant, open, onClose は render 内で指定するので削除
+    sections: homeSection,
   },
   parameters: {
     layout: "fullscreen",
   },
   render: (args) => {
     const [open, setOpen] = useState(false);
+    const [hoveredId, setHoveredId] = useState("home");
 
     return (
       <>
@@ -221,6 +298,12 @@ export const Modal: Story = {
           variant="modal"
           open={open}
           onClose={() => setOpen(false)}
+          sections={sampleSections(hoveredId)}
+          selectedItemId={hoveredId}
+          onItemClick={(item) => {
+            setHoveredId(item.id);
+            args.onItemClick?.(item);
+          }}
         />
       </>
     );
