@@ -240,7 +240,7 @@ export type NavigationDrawerSection = {
 
 type Props = {
   /** The variant of the navigation drawer. */
-  variant: "standard" | "modal";
+  variant?: "standard" | "modal";
   /** The list of sections to display in the drawer. */
   sections: Array<NavigationDrawerSection>; // items を sections に変更
   // headline?: string; // トップレベルの headline は削除
@@ -259,7 +259,7 @@ type Props = {
 export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
   (
     {
-      variant,
+      variant = "standard",
       // items, // items を削除
       // headline, // headline を削除
       sections, // sections を追加

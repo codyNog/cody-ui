@@ -2,10 +2,39 @@
 import { Link } from "react-aria-components";
 import { NavigationDrawer } from "../NavigationDrawer";
 import { NavigationRail } from "../NavigationRail";
-import { useNavigation } from "./hooks";
 import styles from "./index.module.css";
-import type { Props } from "./types"; // Corrected import path
 import { Divider } from "../Divider";
+import type { ComponentProps, ElementType } from "react";
+import { useCallback, useState } from "react";
+
+type Props = {
+  linkComponent?: ElementType;
+  railItems: ComponentProps<typeof NavigationRail>["items"];
+  drawerSections: (
+    key: string,
+  ) => ComponentProps<typeof NavigationDrawer>["sections"];
+};
+
+const useNavigation = ({ linkComponent, railItems, drawerSections }: Props) => {
+  const [status, setStatus] = useState("");
+  const isDrawerOpen = status !== "";
+
+  const onHoverChange = useCallback((key: string) => {
+    setStatus(key);
+  }, []);
+
+  const sections = drawerSections(status);
+
+  return {
+    railItems,
+    drawerSections,
+    status,
+    isDrawerOpen,
+    linkComponent,
+    onHoverChange,
+    sections,
+  };
+};
 
 export const Navigation = (props: Props) => {
   const {
@@ -25,7 +54,6 @@ export const Navigation = (props: Props) => {
       {isDrawerOpen && <Divider orientation="vertical" />}
       <NavigationDrawer
         open={isDrawerOpen}
-        variant="standard"
         linkComponent={linkComponent}
         sections={sections}
       />
