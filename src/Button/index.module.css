@@ -11,7 +11,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2); /* 8px */
   text-decoration: none;
   outline: none; /* react-aria handles focus */
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
@@ -172,6 +171,10 @@
   justify-content: center;
   width: 18px; /* Keep specific size for now */
   height: 18px;
+}
+
+.iconLeading {
+  margin-right: var(--space-1); /* 4px */
 }
 
 /* Ripple styles */

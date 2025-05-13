@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
+import { MdFavorite } from "../Icons"; // アイコンをインポート
 import { Button } from "."; // 作成した Button コンポーネントをインポート
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
@@ -21,10 +22,6 @@ const meta = {
     icon: {
       control: "boolean", // 簡単な切り替えのため boolean にする (実際は Node を渡す)
       description: "左側にアイコンを表示するか (例として boolean)",
-    },
-    trailingIcon: {
-      control: "boolean", // 簡単な切り替えのため boolean にする (実際は Node を渡す)
-      description: "右側にアイコンを表示するか (例として boolean)",
     },
     children: {
       control: "text",
@@ -83,5 +80,13 @@ export const Disabled: Story = {
     variant: "filled",
     children: "Disabled Button",
     isDisabled: true,
+  },
+};
+
+export const WithIcon: Story = {
+  args: {
+    variant: "filled",
+    children: "Icon Button",
+    icon: <MdFavorite />,
   },
 };

@@ -31,9 +31,6 @@ type Props = BaseProps & {
    */
   icon?: ReactNode;
   /**
-   * ボタンの右側に表示するアイコン
-   */
-  trailingIcon?: ReactNode;
   /**
    * ボタンのラベルとして表示する内容
    */
@@ -47,17 +44,7 @@ type Props = BaseProps & {
 };
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
-  (
-    {
-      variant = "filled",
-      icon,
-      trailingIcon,
-      children,
-      onClick,
-      ...props
-    }: Props,
-    ref,
-  ) => {
+  ({ variant = "filled", icon, children, onClick, ...props }: Props, ref) => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const { component: Ripple, handleClick: handleRippleClick } = useRipple();
 
@@ -123,7 +110,11 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         {(_renderProps) => (
           <>
             {/* Render existing content */}
-            {icon && <span className={styles.iconWrapper}>{icon}</span>}
+            {icon && (
+              <span className={`${styles.iconWrapper} ${styles.iconLeading}`}>
+                {icon}
+              </span>
+            )}
             <Typography
               variant="labelLarge"
               color={
@@ -136,9 +127,6 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
             >
               {children}
             </Typography>
-            {trailingIcon && (
-              <span className={styles.iconWrapper}>{trailingIcon}</span>
-            )}
             <Ripple />
           </>
         )}
