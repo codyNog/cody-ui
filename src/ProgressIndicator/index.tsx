@@ -1,5 +1,5 @@
 "use client";
-import { type ForwardedRef, forwardRef } from "react"; // ReactElement と Ref を削除し、ForwardedRef を追加
+import { type ForwardedRef, forwardRef } from "react";
 import { ProgressBar } from "react-aria-components";
 import styles from "./index.module.css";
 
@@ -89,13 +89,10 @@ export const ProgressIndicator = forwardRef(
           aria-label={finalAriaLabel}
           aria-valuetext={indeterminate ? undefined : ariaValueText}
           isIndeterminate={indeterminate}
-          value={indeterminate ? undefined : value} // ProgressBar側で indeterminate なら value を無視してくれるはず
+          value={indeterminate ? undefined : value}
           className={styles.root}
         >
-          {({
-            percentage,
-            isIndeterminate: indeterminateState /*, valueText*/,
-          }) => (
+          {({ percentage, isIndeterminate: indeterminateState }) => (
             <div
               className={styles.fill}
               style={{
@@ -111,7 +108,7 @@ export const ProgressIndicator = forwardRef(
     if (variant === "circular") {
       const { indeterminate, value, ariaValueText } = props;
 
-      const radius = 20; // SVGビューボックス内の半径 (50x50 viewBox で stroke-width 4 の場合)
+      const radius = 20;
       const circumference = 2 * Math.PI * radius;
 
       return (
@@ -125,8 +122,8 @@ export const ProgressIndicator = forwardRef(
         >
           {({ percentage, isIndeterminate: indeterminateState }) => {
             const strokeDashoffset =
-              indeterminateState || typeof percentage === "undefined" // percentage が undefined の場合も考慮
-                ? undefined // CSSアニメーションで制御
+              indeterminateState || typeof percentage === "undefined"
+                ? undefined
                 : circumference - (percentage / 100) * circumference;
             return (
               <svg viewBox="0 0 48 48" className={styles.circularSvg}>

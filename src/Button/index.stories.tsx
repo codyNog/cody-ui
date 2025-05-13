@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { MdFavorite } from "../Icons"; // アイコンをインポート
-import { Button } from "."; // 作成した Button コンポーネントをインポート
+import { MdFavorite } from "../Icons";
+import { Button } from ".";
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   component: Button,
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
     variant: {
       control: "select",
@@ -20,7 +18,7 @@ const meta = {
       defaultValue: false,
     },
     icon: {
-      control: "boolean", // 簡単な切り替えのため boolean にする (実際は Node を渡す)
+      control: "boolean",
       description: "左側にアイコンを表示するか (例として boolean)",
     },
     children: {
@@ -29,17 +27,16 @@ const meta = {
       defaultValue: "Button",
     },
     onClick: {
-      action: "clicked", // "pressed" から "clicked" に変更
-      description: "ボタンがクリックされたときのイベント", // 説明も変更
+      action: "clicked",
+      description: "ボタンがクリックされたときのイベント",
     },
   },
-  args: { onClick: fn() }, // onPress を onClick に変更
+  args: { onClick: fn() },
 } satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Filled: Story = {
   args: {
     variant: "filled",

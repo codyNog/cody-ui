@@ -1,18 +1,13 @@
 .accordion {
   display: flex;
   flex-direction: column;
-  border-radius: var(--md-sys-shape-corner-medium, 8px); /* M3 Corner Radius */
-  overflow: hidden; /* Ensure child elements respect border-radius */
-  background-color: var(--md-sys-color-surface-container-lowest, #ffffff); /* M3 Surface */
-}
-
-.disclosure {
-  /* Individual item border removed, separation handled by accordion or other means if needed */
+  border-radius: var(--md-sys-shape-corner-medium, 8px);
+  overflow: hidden;
+  background-color: var(--md-sys-color-surface-container-lowest, #ffffff);
 }
 
 .triggerHeading {
   margin: 0;
-  /* M3 Title Small or similar, adjust as needed */
   font-family: var(--md-sys-typescale-title-small-font-family-name, Roboto);
   font-weight: var(--md-sys-typescale-title-small-font-weight, 500);
   font-size: var(--md-sys-typescale-title-small-font-size, 14px);
@@ -22,66 +17,60 @@
 }
 
 .trigger {
-  background-color: transparent; /* M3 Surface */
+  background-color: transparent;
   border: none;
-  padding: 16px; /* M3 Padding */
+  padding: 16px;
   width: 100%;
   text-align: left;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Icon to the right */
-  font-family: inherit; /* Inherit from triggerHeading */
-  font-size: inherit; /* Inherit from triggerHeading */
-  line-height: inherit; /* Inherit from triggerHeading */
-  letter-spacing: inherit; /* Inherit from triggerHeading */
-  color: inherit; /* Inherit from triggerHeading */
-  min-height: 48px; /* M3 Minimum touch target */
-  gap: 8px; /* Space between title and icon */
+  justify-content: space-between;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  min-height: 48px;
+  gap: 8px;
 }
 
 .trigger svg {
-  font-size: 24px; /* M3 Icon size */
+  font-size: 24px;
   width: 24px;
   height: 24px;
 }
 
 .trigger:hover {
-  background-color: var(--md-sys-color-surface-container-low, #f0f0f0); /* M3 Hover state */
-}
-
-.trigger[aria-expanded="true"] {
-  /* Styles for when the accordion item is open, if needed */
-  /* e.g., background-color: var(--md-sys-color-secondary-container, #e8def8); */
+  background-color: var(--md-sys-color-surface-container-low, #f0f0f0);
 }
 
 .trigger[disabled] {
   color: var(--md-sys-color-on-surface, #1c1b1f);
   opacity: 0.38;
   cursor: not-allowed;
-  background-color: transparent !important; /* Ensure no hover/focus styles apply, use important if necessary */
+  background-color: transparent !important;
 }
 
 .trigger[disabled]:hover {
-  background-color: transparent !important; /* Override hover style */
+  background-color: transparent !important;
 }
 
 .trigger[disabled] svg {
-  color: var(--md-sys-color-on-surface, #1c1b1f); /* Ensure icon also gets disabled color */
-  opacity: 1; /* Reset opacity for SVG if parent has opacity, or manage color directly */
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  opacity: 1;
 }
 
 .panel {
-  padding: 16px; /* M3 Padding */
-  /* M3 Body Medium or similar */
+  padding: 16px;
   font-family: var(--md-sys-typescale-body-medium-font-family-name, Roboto);
   font-weight: var(--md-sys-typescale-body-medium-font-weight, 400);
   font-size: var(--md-sys-typescale-body-medium-font-size, 14px);
   line-height: var(--md-sys-typescale-body-medium-line-height, 20px);
   letter-spacing: var(--md-sys-typescale-body-medium-tracking, 0.25px);
   color: var(--md-sys-color-on-surface-variant, #49454f);
-  border-top: 1px solid var(--md-sys-color-outline-variant, #cac4d0); /* M3 Divider */
-  background-color: var(--md-sys-color-surface-container, #f3f0f4); /* M3 Panel Background */
+  border-top: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  background-color: var(--md-sys-color-surface-container, #f3f0f4);
 }
 
 .panel[data-state="closed"] {

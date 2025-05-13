@@ -35,7 +35,7 @@ export const Badge = forwardRef<HTMLDivElement, BadgeProps>(
           return currentCount;
         }
       }
-      return null; // countがない場合やsmallの場合は何も表示しない
+      return null;
     };
 
     const getVariantClassName = () => {
@@ -43,12 +43,11 @@ export const Badge = forwardRef<HTMLDivElement, BadgeProps>(
         return styles.small;
       }
       if (variant === "large") {
-        // propsがcountプロパティを持つか、かつその型がnumberであるかで判定
         return typeof (props as { count?: number }).count === "number"
-          ? styles.largeWithCount // countがある場合はpill形状
-          : styles.largeNoCount; // countがない場合は大きな円
+          ? styles.largeWithCount
+          : styles.largeNoCount;
       }
-      return ""; // Should not happen with current BadgeProps
+      return "";
     };
 
     const badgeClassName = [styles.badge, getVariantClassName()]

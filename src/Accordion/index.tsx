@@ -97,30 +97,29 @@ const AccordionItem = forwardRef<HTMLDivElement, DisclosureItemProps>(
 );
 AccordionItem.displayName = "AccordionItem";
 
-// Props の型定義を修正
 type BaseAccordionProps = {
   isDisabled?: boolean;
   items: Item[];
-  expandedKeys?: Iterable<Key>; // controlled
+  expandedKeys?: Iterable<Key>;
   onExpandedChange?: (keys: Set<Key>) => void;
 };
 
 type AccordionWithDefaultKeys = BaseAccordionProps & {
   defaultExpandedKeys: Iterable<Key>;
   defaultExpandedAll?: never;
-  allowsMultipleExpanded?: true; // 暗黙的に true、もしくは指定させない
+  allowsMultipleExpanded?: true;
 };
 
 type AccordionWithDefaultAll = BaseAccordionProps & {
   defaultExpandedKeys?: never;
-  defaultExpandedAll: boolean; // true の場合のみ意味がある
-  allowsMultipleExpanded?: true; // 暗黙的に true、もしくは指定させない
+  defaultExpandedAll: boolean;
+  allowsMultipleExpanded?: true;
 };
 
 type AccordionDefaultBehavior = BaseAccordionProps & {
   defaultExpandedKeys?: never;
   defaultExpandedAll?: never;
-  allowsMultipleExpanded?: boolean; // ユーザーが指定可能
+  allowsMultipleExpanded?: boolean;
 };
 
 type Props =
@@ -141,10 +140,9 @@ export const Accordion = forwardRef<HTMLDivElement, Props>((props, ref) => {
   }
 
   const state = useDisclosureGroupState({
-    ...(rest as BaseAccordionProps), // キャストして共通プロパティを渡す
+    ...(rest as BaseAccordionProps),
     defaultExpandedKeys: resolvedDefaultExpandedKeys,
     allowsMultipleExpanded: resolvedAllowsMultipleExpanded,
-    // defaultExpandedAll は上で解決済みなので渡さない
   });
 
   return (

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Button } from "./Button";
 import { Checkbox } from "./Checkbox";
 import { Grid, GridItem, GridRow } from "./Grid";
-import { MdHouse, MdNotifications, MdSettings } from "./Icons"; // Import MD Icons
-import { Navigation } from "./Navigation"; // Add Navigation import
+import { MdHouse, MdNotifications, MdSettings } from "./Icons";
+import { Navigation } from "./Navigation";
 import { RadioGroup } from "./RadioGroup";
 import { Switch } from "./Switch";
 import { TextField } from "./TextField";
@@ -45,7 +45,6 @@ export const Sandbox: Story = {
         sections: [
           {
             id: "home-section",
-            // headline: "Home Section", // headline is not a direct prop of sections in NavigationDrawer
             items: [
               { id: "home-1", type: "link", label: "Dashboard", href: "#" },
               { id: "home-2", type: "link", label: "Analytics", href: "#" },
@@ -63,7 +62,6 @@ export const Sandbox: Story = {
         sections: [
           {
             id: "settings-section",
-            // headline: "Settings Section",
             items: [
               { id: "settings-1", type: "link", label: "Profile", href: "#" },
               { id: "settings-2", type: "link", label: "Account", href: "#" },
@@ -82,7 +80,6 @@ export const Sandbox: Story = {
         sections: [
           {
             id: "notifications-section",
-            // headline: "Notifications Section",
             items: [
               {
                 id: "notifications-1",

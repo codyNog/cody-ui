@@ -1,30 +1,27 @@
-/* Base styles */
 .button {
-  /* MD3 Base styles */
-  position: relative; /* Needed for state layer */
-  overflow: hidden; /* Needed for state layer */
-  border-radius: var(--space-5); /* 20px, using space variable */
-  padding: var(--space-2) var(--space-6); /* 8px 24px */
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--space-5);
+  padding: var(--space-2) var(--space-6);
   border: none;
   cursor: pointer;
-  transition: box-shadow 0.2s ease-in-out; /* Only transition shadow */
+  transition: box-shadow 0.2s ease-in-out;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  outline: none; /* react-aria handles focus */
-  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* State Layer */
 .button::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: currentcolor; /* Use text color for layer */
+  background-color: currentcolor;
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
-  z-index: 0; /* Behind content */
+  z-index: 0;
 }
 
 .button.pressed::before {
@@ -33,11 +30,10 @@
 }
 
 .button > * {
-  position: relative; /* Ensure content is above state layer */
+  position: relative;
   z-index: 1;
 }
 
-/* Hover, Focus, Pressed States using State Layer */
 .button.hovered::before {
   opacity: var(--md-sys-state-hover-state-layer-opacity);
 }
@@ -48,34 +44,32 @@
   opacity: var(--md-sys-state-pressed-state-layer-opacity);
 }
 
-/* Disabled State Base */
 .button.disabled {
   color: var(--md-sys-color-on-surface);
-  opacity: 0.38; /* Text disabled opacity */
+  opacity: 0.38;
   cursor: not-allowed;
-  box-shadow: var(--md-sys-elevation-level0); /* Use M3 token */
+  box-shadow: var(--md-sys-elevation-level0);
 }
 .button.disabled::before {
-  opacity: 0; /* No state layer on disabled */
+  opacity: 0;
 }
 
-/* Variant styles */
 .filled {
   background-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  box-shadow: var(--md-sys-elevation-level0); /* Use M3 token */
+  box-shadow: var(--md-sys-elevation-level0);
 }
 .filled.hovered {
-  box-shadow: var(--md-sys-elevation-level1); /* Use M3 token */
+  box-shadow: var(--md-sys-elevation-level1);
 }
-/* .filled.focused uses state layer */
+
 .filled.pressed {
-  box-shadow: var(--md-sys-elevation-level0); /* Use M3 token */
+  box-shadow: var(--md-sys-elevation-level0);
 }
 .filled.disabled {
   background-color: var(--md-sys-color-on-surface);
-  /* Use base disabled color/opacity */
-  opacity: 1; /* Override base opacity for background */
+
+  opacity: 1;
   background-color: color-mix(
     in srgb,
     var(--md-sys-color-on-surface) 12%,
@@ -88,14 +82,14 @@
   color: var(--md-sys-color-primary);
   border: 1px solid var(--md-sys-color-outline);
 }
-/* .outlined.hovered uses state layer */
+
 .outlined.focused {
-  border-color: var(--md-sys-color-primary); /* Focus border */
+  border-color: var(--md-sys-color-primary);
 }
-/* .outlined.pressed uses state layer */
+
 .outlined.disabled {
   border-color: var(--md-sys-color-on-surface);
-  /* Use base disabled color/opacity */
+
   border-color: color-mix(
     in srgb,
     var(--md-sys-color-on-surface) 12%,
@@ -106,34 +100,31 @@
 .text {
   background-color: transparent;
   color: var(--md-sys-color-primary);
-  padding: var(--space-2) var(--space-3); /* 8px 12px */
-  border: none; /* Ensure no border */
+  padding: var(--space-2) var(--space-3);
+  border: none;
 }
-/* .text.hovered uses state layer */
-/* .text.focused uses state layer */
-/* .text.pressed uses state layer */
+
 .text.disabled {
   background-color: transparent;
   border: none;
-  /* Use base disabled color/opacity */
 }
 
 .elevated {
   background-color: var(--md-sys-color-surface-container-low);
   color: var(--md-sys-color-primary);
-  box-shadow: var(--md-sys-elevation-level1); /* Use M3 token */
+  box-shadow: var(--md-sys-elevation-level1);
 }
 .elevated.hovered {
-  box-shadow: var(--md-sys-elevation-level2); /* Use M3 token */
+  box-shadow: var(--md-sys-elevation-level2);
 }
-/* .elevated.focused uses state layer */
+
 .elevated.pressed {
-  box-shadow: var(--md-sys-elevation-level1); /* Use M3 token - Elevated buttons retain level 1 on press */
+  box-shadow: var(--md-sys-elevation-level1);
 }
 .elevated.disabled {
   background-color: var(--md-sys-color-on-surface);
-  /* Use base disabled color/opacity */
-  opacity: 1; /* Override base opacity for background */
+
+  opacity: 1;
   background-color: color-mix(
     in srgb,
     var(--md-sys-color-on-surface) 12%,
@@ -144,19 +135,19 @@
 .tonal {
   background-color: var(--md-sys-color-secondary-container);
   color: var(--md-sys-color-on-secondary-container);
-  box-shadow: var(--md-sys-elevation-level0); /* Use M3 token */
+  box-shadow: var(--md-sys-elevation-level0);
 }
 .tonal.hovered {
-  box-shadow: var(--md-sys-elevation-level1); /* Use M3 token */
+  box-shadow: var(--md-sys-elevation-level1);
 }
-/* .tonal.focused uses state layer */
+
 .tonal.pressed {
-  box-shadow: var(--md-sys-elevation-level0); /* Use M3 token */
+  box-shadow: var(--md-sys-elevation-level0);
 }
 .tonal.disabled {
   background-color: var(--md-sys-color-on-surface);
-  /* Use base disabled color/opacity */
-  opacity: 1; /* Override base opacity for background */
+
+  opacity: 1;
   background-color: color-mix(
     in srgb,
     var(--md-sys-color-on-surface) 12%,
@@ -164,39 +155,37 @@
   );
 }
 
-/* Icon styles */
 .iconWrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px; /* Keep specific size for now */
+  width: 18px;
   height: 18px;
 }
 
 .iconLeading {
-  margin-right: var(--space-1); /* 4px */
+  margin-right: var(--space-1);
 }
 
-/* Ripple styles */
 .rippleContainer {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  border-radius: inherit; /* Match button's border radius */
-  pointer-events: none; /* Allow clicks to pass through */
-  z-index: 0; /* Ensure ripples are behind the content but above the background */
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .ripple {
   position: absolute;
   border-radius: 50%;
-  background-color: currentcolor; /* Use text color for ripple */
-  opacity: var(--md-sys-state-pressed-state-layer-opacity, 0.12); /* Match pressed state opacity */
+  background-color: currentcolor;
+  opacity: var(--md-sys-state-pressed-state-layer-opacity, 0.12);
   transform: scale(0);
-  animation: ripple-effect 1000ms ease-out; /* Changed timing function to ease-out */
-  /* Center the ripple on the click coordinates */
+  animation: ripple-effect 1000ms ease-out;
+
   transform-origin: center;
-  /* Adjust positioning based on transform origin */
+
   margin-left: -50%;
   margin-top: -50%;
   pointer-events: none;

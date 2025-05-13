@@ -4,7 +4,7 @@ import { Accordion as Component } from ".";
 import { getCanvas } from "../libs/storybook";
 import { useState } from "react";
 import { action } from "@storybook/addon-actions";
-import type { Key } from "@react-types/shared"; // Key をインポート
+import type { Key } from "@react-types/shared";
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -24,19 +24,17 @@ type Story = StoryObj<typeof Component>;
 
 export const Default: Story = {
   args: {
-    defaultExpandedKeys: new Set(["1"]), // Set を使用
+    defaultExpandedKeys: new Set(["1"]),
   },
 };
 
 export const Controlled: Story = {
   render: (args) => {
-    // useState の型を Set<Key> に変更
     const [expandedKeys, setExpandedKeys] = useState<Set<Key>>(new Set(["2"]));
     return (
       <Component
         {...args}
         expandedKeys={expandedKeys}
-        // onExpandedChange の引数の型も Set<Key> に
         onExpandedChange={(keys: Set<Key>) => {
           setExpandedKeys(keys);
           args.onExpandedChange?.(keys);
@@ -44,15 +42,13 @@ export const Controlled: Story = {
       />
     );
   },
-  args: {
-    // expandedKeys と onExpandedChange は render 関数内で管理
-  },
+  args: {},
 };
 
 export const Disabled: Story = {
   args: {
     isDisabled: true,
-    defaultExpandedKeys: new Set(["1"]), // Set を使用
+    defaultExpandedKeys: new Set(["1"]),
   },
 };
 
@@ -73,13 +69,5 @@ export const Behavior: Story = {
     const canvas = getCanvas(canvasElement);
     expect(canvas.getByText("Behavior Section 1")).toBeInTheDocument();
     expect(canvas.getByText("Behavior Section 2")).toBeInTheDocument();
-
-    // TODO: Add more interaction tests
-    // Example: Click to expand/collapse
-    // const section1Title = canvas.getByText("Behavior Section 1");
-    // await userEvent.click(section1Title);
-    // expect(canvas.getByText("Behavior content 1")).toBeVisible();
-    // await userEvent.click(section1Title);
-    // expect(canvas.queryByText("Behavior content 1")).not.toBeVisible();
   },
 };

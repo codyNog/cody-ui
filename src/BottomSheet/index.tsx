@@ -5,12 +5,12 @@ import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
 type Props = {
-  children?: ReactNode; // Drawer.Triggerになる想定
-  headline?: string; // 省略可能にする（ハンドルのみの場合など）
+  children?: ReactNode;
+  headline?: string;
   content: ReactNode;
   isOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
-  showHandle?: boolean; // ハンドルを表示するかどうか
+  showHandle?: boolean;
   variant?: "standard" | "modal";
 };
 
@@ -22,7 +22,7 @@ export const BottomSheet = forwardRef<HTMLDivElement, Props>(
       content,
       isOpen,
       onOpenChange,
-      showHandle = true, // デフォルトでハンドル表示
+      showHandle = true,
       variant = "standard",
     },
     ref,
@@ -32,7 +32,6 @@ export const BottomSheet = forwardRef<HTMLDivElement, Props>(
         shouldScaleBackground
         open={isOpen}
         onOpenChange={onOpenChange}
-        // direction="bottom" は vaul のデフォルトなので指定不要
         modal={variant === "modal"}
       >
         {children && <Drawer.Trigger asChild>{children}</Drawer.Trigger>}

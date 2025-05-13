@@ -1,34 +1,28 @@
-/* Grid基本スタイル - 共通 */
 .grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--space-2); /* モバイル用の小さいgap */
+  gap: var(--space-2);
   width: 100%;
-  padding-inline: var(--space-4); /* Compact: 16px */
+  padding-inline: var(--space-4);
 }
 
-/* BentoGrid特有のスタイル */
 .bentoGrid {
   container-type: inline-size;
   container-name: bento-grid;
 }
 
-/* コンテナクエリによるレスポンシブ対応 - タブレット */
 @container bento-grid (min-width: 768px) {
   .grid {
-    gap: var(--space-3); /* タブレット用の中くらいgap */
+    gap: var(--space-3);
   }
 }
 
-/* コンテナクエリによるレスポンシブ対応 - デスクトップ */
 @container bento-grid (min-width: 1024px) {
   .grid {
-    gap: var(--space-4); /* デスクトップ用の大きいgap */
+    gap: var(--space-4);
   }
 }
 
-/* コンテナクエリによるレスポンシブ対応 */
-/* 小さいコンテナ（400px以下）では全てのアイテムを1カラムに */
 @container bento-grid (max-width: 400px) {
   .grid {
     grid-template-columns: repeat(1, 1fr);
@@ -38,7 +32,6 @@
   }
 }
 
-/* 中くらいのコンテナ（401px〜700px）では6カラム */
 @container bento-grid (min-width: 401px) and (max-width: 700px) {
   .grid {
     grid-template-columns: repeat(6, 1fr);
@@ -62,14 +55,12 @@
   }
 }
 
-/* GridItem基本スタイル */
 .item {
   position: relative;
-  min-width: 0; /* 内容が潰れないようにする */
+  min-width: 0;
   box-sizing: border-box;
 }
 
-/* Bentoバリアント用のスタイル */
 .bentoItem {
   background-color: var(--md-sys-color-surface-container);
   border-radius: var(--space-3);
@@ -79,35 +70,29 @@
   overflow: hidden;
 }
 
-/* ホバー時のエフェクト */
 .bentoItem:hover {
   box-shadow: var(--md-sys-elevation-level2);
 }
 
-/* アクティブ時のエフェクト */
 .bentoItem:active {
   box-shadow: var(--md-sys-elevation-level1);
 }
 
-/* GridRow用のスタイル */
 .row {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-/* Bentoバリアント用のRowスタイル */
 .bentoRow {
-  padding: 0; /* rowの場合はパディングをリセット */
+  padding: 0;
 }
 
-/* GridRowの子要素のスタイル */
 .row > * {
   flex: 1;
   min-width: 0;
 }
 
-/* コンテナクエリ用の小さい画面対応 */
 @container bento-grid (max-width: 600px) {
   .row {
     flex-direction: column;
@@ -115,44 +100,36 @@
     gap: var(--space-3);
   }
 
-  /* 子要素の幅を100%に */
   .row > * {
     width: 100%;
   }
 }
 
-/* メディアクエリによるレスポンシブ対応 - タブレット */
 @container (min-width: 768px) {
   .grid:not(.bentoGrid) {
-    gap: var(--space-3); /* タブレット用の中くらいgap */
+    gap: var(--space-3);
   }
 }
 
-/* メディアクエリによるレスポンシブ対応 - デスクトップ */
 @container (min-width: 1024px) {
   .grid:not(.bentoGrid) {
-    gap: var(--space-4); /* デスクトップ用の大きいgap */
+    gap: var(--space-4);
   }
 }
 
-/* M3 Window Size Classesに基づくpadding調整 */
 @container (min-width: 600px) {
-  /* 600px以上 */
   .grid {
-    padding-inline: var(--space-6); /* Medium & Expanded: 24px */
+    padding-inline: var(--space-6);
   }
 }
 
-/* M3 Canonical Layoutに基づくmax-width設定 */
 @container (min-width: 1200px) {
-  /* 1200px以上 */
   .grid {
-    max-width: 1040px; /* Expanded/Large/Extra-large Body max-width */
-    margin-inline: auto; /* 中央揃え */
+    max-width: 1040px;
+    margin-inline: auto;
   }
 }
 
-/* 小さい画面では縦並びに（非ベントグリッド用） */
 @container (max-width: 600px) {
   .row:not(.bentoRow) {
     flex-direction: column;
@@ -160,7 +137,6 @@
     gap: var(--space-3);
   }
 
-  /* 子要素の幅を100%に */
   .row:not(.bentoRow) > * {
     width: 100%;
   }

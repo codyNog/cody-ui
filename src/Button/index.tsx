@@ -11,10 +11,6 @@ import styles from "./index.module.css";
 
 type ButtonVariant = "filled" | "outlined" | "text" | "elevated" | "tonal";
 
-// react-aria-components の ButtonProps から不要なものを除外し、
-// 独自のプロパティを追加する
-// (className は module css で管理するため除外, children は独自に定義するため除外)
-// onPress は onClick に置き換えるため AriaButtonProps からも除外
 type BaseProps = Omit<
   AriaButtonProps,
   "className" | "style" | "children" | "onPress"
@@ -40,7 +36,6 @@ type Props = BaseProps & {
    * react-aria-components の PressEvent を受け取ります
    */
   onClick?: (e: PressEvent) => void;
-  // onPress は削除
 };
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
@@ -48,16 +43,14 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const { component: Ripple, handleClick: handleRippleClick } = useRipple();
 
-    // onClick が指定されていれば、それを onPress として react-aria-components に渡す
     const handlePress = useCallback(
       (e: PressEvent) => {
-        if (props.isDisabled) return; // 無効な場合は何もしない
+        if (props.isDisabled) return;
         onClick?.(e);
       },
       [onClick, props.isDisabled],
     );
 
-    // Rename to handlePressStart and use PressEvent
     const handlePressStart = useCallback(
       (e: PressEvent) => {
         if (props.isDisabled) return;
@@ -65,20 +58,15 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         if (buttonRef.current) {
           handleRippleClick(e, buttonRef);
         }
-        // react-aria-components の PressEvent はデフォルトで伝播を止めるため、
-        // stopPropagation は通常不要ですが、意図しない動作を防ぐために明示的に呼ぶことも検討できます。
       },
       [props.isDisabled, handleRippleClick],
     );
 
-    // handleAnimationEnd は不要なので削除
-
     return (
       <AriaButton
         {...props}
-        onPressStart={handlePressStart} // Use onPressStart instead of onPointerDown
+        onPressStart={handlePressStart}
         ref={(el: HTMLButtonElement | null) => {
-          // Handle both forwardRef and local ref
           if (typeof ref === "function") {
             ref(el);
             return;
@@ -86,9 +74,9 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
           if (ref) {
             ref.current = el;
           }
-          buttonRef.current = el; // Assign to local ref as well
+          buttonRef.current = el;
         }}
-        onPress={onClick ? handlePress : undefined} // onClick があれば handlePress を、なければ undefined を渡す
+        onPress={onClick ? handlePress : undefined}
         className={({ isPressed, isFocused, isHovered }) => {
           const classNames = [styles.button, styles[variant]];
           if (isPressed) {
@@ -106,10 +94,8 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
           return classNames.filter(Boolean).join(" ");
         }}
       >
-        {/* Render children directly or via render prop */}
         {(_renderProps) => (
           <>
-            {/* Render existing content */}
             {icon && (
               <span className={`${styles.iconWrapper} ${styles.iconLeading}`}>
                 {icon}
@@ -135,5 +121,4 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
   },
 );
 
-// Add display name for better debugging
 Button.displayName = "Button";
