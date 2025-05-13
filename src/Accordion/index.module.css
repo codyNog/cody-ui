@@ -1,41 +1,89 @@
-/* src/Accordion/index.module.css */
-.disclosureItem {
-  /* Disclosureコンポーネントに適用するスタイル */
-  /* 必要であればここにスタイルを追加 */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--md-sys-shape-corner-medium, 8px); /* M3 Corner Radius */
+  overflow: hidden; /* Ensure child elements respect border-radius */
+  background-color: var(--md-sys-color-surface-container-lowest, #ffffff); /* M3 Surface */
 }
 
-/* DisclosureTitleのデフォルトの挙動に依存するため、一旦削除またはコメントアウト */
-/* .disclosureTitle {
-  display: flex;
-  align-items: center;
+.disclosure {
+  /* Individual item border removed, separation handled by accordion or other means if needed */
+}
+
+.triggerHeading {
+  margin: 0;
+  /* M3 Title Small or similar, adjust as needed */
+  font-family: var(--md-sys-typescale-title-small-font-family-name, Roboto);
+  font-weight: var(--md-sys-typescale-title-small-font-weight, 500);
+  font-size: var(--md-sys-typescale-title-small-font-size, 14px);
+  line-height: var(--md-sys-typescale-title-small-line-height, 20px);
+  letter-spacing: var(--md-sys-typescale-title-small-tracking, 0.1px);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.trigger {
+  background-color: transparent; /* M3 Surface */
+  border: none;
+  padding: 16px; /* M3 Padding */
   width: 100%;
-} */
-
-.titleText {
-  /* タイトルテキスト用のスタイル */
-  flex-grow: 1; /* 親要素がflexコンテナの場合に有効 */
-  margin-right: 8px; /* アイコンとの間に少しスペース */
-}
-
-.icon {
-  /* アイコン用のスタイル */
-  /* margin-left: auto; */ /* 親要素のflexの挙動に依存するため、一旦コメントアウト */
+  text-align: left;
+  cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Icon to the right */
+  font-family: inherit; /* Inherit from triggerHeading */
+  font-size: inherit; /* Inherit from triggerHeading */
+  line-height: inherit; /* Inherit from triggerHeading */
+  letter-spacing: inherit; /* Inherit from triggerHeading */
+  color: inherit; /* Inherit from triggerHeading */
+  min-height: 48px; /* M3 Minimum touch target */
+  gap: 8px; /* Space between title and icon */
 }
 
-/* DisclosureTitleの直接の子要素としてアイコンを配置し、
-   親のDisclosureTitleがflexコンテナとして振る舞うことを期待する。
-   もしそうでなければ、DisclosureTitleの内部構造を再度見直す必要がある。
-   ここでは、DisclosureTitleが内部的にflexのようなレイアウトを
-   持っているか、あるいは子要素の配置を制御できることを期待する。
-*/
-/* もしDisclosureTitleがflexでない場合、以下のようなアプローチも考えられるが、
-   まずはシンプルな構造で試す。
-.disclosureItem > button > span:last-child {
-  margin-left: auto;
+.trigger svg {
+  font-size: 24px; /* M3 Icon size */
+  width: 24px;
+  height: 24px;
 }
-*/
 
-.content {
+.trigger:hover {
+  background-color: var(--md-sys-color-surface-container-low, #f0f0f0); /* M3 Hover state */
+}
+
+.trigger[aria-expanded="true"] {
+  /* Styles for when the accordion item is open, if needed */
+  /* e.g., background-color: var(--md-sys-color-secondary-container, #e8def8); */
+}
+
+.trigger[disabled] {
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  opacity: 0.38;
+  cursor: not-allowed;
+  background-color: transparent !important; /* Ensure no hover/focus styles apply, use important if necessary */
+}
+
+.trigger[disabled]:hover {
+  background-color: transparent !important; /* Override hover style */
+}
+
+.trigger[disabled] svg {
+  color: var(--md-sys-color-on-surface, #1c1b1f); /* Ensure icon also gets disabled color */
+  opacity: 1; /* Reset opacity for SVG if parent has opacity, or manage color directly */
+}
+
+.panel {
+  padding: 16px; /* M3 Padding */
+  /* M3 Body Medium or similar */
+  font-family: var(--md-sys-typescale-body-medium-font-family-name, Roboto);
+  font-weight: var(--md-sys-typescale-body-medium-font-weight, 400);
+  font-size: var(--md-sys-typescale-body-medium-font-size, 14px);
+  line-height: var(--md-sys-typescale-body-medium-line-height, 20px);
+  letter-spacing: var(--md-sys-typescale-body-medium-tracking, 0.25px);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  border-top: 1px solid var(--md-sys-color-outline-variant, #cac4d0); /* M3 Divider */
+  background-color: var(--md-sys-color-surface-container, #f3f0f4); /* M3 Panel Background */
+}
+
+.panel[data-state="closed"] {
+  border-top: none;
 }

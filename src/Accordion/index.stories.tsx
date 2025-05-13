@@ -4,6 +4,7 @@ import { Accordion as Component } from ".";
 import { getCanvas } from "../libs/storybook";
 import { useState } from "react";
 import { action } from "@storybook/addon-actions";
+import type { Key } from "@react-types/shared"; // Key をインポート
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -23,18 +24,20 @@ type Story = StoryObj<typeof Component>;
 
 export const Default: Story = {
   args: {
-    defaultExpandedKeys: ["1"],
+    defaultExpandedKeys: new Set(["1"]), // Set を使用
   },
 };
 
 export const Controlled: Story = {
   render: (args) => {
-    const [expandedKeys, setExpandedKeys] = useState<Iterable<string>>(["2"]);
+    // useState の型を Set<Key> に変更
+    const [expandedKeys, setExpandedKeys] = useState<Set<Key>>(new Set(["2"]));
     return (
       <Component
         {...args}
         expandedKeys={expandedKeys}
-        onExpandedChange={(keys) => {
+        // onExpandedChange の引数の型も Set<Key> に
+        onExpandedChange={(keys: Set<Key>) => {
           setExpandedKeys(keys);
           args.onExpandedChange?.(keys);
         }}
@@ -42,15 +45,14 @@ export const Controlled: Story = {
     );
   },
   args: {
-    // expandedKeys と onExpandedChange は render 関数内で管理するため、
-    // argsからは除外するか、初期値として渡さないようにする
+    // expandedKeys と onExpandedChange は render 関数内で管理
   },
 };
 
 export const Disabled: Story = {
   args: {
     isDisabled: true,
-    defaultExpandedKeys: ["1"],
+    defaultExpandedKeys: new Set(["1"]), // Set を使用
   },
 };
 
