@@ -34,79 +34,77 @@ export const Sandbox: Story = {
       alert(JSON.stringify(formState, null, 2));
     };
 
-    const railItems: ComponentProps<typeof Navigation>["railItems"] = [
+    const navigations: ComponentProps<typeof Navigation>["navigations"] = [
       {
         id: "home",
-        label: "Home",
-        icon: <MdHouse size={24} />,
+        item: {
+          id: "home",
+          label: "Home",
+          icon: <MdHouse size={24} />,
+        },
+        sections: [
+          {
+            id: "home-section",
+            // headline: "Home Section", // headline is not a direct prop of sections in NavigationDrawer
+            items: [
+              { id: "home-1", type: "link", label: "Dashboard", href: "#" },
+              { id: "home-2", type: "link", label: "Analytics", href: "#" },
+            ],
+          },
+        ],
       },
       {
         id: "settings",
-        label: "Settings",
-        icon: <MdSettings size={24} />,
+        item: {
+          id: "settings",
+          label: "Settings",
+          icon: <MdSettings size={24} />,
+        },
+        sections: [
+          {
+            id: "settings-section",
+            // headline: "Settings Section",
+            items: [
+              { id: "settings-1", type: "link", label: "Profile", href: "#" },
+              { id: "settings-2", type: "link", label: "Account", href: "#" },
+            ],
+          },
+        ],
       },
       {
         id: "notifications",
-        label: "Notifications",
-        icon: <MdNotifications size={24} />,
-        badge: 3,
+        item: {
+          id: "notifications",
+          label: "Notifications",
+          icon: <MdNotifications size={24} />,
+          badge: 3,
+        },
+        sections: [
+          {
+            id: "notifications-section",
+            // headline: "Notifications Section",
+            items: [
+              {
+                id: "notifications-1",
+                type: "link",
+                label: "Inbox",
+                href: "#",
+              },
+              {
+                id: "notifications-2",
+                type: "link",
+                label: "Archive",
+                href: "#",
+              },
+            ],
+          },
+        ],
       },
     ];
 
-    const drawerSections: ComponentProps<typeof Navigation>["drawerSections"] =
-      (key) => {
-        if (key === "home") {
-          return [
-            {
-              id: "home-section",
-              headline: "Home Section",
-              items: [
-                { id: "home-1", type: "link", label: "Dashboard", href: "#" },
-                { id: "home-2", type: "link", label: "Analytics", href: "#" },
-              ],
-            },
-          ];
-        }
-        if (key === "settings") {
-          return [
-            {
-              id: "settings-section",
-              headline: "Settings Section",
-              items: [
-                { id: "settings-1", type: "link", label: "Profile", href: "#" },
-                { id: "settings-2", type: "link", label: "Account", href: "#" },
-              ],
-            },
-          ];
-        }
-        if (key === "notifications") {
-          return [
-            {
-              id: "notifications-section",
-              headline: "Notifications Section",
-              items: [
-                {
-                  id: "notifications-1",
-                  type: "link",
-                  label: "Inbox",
-                  href: "#",
-                },
-                {
-                  id: "notifications-2",
-                  type: "link",
-                  label: "Archive",
-                  href: "#",
-                },
-              ],
-            },
-          ];
-        }
-        return [];
-      };
-
     return (
       <div style={{ display: "flex", height: "100vh" }}>
-        <Navigation railItems={railItems} drawerSections={drawerSections} />
+        <Navigation navigations={navigations} />
         <div style={{ flex: 1 }}>
           <Grid>
             <GridItem colSpan={12}>

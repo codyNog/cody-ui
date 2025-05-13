@@ -51,9 +51,7 @@ const meta: Meta<typeof Component> = {
         onClick: fn(), // onPressMenu を onClick に変更
       },
     ],
-    defaultSelectedId: "home",
     onSelectionChange: fn(),
-    onHoverChange: (key: string) => console.log("Hovered:", key),
   },
 };
 
