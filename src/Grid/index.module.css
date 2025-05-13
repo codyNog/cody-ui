@@ -122,21 +122,21 @@
 }
 
 /* メディアクエリによるレスポンシブ対応 - タブレット */
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .grid:not(.bentoGrid) {
     gap: var(--space-3); /* タブレット用の中くらいgap */
   }
 }
 
 /* メディアクエリによるレスポンシブ対応 - デスクトップ */
-@media (min-width: 1024px) {
+@container (min-width: 1024px) {
   .grid:not(.bentoGrid) {
     gap: var(--space-4); /* デスクトップ用の大きいgap */
   }
 }
 
 /* M3 Window Size Classesに基づくpadding調整 */
-@media (min-width: var(--media-compact)) {
+@container (min-width: 600px) {
   /* 600px以上 */
   .grid {
     padding-inline: var(--space-6); /* Medium & Expanded: 24px */
@@ -144,7 +144,7 @@
 }
 
 /* M3 Canonical Layoutに基づくmax-width設定 */
-@media (min-width: var(--media-expanded)) {
+@container (min-width: 1200px) {
   /* 1200px以上 */
   .grid {
     max-width: 1040px; /* Expanded/Large/Extra-large Body max-width */
@@ -153,7 +153,7 @@
 }
 
 /* 小さい画面では縦並びに（非ベントグリッド用） */
-@media (max-width: 600px) {
+@container (max-width: 600px) {
   .row:not(.bentoRow) {
     flex-direction: column;
     align-items: stretch;
