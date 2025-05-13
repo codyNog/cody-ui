@@ -1,85 +1,131 @@
 "use client";
-import { type ReactNode, forwardRef, useRef } from "react"; // MouseEvent のインポートを削除
+import { type ReactNode, forwardRef, useRef } from "react";
 import { type PressEvent, Button as RACButton } from "react-aria-components";
-import { MdCheck } from "../Icons"; // Import MdCheck
-import { useRipple } from "../Ripple"; // useRipple, RippleType をインポート
-import { Typography } from "../Typography"; // Typography をインポート
+import { MdCheck } from "../Icons";
+import { useRipple } from "../Ripple";
+import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
-// --- Type Definitions ---
-
-// ベースとなる共通プロパティ
+/**
+ * Base props common to all chip variants.
+ */
 type ChipBaseProps = {
+  /** The content displayed within the chip, typically text. */
   children: ReactNode;
+  /** An optional icon displayed at the beginning of the chip. */
   leadingIcon?: ReactNode;
+  /** Whether the chip is disabled. */
   isDisabled?: boolean;
-  onClick?: (e: PressEvent) => void; // onPress を onClick に変更
+  /** Callback function executed when the chip is pressed. */
+  onClick?: (e: PressEvent) => void;
+  /** Accessibility label for the chip. */
   "aria-label"?: string;
 };
 
-// Chip のバリアントを定義
+/**
+ * Defines the possible visual styles and interaction types for a Chip.
+ * - `assist`: Assist chips represent smart or automated actions that can help users.
+ * - `filter`: Filter chips represent filters for a collection of content. They can be selected or deselected.
+ * - `input`: Input chips represent a complex piece of information, such as an entity (person, place, or thing) or text. They can include a trailing icon for removal.
+ * - `suggestion`: Suggestion chips help narrow a user's intent by offering dynamically generated suggestions.
+ */
 type ChipVariant = "assist" | "filter" | "input" | "suggestion";
 
-// バリアントに応じた固有のプロパティを定義する Conditional Type
-type VariantSpecificProps<V extends ChipVariant> =
-  // 'filter' の場合は isSelected と trailingIcon を許可
-  V extends "filter"
-    ? { isSelected?: boolean; trailingIcon?: ReactNode }
-    : // 'input' の場合は trailingIcon を許可し、isSelected は禁止
-      V extends "input"
-      ? { isSelected?: never; trailingIcon?: ReactNode }
-      : // 'assist' または 'suggestion' の場合は両方禁止
-        { isSelected?: never; trailingIcon?: never };
+/**
+ * @internal
+ * Conditional type that defines props specific to each `ChipVariant`.
+ * - `filter` variant can have `isSelected` and `trailingIcon`.
+ * - `input` variant can have `trailingIcon` but not `isSelected`.
+ * - `assist` and `suggestion` variants have neither `isSelected` nor `trailingIcon`.
+ */
+type VariantSpecificProps<V extends ChipVariant> = V extends "filter"
+  ? {
+      /** Whether the filter chip is currently selected. */
+      isSelected?: boolean;
+      /** An optional icon displayed at the end of the chip, typically for removal in input chips or custom actions in filter chips. */
+      trailingIcon?: ReactNode;
+    }
+  : V extends "input"
+    ? {
+        isSelected?: never;
+        /** An optional icon displayed at the end of the chip, typically for removal. */
+        trailingIcon?: ReactNode;
+      }
+    : { isSelected?: never; trailingIcon?: never };
 
-// ChipProps を Conditional Type を使って定義
-// デフォルトのバリアントは 'assist' に設定
+/**
+ * Props for the Chip component.
+ * The props vary based on the selected `variant`.
+ * @template V - The variant of the chip, defaults to "assist".
+ */
 type ChipProps<V extends ChipVariant = "assist"> = ChipBaseProps & {
-  variant?: V; // variant プロパティを追加
-} & VariantSpecificProps<V>; // バリアント固有のプロパティを合成
+  /**
+   * The visual style and interaction type of the chip.
+   * @default 'assist'
+   */
+  variant?: V;
+} & VariantSpecificProps<V>;
 
-// --- Component Implementation ---
-
-// forwardRef の型引数を更新
+/**
+ * A Chip component that displays a compact element representing an input, attribute, or action.
+ * It supports different variants (`assist`, `filter`, `input`, `suggestion`) with corresponding behaviors and appearances.
+ *
+ * @example
+ * ```tsx
+ * // Assist Chip
+ * <Chip onClick={() => console.log('Assist chip clicked')}>Assist Me</Chip>
+ *
+ * // Filter Chip
+ * const [selected, setSelected] = useState(false);
+ * <Chip
+ *   variant="filter"
+ *   isSelected={selected}
+ *   onClick={() => setSelected(!selected)}
+ * >
+ *   Filter Option
+ * </Chip>
+ *
+ * // Input Chip with a remove icon
+ * <Chip
+ *   variant="input"
+ *   trailingIcon={<MdClose />}
+ *   onClick={() => console.log('Remove input')}
+ * >
+ *   Search Term
+ * </Chip>
+ *
+ * // Suggestion Chip
+ * <Chip variant="suggestion" onClick={() => console.log('Suggestion selected')}>
+ *   Suggested Action
+ * </Chip>
+ * ```
+ */
 export const Chip = forwardRef<HTMLButtonElement, ChipProps<ChipVariant>>(
-  // Use the new ChipProps type
   (props, _ref) => {
-    // ref を _ref に変更 (未使用のため)
-    // Destructure props based on the specific variant type
     const {
-      // デフォルトの variant を 'assist' に設定
-      variant = "assist", // Default variant
+      variant = "assist",
       children,
       leadingIcon,
       isDisabled = false,
-      onClick, // onPress を onClick に変更
+      onClick,
       "aria-label": ariaLabel,
     } = props;
 
-    // Type guards are needed for variant-specific props
-    // この辺のロジックは Conditional Type でも正しく機能するはず
     const isSelected =
-      // variant === "filter" && props.isSelected ? props.isSelected : false;
-      variant === "filter" && "isSelected" in props ? props.isSelected : false; // Check if isSelected exists
-    // trailingIcon is allowed only for filter and input variants
+      variant === "filter" && "isSelected" in props ? props.isSelected : false;
     const trailingIcon =
-      // (variant === "filter" || variant === "input") && props.trailingIcon
       (variant === "filter" || variant === "input") && "trailingIcon" in props
         ? props.trailingIcon
-        : undefined; // Check if trailingIcon exists
-    // ? props.trailingIcon
-    // : undefined;
+        : undefined;
 
-    // Determine leading icon (checkmark for selected filter chip)
-    // Determine leading icon (checkmark for selected filter chip)
     const actualLeadingIcon =
       variant === "filter" && isSelected ? <MdCheck /> : leadingIcon;
 
     const hasLeadingIcon = actualLeadingIcon != null;
-    // trailingIcon is now correctly typed based on variant, check directly
     const hasTrailingIcon = trailingIcon != null;
 
     const buttonRef = useRef<HTMLButtonElement>(null);
-    const { component: Ripple, handleClick } = useRipple(); // setRipples を setRipple に変更
+    const { component: Ripple, handleClick } = useRipple();
 
     const onPress = (e: PressEvent) => {
       handleClick(e, buttonRef);
@@ -88,39 +134,34 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps<ChipVariant>>(
 
     return (
       <RACButton
-        ref={buttonRef} // ref を buttonRef に変更
+        ref={buttonRef}
         isDisabled={isDisabled}
-        onPress={onPress} // onPress を handleClick に変更
+        onPress={onPress}
         aria-label={ariaLabel}
         className={[
           styles.chip,
-          styles[variant], // Apply variant class
+          styles[variant],
           hasLeadingIcon && styles.hasIcon,
-          // Only apply hasCloseIcon if trailingIcon is actually present
           hasTrailingIcon && styles.hasCloseIcon,
         ]
           .filter(Boolean)
           .join(" ")}
-        // Apply data-selected only if variant is filter and isSelected is true
         data-selected={variant === "filter" && isSelected ? true : undefined}
         data-disabled={isDisabled || undefined}
       >
-        {/* Render leading icon with appropriate class and aria-hidden */}
         {hasLeadingIcon && (
           <span
             className={styles.icon}
-            // Add aria-hidden only if it's the checkmark icon
             aria-hidden={variant === "filter" && isSelected ? true : undefined}
           >
             {actualLeadingIcon}
           </span>
         )}
         <Typography variant="labelLarge">{children}</Typography>
-        {/* Render trailingIcon only if it exists (type system ensures it's not for assist) */}
         {hasTrailingIcon && (
           <span className={styles.closeIcon}>{trailingIcon}</span>
         )}
-        <Ripple /> {/* handleAnimationEnd を削除 */}
+        <Ripple />
       </RACButton>
     );
   },

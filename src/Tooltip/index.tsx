@@ -1,41 +1,68 @@
 "use client";
 import { type ReactNode, forwardRef } from "react";
 import { Tooltip as AriaTooltip, TooltipTrigger } from "react-aria-components";
-import { Typography } from "../Typography"; // Typography をインポート
+import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
+/**
+ * Defines an action that can be performed within a rich tooltip.
+ */
 type Action = {
   /** The text label for the action button. */
   label: string;
-  /** Function called when the button is pressed. */
-  onClick?: () => void; // onPress を onClick に変更
+  /** Function called when the button is clicked. */
+  onClick?: () => void;
   /** Whether the button is disabled. */
   isDisabled?: boolean;
 };
 
+/**
+ * Base props common to all tooltip variants.
+ */
 type BaseProps = {
+  /** The trigger element for the tooltip. */
   children?: ReactNode;
 };
 
+/**
+ * Props for a plain tooltip, which displays simple text content.
+ */
 type PlainTooltipProps = BaseProps & {
+  /** The variant of the tooltip. For plain tooltips, this is "plain". */
   variant?: "plain";
+  /** Actions are not applicable to plain tooltips. */
   actions?: never;
+  /** The text content to display in the tooltip. */
   content: string;
 };
 
+/**
+ * Props for a rich tooltip, which can display a title, complex content, and actions.
+ */
 type RichTooltipProps = BaseProps & {
+  /** The variant of the tooltip. For rich tooltips, this is "rich". */
   variant: "rich";
+  /** The title of the rich tooltip. */
   title: string;
+  /** An array of actions to display in the rich tooltip. */
   actions: Action[];
+  /** The content to display in the rich tooltip. Can be complex React nodes. */
   content: ReactNode;
 };
 
+/**
+ * Props for the Tooltip component, supporting both plain and rich variants.
+ */
 type Props = PlainTooltipProps | RichTooltipProps;
 
+/**
+ * Tooltip component displays information related to an element when the user
+ * hovers over or focuses on it. Supports plain text and rich content with actions.
+ * Built using `react-aria-components`.
+ */
 export const Tooltip = forwardRef<HTMLDivElement, Props>(
   ({ children, content, ...props }, ref) => {
     const isRich = props.variant === "rich";
-    // Safely access title and actions only if props is RichTooltipProps
     const title = isRich ? (props as RichTooltipProps).title : undefined;
     const actions = isRich ? (props as RichTooltipProps).actions : undefined;
 
@@ -72,7 +99,7 @@ export const Tooltip = forwardRef<HTMLDivElement, Props>(
                       key={action.label}
                       type="button"
                       onClick={() => {
-                        action.onClick?.(); // action.onPress を action.onClick に変更
+                        action.onClick?.();
                       }}
                       disabled={action.isDisabled}
                       className={styles.tooltipAction}

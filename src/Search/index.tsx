@@ -9,14 +9,17 @@ import {
 import { MdClose as CloseIcon, MdSearch as SearchIcon } from "../Icons";
 import styles from "./index.module.css";
 
+/**
+ * Props for the Search component.
+ */
 type Props = SearchFieldProps & {
-  /** leadingIconButtonをクリックしたときの処理 */
+  /** Callback fired when the leading icon button is clicked. */
   onClickLeadingIcon?: () => void;
-  /** placeholder */
+  /** Placeholder text for the input field. */
   supportingText?: string;
-  /** inputの右側に表示する要素(iconやavatarなど) */
+  /** Optional element to display on the right side of the input (e.g., an icon or avatar). */
   trailingElement?: ReactNode;
-  /** inputの左側に表示するアイコン、デフォルトはSearchIcon */
+  /** Optional icon to display on the left side of the input. Defaults to a search icon. */
   leadingIcon?: ReactNode;
   /**
    * The ARIA label for the search field.
@@ -39,7 +42,7 @@ export const Search = forwardRef<HTMLDivElement, Props>(
       supportingText,
       trailingElement,
       leadingIcon,
-      "aria-label": ariaLabel, // Destructure aria-label here
+      "aria-label": ariaLabel,
       ...props
     },
     ref,
@@ -48,7 +51,7 @@ export const Search = forwardRef<HTMLDivElement, Props>(
       <SearchField
         ref={ref}
         {...props}
-        aria-label={ariaLabel} // Use the destructured ariaLabel
+        aria-label={ariaLabel}
         className={styles.search}
       >
         <div className={styles.inputWrapper}>

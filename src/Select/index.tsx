@@ -5,27 +5,50 @@ import { Button } from "../Button";
 import { MdArrowDropDown, MdClear } from "../Icons";
 import { Menu } from "../Menu";
 import { TextField } from "../TextField";
-import styles from "./index.module.css"; // スタイルをインポート
+import styles from "./index.module.css";
 
+/**
+ * Represents a single option in the Select component.
+ * @template T - The type of the option's value.
+ */
 type Option<T> = {
+  /** The display label for the option. */
   label: string;
+  /** The actual value of the option. */
   value: T;
 };
 
+/**
+ * Props for the Select component.
+ * @template T - The type of the value for the select options.
+ */
 type Props<T> = {
+  /** An array of options to be displayed in the select dropdown. */
   options: Option<T>[];
+  /** Callback function invoked when the selected value changes. */
   onChange: (value: T | undefined) => void;
+  /** The currently selected value. */
   value: T | undefined;
+  /** The label for the select field. */
   label: string;
+  /** Whether the select field is disabled. */
   disabled?: boolean;
+  /** Error message to display below the select field. */
   errorMessage?: string;
+  /** Supporting text to display below the select field. */
   supportingText?: string;
+  /** Optional icon to display at the beginning of the select field. */
   leadingIcon?: ReactNode;
+  /** The visual variant of the select field. @default "filled" */
   variant?: "filled" | "outlined";
 };
 
+/**
+ * Select component allows users to choose a single option from a list.
+ * It integrates with TextField for display and Menu for the dropdown.
+ * @template T - The type of the value for the select options, constrained to string or number.
+ */
 export const Select = forwardRef(function Select<T extends string | number>(
-  // T に制約を追加
   props: Props<T>,
   ref: Ref<HTMLDivElement>,
 ) {

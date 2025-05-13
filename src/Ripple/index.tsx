@@ -1,34 +1,48 @@
 "use client";
-import type { PressEvent } from "@react-types/shared"; // For PressEvent type
+import type { PressEvent } from "@react-types/shared";
 import {
   type ComponentProps,
-  type MouseEvent, // Import MouseEvent for named import usage
+  type MouseEvent,
   type RefObject,
   useState,
 } from "react";
 import styles from "./index.module.css";
 
+/**
+ * Represents the state of a single ripple effect.
+ */
 type RippleType = {
-  key: number; // key はアニメーション識別のため残しても良いが、単一なら不要になる可能性も
+  /** A unique key for the ripple, typically a timestamp. */
+  key: number;
+  /** The x-coordinate of the ripple's origin. */
   x: number;
+  /** The y-coordinate of the ripple's origin. */
   y: number;
+  /** The size (diameter) of the ripple. */
   size: number;
 };
 
+/**
+ * Props for the internal RippleComponent.
+ */
 type Props = {
-  ripple: RippleType | null; // 単一のリップル、または null
-  clearRipple: () => void; // リップルをクリアする関数
-  isInputtingRef?: RefObject<boolean>; // ★ isInputtingRef を Props に追加
+  /** The current ripple state, or null if no ripple is active. */
+  ripple: RippleType | null;
+  /** Callback function to clear the active ripple. */
+  clearRipple: () => void;
+  /** Optional ref to a boolean indicating if the user is currently inputting (e.g., via keyboard). */
+  isInputtingRef?: RefObject<boolean>;
 };
 
-// clearRipple と isInputtingRef を Props に追加
+/**
+ * Internal component responsible for rendering a single ripple effect.
+ */
 const RippleComponent = ({ ripple, clearRipple, isInputtingRef }: Props) => {
   return (
     <span className={styles.rippleContainer}>
-      {/* ripple が存在し、かつキー入力中でない場合のみ描画 */}
       {ripple && !isInputtingRef?.current && (
         <span
-          key={ripple.key} // もし key を RippleType に残すなら使う
+          key={ripple.key}
           className={styles.ripple}
           style={{
             left: ripple.x,
@@ -36,30 +50,53 @@ const RippleComponent = ({ ripple, clearRipple, isInputtingRef }: Props) => {
             width: ripple.size,
             height: ripple.size,
           }}
-          onAnimationEnd={clearRipple} // アニメーション終了時に clearRipple を呼ぶ
+          onAnimationEnd={clearRipple}
         />
       )}
     </span>
   );
 };
 
+/**
+ * Custom hook to manage and render ripple effects on a component.
+ *
+ * @param isInputtingRef - Optional ref to a boolean. If true, ripples are suppressed (e.g., during keyboard input).
+ * @returns An object containing:
+ *  - `handleClick`: A function to trigger a ripple effect based on a mouse or press event.
+ *  - `component`: A React component that renders the ripple visualization.
+ *
+ * @example
+ * ```tsx
+ * const MyButton = (props) => {
+ *   const buttonRef = useRef(null);
+ *   const { handleClick: handleRippleClick, component: RippleVisuals } = useRipple();
+ *
+ *   return (
+ *     <button
+ *       ref={buttonRef}
+ *       onMouseDown={(e) => handleRippleClick(e, buttonRef)}
+ *       {...props}
+ *     >
+ *       {props.children}
+ *       <RippleVisuals />
+ *     </button>
+ *   );
+ * };
+ * ```
+ */
 export const useRipple = (isInputtingRef?: RefObject<boolean>) => {
-  // isInputtingRef を追加
-  const [ripple, setRipple] = useState<RippleType | null>(null); // 単一のリップル状態
+  const [ripple, setRipple] = useState<RippleType | null>(null);
 
   const clearRipple = () => {
-    // リップルをクリアする関数を定義
     setRipple(null);
   };
 
-  // Props の型から "ripple" と "clearRipple" を Omit する
   type RippleComponentProps = Omit<
     ComponentProps<typeof RippleComponent>,
-    "ripple" | "clearRipple" | "isInputtingRef" // isInputtingRef も Omit 対象に追加
+    "ripple" | "clearRipple" | "isInputtingRef"
   >;
 
   const component = (props: RippleComponentProps) => {
-    // RippleComponent に ripple, clearRipple, isInputtingRef を渡す
     return (
       <RippleComponent
         ripple={ripple}
@@ -73,9 +110,8 @@ export const useRipple = (isInputtingRef?: RefObject<boolean>) => {
   const handleClick = (
     event: MouseEvent<globalThis.Element> | PressEvent,
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    ref: RefObject<any>, // Temporarily changed to any to resolve RefObject<SpecificElement | null> vs RefObject<Element> issues
+    ref: RefObject<any>,
   ) => {
-    // If isInputtingRef is provided and its current value is true, do not create a ripple.
     if (isInputtingRef?.current) {
       return;
     }
@@ -87,20 +123,14 @@ export const useRipple = (isInputtingRef?: RefObject<boolean>) => {
       let y: number;
 
       if ("clientX" in event && "clientY" in event) {
-        // It's a MouseEvent (or has similar properties)
         x = event.clientX - rect.left;
         y = event.clientY - rect.top;
       } else if ("x" in event && "y" in event) {
-        // It's likely a PressEvent or similar with local coordinates
-        // Ensure these are numbers if not strictly typed as PressEvent yet
         const pressX = event.x as number;
         const pressY = event.y as number;
         x = pressX;
         y = pressY;
       } else {
-        // Fallback if coordinates cannot be determined
-        // console.warn("Ripple: Could not determine click coordinates from event.", event);
-        // Default to center or handle as an error case
         x = rect.width / 2;
         y = rect.height / 2;
       }
@@ -112,16 +142,15 @@ export const useRipple = (isInputtingRef?: RefObject<boolean>) => {
         size,
       };
       setRipple(newRipple);
-      // Add a timeout to clear the ripple after the animation duration
+      // Add a timeout to clear the ripple after the animation duration.
       // This ensures the ripple is cleared even if onAnimationEnd doesn't fire as expected
       // or if re-renders happen frequently.
-      const animationDuration = 1000; // Should match the CSS animation duration
+      const animationDuration = 1000; // Should match the CSS animation duration.
       setTimeout(() => {
         setRipple(null);
       }, animationDuration);
     }
   };
 
-  // setRipple (単数形) を返す
   return { handleClick, component };
 };

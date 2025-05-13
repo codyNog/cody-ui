@@ -6,9 +6,13 @@ import {
 import { MdCheck } from "../Icons";
 import styles from "./index.module.css";
 
-type SwitchProps = AriaSwitchProps & {
+/**
+ * Props for the Switch component.
+ */
+type Props = AriaSwitchProps & {
   /** Optional icon to display within the switch thumb. Defaults to a checkmark when selected and no icon is provided. */
   icon?: ReactNode;
+  /** Whether the switch is currently checked (controlled). */
   checked?: boolean;
 };
 
@@ -26,13 +30,13 @@ export const Switch = ({
   children,
   checked,
   ...props
-}: SwitchProps) => {
+}: Props) => {
   const renderIcon = (isSelected: boolean) => {
     if (icon) {
       return icon;
     }
     if (isSelected) {
-      return <MdCheck />; // デフォルトのチェックアイコン
+      return <MdCheck />;
     }
     return null;
   };
@@ -48,7 +52,6 @@ export const Switch = ({
           renderProps.isDisabled ? "disabled" : "",
           renderProps.isFocusVisible ? "focus-visible" : "",
           renderProps.isPressed ? "pressed" : "",
-          // Add .withIcon class if an icon (custom or default check) is present
           icon || renderProps.isSelected ? styles.withIcon : "",
           typeof className === "function"
             ? className(renderProps)

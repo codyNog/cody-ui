@@ -9,16 +9,16 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 import type {
-  Key, // Key も react-aria-components からインポート (react-aria からでも良いが統一)
+  Key,
   PopoverProps,
   MenuProps as RACMenuProps,
-  Selection, // Selection を react-aria-components からインポート
+  Selection,
   SeparatorProps,
 } from "react-aria-components";
-import { Typography } from "../Typography"; // Typography をインポート
+import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
-// --- Type Definitions based on docs/components/Menu.md ---
+// Type Definitions
 
 /**
  * Defines the data structure for a menu item or a separator.
@@ -42,7 +42,7 @@ type MenuItemData = {
   /** Whether the item is disabled (optional, only for type='item'). */
   isDisabled?: boolean;
   /** Array of MenuItemData for submenu items (optional, only for type='item'). */
-  items?: ReadonlyArray<MenuItemData>; // ここも ReadonlyArray に変更
+  items?: ReadonlyArray<MenuItemData>;
 };
 
 /**
@@ -52,7 +52,7 @@ type MenuProps = {
   /** The trigger element that opens the menu (required). Typically a Button. */
   children: ReactNode;
   /** Array of item/separator data to display in the menu (required). */
-  items: ReadonlyArray<MenuItemData>; // ReadonlyArray を許容するように変更
+  items: ReadonlyArray<MenuItemData>;
   /**
    * Callback invoked when a menu item is selected (optional).
    * Receives the `id` (Key) of the selected item.
@@ -62,7 +62,7 @@ type MenuProps = {
    * Placement of the menu relative to the trigger (optional, default: 'bottom start').
    * Uses react-aria-components Popover placement options.
    */
-  placement?: PopoverProps["placement"]; // Use PopoverProps['placement']
+  placement?: PopoverProps["placement"];
   /** The offset of the menu relative to the trigger (optional). */
   offset?: number;
   /** Whether the menu should match the width of the trigger (optional, default: false). */
@@ -72,41 +72,34 @@ type MenuProps = {
   /** Accessibility label for the menu (optional). */
   "aria-label"?: string;
 
-  // --- Selection Props ---
   /**
-   * Selection mode (optional, default: 'none').
-   * 'none': No selection allowed.
-   * 'single': Only one item can be selected.
-   * 'multiple': Multiple items can be selected.
+   * Selection mode.
+   * @default 'none'
    */
-  selectionMode?: RACMenuProps<object>["selectionMode"]; // Use RACMenuProps
-  /**
-   * The currently selected keys (controlled) (optional).
-   */
+  selectionMode?: RACMenuProps<object>["selectionMode"];
+  /** The currently selected keys (controlled). */
   selectedKeys?: Selection;
-  /**
-   * The initially selected keys (uncontrolled) (optional).
-   */
+  /** The initially selected keys (uncontrolled). */
   defaultSelectedKeys?: Selection;
-  /**
-   * Callback invoked when the selection changes (optional).
-   * Receives the new selection state (Selection).
-   */
+  /** Callback invoked when the selection changes. */
   onSelectionChange?: (keys: Selection) => void;
-  // --- End Selection Props ---
 };
 
-// --- Internal Components ---
+// Internal Components
 
+/**
+ * Props for the InternalMenuItem component.
+ */
 type InternalMenuItemProps = ComponentProps<typeof RACMenuItem> & {
-  item: MenuItemData; // Pass item data
+  /** The data for the menu item. */
+  item: MenuItemData;
 };
 
 const InternalMenuItem = ({ item, ...props }: InternalMenuItemProps) => {
   return (
     <RACMenuItem
       {...props}
-      id={item.id} // Use id from item data
+      id={item.id}
       isDisabled={item.isDisabled}
       className={composeRenderProps(
         props.className,
@@ -129,29 +122,33 @@ const InternalMenuItem = ({ item, ...props }: InternalMenuItemProps) => {
   );
 };
 
+/**
+ * Props for the InternalMenuSeparator component.
+ */
 type InternalMenuSeparatorProps = SeparatorProps;
 
 const InternalMenuSeparator = (props: InternalMenuSeparatorProps) => {
   return <Separator {...props} className={styles.separator} />;
 };
 
-// --- Recursive Menu Rendering Function ---
+// Recursive Menu Rendering Function
 
+/**
+ * Renders menu items, including separators and submenus.
+ * @param items - An array of MenuItemData objects.
+ * @returns An array of ReactNode elements representing the menu items.
+ */
 const renderMenuItems = (items: ReadonlyArray<MenuItemData>): ReactNode[] => {
-  // ReadonlyArray を受け入れる
   return items.map((item) => {
     if (item.type === "separator") {
-      // Use item.id as key for separator as well, ensure it's unique
       return <InternalMenuSeparator key={item.id} />;
     }
 
-    // Handle items with submenus
     if (item.items && item.items.length > 0) {
       return (
         <SubmenuTrigger key={item.id}>
           <InternalMenuItem item={item} />
           <Popover className={styles.popover}>
-            {/* Recursively render submenu items */}
             <RACMenu className={styles.menu}>
               {renderMenuItems(item.items)}
             </RACMenu>
@@ -160,13 +157,15 @@ const renderMenuItems = (items: ReadonlyArray<MenuItemData>): ReactNode[] => {
       );
     }
 
-    // Standard menu item
     return <InternalMenuItem key={item.id} item={item} />;
   });
 };
 
-// --- Main Menu Component ---
-
+/**
+ * Menu component that displays a list of actions or options.
+ * It can be triggered by a button or other element.
+ * Supports submenus and selection modes.
+ */
 export const Menu = ({
   children,
   items,
@@ -188,7 +187,7 @@ export const Menu = ({
     selectedKeys,
     defaultSelectedKeys,
     onSelectionChange,
-    disabledKeys: isDisabled ? items.map((item) => item.id) : undefined, // Disable all if menu is disabled
+    disabledKeys: isDisabled ? items.map((item) => item.id) : undefined,
   };
 
   return (
@@ -196,7 +195,7 @@ export const Menu = ({
       {children}
       <Popover
         placement={placement}
-        offset={offset} // Pass offset to Popover
+        offset={offset}
         className={`${styles.popover} ${matchTriggerWidth ? styles.matchTriggerWidthPopover : ""}`}
       >
         <RACMenu {...menuProps} className={styles.menu}>

@@ -1,4 +1,4 @@
-import type { ComponentProps, ReactNode } from "react";
+import type { ReactNode } from "react";
 import {
   Label as RACLabel,
   Radio as RACRadio,
@@ -6,23 +6,27 @@ import {
   type RadioGroupProps as RACRadioGroupProps,
   type RadioProps as RACRadioProps,
 } from "react-aria-components";
-import { Typography } from "../Typography"; // Typography をインポート
+import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
-// --- RadioGroup ---
-
+/**
+ * Props for the RadioGroup component.
+ */
 type RadioGroupProps = {
-  /** Group label */
+  /** The label for the radio group. */
   label?: ReactNode;
-  /** Additional CSS class */
+  /** Additional CSS class name(s) to apply to the radio group. */
   className?: string;
+  /** An array of options to render as radio buttons. */
   options: {
+    /** The value of the radio option. */
     value: string;
+    /** The label for the radio option. */
     label: string;
-    /** Optionally disable this specific radio button */
+    /** Whether this specific radio button is disabled. */
     isDisabled?: boolean;
   }[];
-} & Omit<RACRadioGroupProps, "className">; // Exclude RAC className
+} & Omit<RACRadioGroupProps, "className">;
 
 /**
  * RadioGroup component based on react-aria-components.
@@ -59,14 +63,15 @@ export const RadioGroup = ({
   );
 };
 
-// --- Radio ---
-
+/**
+ * Props for the Radio component.
+ */
 type RadioProps = {
-  /** Radio label */
+  /** The content to be displayed as the radio button's label. */
   children: ReactNode;
-  /** Additional CSS class */
+  /** Additional CSS class name(s) to apply to the radio button. */
   className?: string;
-} & Omit<RACRadioProps, "className" | "children">; // Exclude RAC className and children
+} & Omit<RACRadioProps, "className" | "children">;
 
 /**
  * Radio component based on react-aria-components.
@@ -78,22 +83,12 @@ const Radio = ({ children, className, ...props }: RadioProps) => {
       {...props}
       className={className ? `${styles.radio} ${className}` : styles.radio}
     >
-      {/* Custom visual indicator */}
       <div className={styles.indicator} />
-      {/* Label */}
       <RACLabel>
         <Typography variant="bodyLarge" color="onSurface">
           {children}
         </Typography>
       </RACLabel>
-      {/* Input is handled internally by RACRadio */}
     </RACRadio>
   );
 };
-
-// --- Prop Types for Storybook/External Use ---
-
-/** Props for the RadioGroup component */
-type RadioGroupComponentProps = ComponentProps<typeof RadioGroup>;
-/** Props for the Radio component */
-type RadioComponentProps = ComponentProps<typeof Radio>;

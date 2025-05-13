@@ -8,104 +8,116 @@ import {
 } from "react";
 import styles from "./index.module.css";
 
-// グリッドのバリアント
+/**
+ * Defines the possible variants for the Grid.
+ * - `default`: A standard grid layout.
+ * - `bento`: A bento-style grid layout, often used for dashboards or complex UIs.
+ */
 type GridVariant = "default" | "bento";
 
-// 共通のGridコンポーネントのProps
+/**
+ * Props for the Grid component.
+ */
 type GridProps = {
   /**
-   * グリッドに表示する子要素
+   * The content to be displayed within the grid.
    */
   children: ReactNode;
 
   /**
-   * グリッドのバリアント
+   * The variant of the grid.
    * @default "default"
    */
   variant?: GridVariant;
 
   /**
-   * コンテナクエリを使用するかどうか（bentoバリアントのみ有効）
+   * Whether to use container queries (only effective for the "bento" variant).
    * @default true
    */
   containerQuery?: boolean;
 
   /**
-   * グリッドのカラム数
+   * The number of columns in the grid.
    * @default 12
    */
   columns?: number;
 
   /**
-   * グリッド間のギャップ
+   * The gap between grid items.
    */
   gap?: string | number;
 
   /**
-   * 追加のクラス名
+   * Additional CSS class name(s) to apply to the grid.
    */
   className?: string;
 };
 
-// GridItemの共通Props
+/**
+ * Props for the GridItem component.
+ */
 type GridItemProps = {
   /**
-   * グリッドアイテムに表示する内容
+   * The content to be displayed within the grid item.
    */
   children: ReactNode;
 
   /**
-   * アイテムのバリアント（親のGridと同じにすることを推奨）
+   * The variant of the item (recommended to match the parent Grid's variant).
    * @default "default"
    */
   variant?: GridVariant;
 
   /**
-   * アイテムが占める列数（12列グリッドシステム）
+   * The number of columns the item should span (in a 12-column grid system).
    * @default 3
    */
   colSpan?: 1 | 2 | 3 | 4 | 6 | 8 | 12;
 
   /**
-   * アイテムが占める行数
+   * The number of rows the item should span.
    * @default 1
    */
   rowSpan?: 1 | 2 | 3;
 
   /**
-   * 追加のクラス名
+   * Additional CSS class name(s) to apply to the grid item.
    */
   className?: string;
 };
 
-// GridRowのProps
+/**
+ * Props for the GridRow component.
+ */
 type GridRowProps = GridItemProps & {
   /**
-   * 要素間のギャップ
+   * The spacing between elements within the row.
    * @default var(--space-3)
    */
   spacing?: string | number;
 
   /**
-   * 縦方向の配置
+   * The vertical alignment of items within the row.
    * @default center
    */
   align?: "start" | "center" | "end" | "stretch";
 
   /**
-   * 横方向の配置
+   * The horizontal alignment of items within the row.
    * @default start
    */
   justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
 
   /**
-   * 折り返すかどうか
+   * Whether items in the row should wrap to the next line if they exceed the available width.
    * @default false
    */
   wrap?: boolean;
 };
 
-// GridItemコンポーネント
+/**
+ * GridItem component represents an individual item within a Grid.
+ */
 export const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
   (
     {
@@ -143,7 +155,9 @@ export const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
 
 GridItem.displayName = "GridItem";
 
-// GridRowコンポーネント - 横並びのアイテム用
+/**
+ * GridRow component is used for arranging items horizontally within a Grid.
+ */
 export const GridRow = forwardRef<HTMLDivElement, GridRowProps>(
   (
     {
@@ -160,7 +174,6 @@ export const GridRow = forwardRef<HTMLDivElement, GridRowProps>(
     },
     ref,
   ) => {
-    // alignとjustifyのマッピング
     const alignMap = {
       start: "flex-start",
       center: "center",
@@ -206,7 +219,11 @@ export const GridRow = forwardRef<HTMLDivElement, GridRowProps>(
 
 GridRow.displayName = "GridRow";
 
-// 後方互換性のためのBentoGridItemコンポーネント
+/**
+ * BentoGridItem component is a specialized GridItem for use within a BentoGrid.
+ * This component is provided for backward compatibility.
+ * It is recommended to use GridItem with the variant="bento" prop instead.
+ */
 export const BentoGridItem = forwardRef<
   HTMLDivElement,
   Omit<GridItemProps, "variant">
@@ -216,7 +233,10 @@ export const BentoGridItem = forwardRef<
 
 BentoGridItem.displayName = "BentoGridItem";
 
-// 基本のGridコンポーネント
+/**
+ * Grid component provides a flexible layout system based on CSS Grid.
+ * It supports different variants like "default" and "bento".
+ */
 export const Grid = forwardRef<HTMLDivElement, GridProps>(
   (
     {
@@ -233,7 +253,6 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
     const style: CSSProperties = {};
 
     if (columns) {
-      // 最小幅を設定して、内容が潰れないようにする
       style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
     }
 
@@ -241,7 +260,6 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
       style.gap = gap;
     }
 
-    // バリアントに応じたクラス名を設定
     const isBento = variant === "bento";
     const gridClassName = isBento
       ? containerQuery
@@ -249,18 +267,14 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
         : `${styles.grid} ${className || ""}`
       : `${styles.grid} ${className || ""}`;
 
-    // Bentoバリアントの場合は子要素を検証
     if (isBento) {
       const validChildren = Children.map(children, (child) => {
         if (isValidElement(child)) {
-          // GridItemまたはGridRowの場合は、variantプロパティを追加
           if (
             child.type === GridItem ||
             child.type === GridRow ||
-            // 後方互換性のために古いコンポーネントもサポート
             child.type === BentoGridItem
           ) {
-            // propsが存在することを確認
             const childProps = child.props || {};
             return {
               ...child,
@@ -295,7 +309,11 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
 
 Grid.displayName = "Grid";
 
-// 後方互換性のためのBentoGridコンポーネント
+/**
+ * BentoGrid component is a specialized Grid for creating bento-style layouts.
+ * This component is provided for backward compatibility.
+ * It is recommended to use Grid with the variant="bento" prop instead.
+ */
 export const BentoGrid = forwardRef<HTMLDivElement, Omit<GridProps, "variant">>(
   (props, ref) => {
     return <Grid ref={ref} variant="bento" {...props} />;

@@ -5,20 +5,38 @@ import { Button } from "../Button";
 import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
+/**
+ * Props for the SideSheet component.
+ */
 type Props = {
-  variant?: "standard" | "modal"; // TODO: variantの対応
-  children?: ReactNode; // Drawer.Triggerになる想定
+  /** The visual variant of the side sheet. @default "standard" */
+  variant?: "standard" | "modal";
+  /** The trigger element that opens the side sheet. Typically a Button. */
+  children?: ReactNode;
+  /** The headline or title of the side sheet. */
   headline: string;
+  /** The main content to be displayed within the side sheet. */
   content: ReactNode;
+  /** Controls the open state of the side sheet. */
   isOpen?: boolean;
+  /** Callback function invoked when the open state of the side sheet changes. */
   onOpenChange?: (isOpen: boolean) => void;
+  /** An array of action buttons to display in the footer of the side sheet. */
   actions?: {
+    /** The label text for the action button. */
     label: string;
+    /** The visual variant of the action button. */
     variant?: "filled" | "outlined";
+    /** Callback function invoked when the action button is clicked. */
     onClick: () => void;
   }[];
 };
 
+/**
+ * SideSheet component provides a panel that slides in from the side of the screen.
+ * It can be used for displaying supplementary content or actions.
+ * Based on the `vaul` library for drawer functionality.
+ */
 export const SideSheet = forwardRef<HTMLDivElement, Props>(
   (
     {
@@ -38,7 +56,7 @@ export const SideSheet = forwardRef<HTMLDivElement, Props>(
         open={isOpen}
         onOpenChange={onOpenChange}
         modal={variant === "modal"}
-        direction="right" // 右から出てくるように設定！
+        direction="right"
       >
         {children && <Drawer.Trigger asChild>{children}</Drawer.Trigger>}
         <Drawer.Portal>

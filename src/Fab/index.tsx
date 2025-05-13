@@ -4,17 +4,30 @@ import {
   type ForwardedRef,
   type ReactNode,
   forwardRef,
-  // useState, // useState は useRipple 内で使われるため、ここでは不要
-  useRef, // useRef をインポート
+  useRef,
 } from "react";
-import { useRipple } from "../Ripple"; // useRipple をインポート
-import { Typography } from "../Typography"; // Typography をインポート
+import { useRipple } from "../Ripple";
+import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
+/**
+ * Defines the possible variants for the FAB.
+ * - `standard`: A standard FAB, typically circular with an icon.
+ * - `extended`: An extended FAB, which includes a label and optionally an icon.
+ */
 type FabVariantValue = "standard" | "extended";
+
+/**
+ * Defines the possible sizes for the FAB.
+ * - `small`: A small FAB.
+ * - `medium`: A medium FAB (default).
+ * - `large`: A large FAB.
+ */
 type FabSizeValue = "small" | "medium" | "large";
 
-// Common props shared across all variants
+/**
+ * Common properties shared across all FAB variants.
+ */
 type FabCommonProps = {
   /** The size of the FAB. @default "medium" */
   size?: FabSizeValue;
@@ -22,24 +35,34 @@ type FabCommonProps = {
   "aria-label"?: string;
 } & Omit<ComponentProps<"button">, "children" | "aria-label">;
 
-// Specific props for the "standard" variant
+/**
+ * Specific properties for the "standard" FAB variant.
+ */
 type StandardFabSpecificProps = {
-  variant?: "standard"; // Optional because it's the default
+  /** The variant of the FAB. */
+  variant?: "standard";
   /** The icon to display in the FAB. Required for standard FAB. */
   icon: ReactNode;
-  label?: never; // Label is not allowed for standard FAB
+  /** Label is not allowed for standard FAB. */
+  label?: never;
 };
 
-// Specific props for the "extended" variant
+/**
+ * Specific properties for the "extended" FAB variant.
+ */
 type ExtendedFabSpecificProps = {
-  variant: "extended"; // Required to discriminate
+  /** The variant of the FAB. */
+  variant: "extended";
   /** The label for the FAB. Required for extended FAB. */
   label: string;
   /** The icon to display in the FAB. Optional for extended FAB. */
   icon?: ReactNode;
 };
 
-// Union type for all possible FAB props, using a generic for the variant
+/**
+ * Props for the Fab component.
+ * @template V - The variant of the FAB, defaults to "standard".
+ */
 type FabProps<V extends FabVariantValue = "standard"> = FabCommonProps &
   (V extends "standard"
     ? StandardFabSpecificProps
@@ -47,6 +70,17 @@ type FabProps<V extends FabVariantValue = "standard"> = FabCommonProps &
       ? ExtendedFabSpecificProps
       : never);
 
+/**
+ * Fab (Floating Action Button) component.
+ *
+ * @example
+ * // Standard FAB
+ * <Fab icon={<Icon />} aria-label="Add" />
+ *
+ * @example
+ * // Extended FAB
+ * <Fab variant="extended" label="Create" icon={<Icon />} />
+ */
 export const Fab = forwardRef(
   <V extends FabVariantValue>(
     props: FabProps<V>,
@@ -57,7 +91,6 @@ export const Fab = forwardRef(
       size = "medium",
       className,
       "aria-label": ariaLabelProp,
-      // All other props, including variant-specific ones like icon/label, are in restRootProps
       ...restRootProps
     } = props;
 
@@ -65,33 +98,12 @@ export const Fab = forwardRef(
       useRipple();
     const buttonRef = useRef<HTMLButtonElement>(null);
 
-    // Determine the variant, defaulting to 'standard'
-    // props.variant can be undefined if V is "standard" (due to `variant?: "standard"`)
-    const currentVariant: FabVariantValue = props.variant || "standard";
-
-    let iconNode: ReactNode | undefined;
-    let labelText: string | undefined;
-
-    // Safely access variant-specific props based on the determined variant
-    if (currentVariant === "standard") {
-      // At this point, TypeScript knows props must conform to FabProps<"standard">
-      // which includes StandardFabSpecificProps.
-      const standardProps = props as FabProps<"standard">;
-      iconNode = standardProps.icon;
-      // labelText remains undefined as per StandardFabSpecificProps
-    } else if (currentVariant === "extended") {
-      // props must conform to FabProps<"extended">
-      const extendedProps = props as FabProps<"extended">;
-      iconNode = extendedProps.icon;
-      labelText = extendedProps.label;
-    }
-
-    const hasIcon = !!iconNode;
-    const isExtendedLayout = currentVariant === "extended";
+    const { icon, label }: FabProps<typeof variant> = props;
+    const isExtendedLayout = variant === "extended";
 
     const getAccessibleName = () => {
       if (ariaLabelProp) return ariaLabelProp;
-      if (isExtendedLayout && labelText) return labelText;
+      if (isExtendedLayout && label) return label;
       return undefined;
     };
 
@@ -105,25 +117,16 @@ export const Fab = forwardRef(
       .filter(Boolean)
       .join(" ");
 
-    // Prepare buttonProps by removing props specific to Fab's logic
-    // to prevent them from being passed down to the DOM element.
-    // The type assertion for restRootProps helps ensure we are considering all possible props
-    // that might have come from the union type before stripping them.
-    const {
-      variant: _variant,
-      icon: _icon,
-      label: _label,
-    } = restRootProps as FabCommonProps &
-      StandardFabSpecificProps &
-      ExtendedFabSpecificProps;
-
     return (
       <button
         ref={(node) => {
           if (typeof ref === "function") {
             ref(node);
-          } else if (ref) {
+            return;
+          }
+          if (ref) {
             ref.current = node;
+            return;
           }
           buttonRef.current = node;
         }}
@@ -134,12 +137,12 @@ export const Fab = forwardRef(
           handleRippleClick(e, buttonRef);
           props.onMouseDown?.(e);
         }}
-        {...restRootProps} // Spread the cleaned buttonProps
+        {...restRootProps}
       >
-        {hasIcon && <span className={styles.icon}>{iconNode}</span>}
-        {isExtendedLayout && labelText && (
+        {!!icon && <span className={styles.icon}>{icon}</span>}
+        {isExtendedLayout && label && (
           <Typography variant="labelLarge" color="onPrimaryContainer">
-            {labelText}
+            {label}
           </Typography>
         )}
         <RippleVisuals />

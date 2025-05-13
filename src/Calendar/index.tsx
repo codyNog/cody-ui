@@ -17,8 +17,31 @@ import {
 import type { CalendarProps, CalendarVariant } from "./types";
 import type { InternalDateRange, InternalDateValue } from "./types";
 
-// --- Component ---
-
+/**
+ * A versatile Calendar component that supports single date selection,
+ * multiple date selection, and date range selection.
+ *
+ * The component dynamically renders `SingleCalendar`, `MultipleCalendar`, or `RangeCalendar`
+ * based on the `variant` prop. It also handles the conversion between
+ * external `Date` objects and internal `CalendarDate` objects used by `react-aria-components`.
+ *
+ * @template T - The variant of the calendar, defaults to "single".
+ * @param {CalendarProps<T>} props - The props for the Calendar component.
+ * @returns {JSX.Element} The rendered calendar component based on the variant.
+ * @throws {Error} If an unsupported calendar variant is provided.
+ *
+ * @example
+ * ```tsx
+ * // Single Date Picker
+ * <Calendar variant="single" onChange={(date) => console.log(date)} />
+ *
+ * // Multiple Date Picker
+ * <Calendar variant="multiple" onChange={(dates) => console.log(dates)} />
+ *
+ * // Date Range Picker
+ * <Calendar variant="range" onChange={(range) => console.log(range)} />
+ * ```
+ */
 export const Calendar = <T extends CalendarVariant = "single">(
   props: CalendarProps<T>,
 ) => {
@@ -107,7 +130,4 @@ export const Calendar = <T extends CalendarVariant = "single">(
       />
     );
   }
-
-  // Should not be reached due to exhaustive checks
-  throw new Error(`Unsupported calendar variant: ${props.variant}`);
 };

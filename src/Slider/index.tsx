@@ -9,34 +9,51 @@ import {
 } from "react-aria-components";
 import styles from "./index.module.css";
 
+/** Defines the interaction mode of the slider. */
 type Mode = "continuous" | "centered";
 
+/** Defines the visual variant of the slider. */
 type Variant = "number" | "range";
 
+/**
+ * Props for the Slider component.
+ */
 type Props = {
-  label?: string; // ラベルはあったほうがいいよね！
-  value: number | number[]; // range の場合は配列になるかも
+  /** Optional label for the slider. */
+  label?: string;
+  /** The current value of the slider. Can be a single number or an array for range sliders. */
+  value: number | number[];
+  /** Callback function invoked when the slider value changes. */
   onChange: (value: number | number[]) => void;
-  minValue?: number; // react-aria-components に合わせて変更
-  maxValue?: number; // react-aria-components に合わせて変更
+  /** The minimum value of the slider. @default 0 */
+  minValue?: number;
+  /** The maximum value of the slider. @default 100 */
+  maxValue?: number;
+  /** The step increment of the slider. */
   step?: number;
-  mode?: Mode; // これは react-aria-components に直接はないかも？一旦残す
-  variant?: Variant; // これも react-aria-components に直接はないかも？一旦残す
+  /** The interaction mode of the slider. @default "continuous" */
+  mode?: Mode;
+  /** The visual variant of the slider. */
+  variant?: Variant;
+  /** Whether the slider is disabled. */
   isDisabled?: boolean;
+  /** The orientation of the slider. @default "horizontal" */
   orientation?: "horizontal" | "vertical";
 };
 
+/**
+ * Slider component allows users to select a value or a range of values along a track.
+ * It is built on top of `react-aria-components` and styled according to Material Design 3.
+ */
 export const Slider = forwardRef<HTMLDivElement, Props>(
   (
     {
       label,
       value,
       onChange,
-      minValue = 0, // Default minValue if not provided
-      maxValue = 100, // Default maxValue if not provided
+      minValue = 0,
+      maxValue = 100,
       step,
-      // mode, // TODO: mode と variant の処理は後で考える
-      // variant,
       isDisabled,
       mode = "continuous",
       orientation = "horizontal",
@@ -50,18 +67,15 @@ export const Slider = forwardRef<HTMLDivElement, Props>(
       const numSteps = Math.floor((maxValue - minValue) / step);
       for (let i = 0; i <= numSteps; i++) {
         const tickValue = minValue + i * step;
-        // Ensure tick does not exceed maxValue if step doesn't align perfectly
         if (tickValue <= maxValue) {
           tickMarks.push(tickValue);
         } else if (
           i === numSteps &&
           tickMarks[tickMarks.length - 1] < maxValue
         ) {
-          // Add maxValue as the last tick if it wasn't perfectly divisible
           tickMarks.push(maxValue);
         }
       }
-      // Ensure the first and last tick marks correspond to minValue and maxValue if step is large
       if (
         tickMarks.length === 0 ||
         (tickMarks.length > 0 && tickMarks[0] > minValue)
@@ -74,10 +88,8 @@ export const Slider = forwardRef<HTMLDivElement, Props>(
           tickMarks[tickMarks.length - 1] < maxValue &&
           step > maxValue - minValue)
       ) {
-        // if only one step and it's larger than the range, ensure max value is a tick
         if (!tickMarks.includes(maxValue)) tickMarks.push(maxValue);
       }
-      // Remove duplicates that might have been added
       tickMarks = [...new Set(tickMarks)].sort((a, b) => a - b);
     }
 
@@ -96,14 +108,11 @@ export const Slider = forwardRef<HTMLDivElement, Props>(
         data-discrete={showTickMarks ? "" : undefined}
         {...props}
       >
-        {/* Label is styled as display:none in CSS for M3, but kept for prop compatibility */}
         {label && <Label className={styles.label}>{label}</Label>}
-        {/* trackContainer for positioning track and thumbs */}
         <div className={styles.trackContainer}>
           <SliderTrack className={styles.track}>
             {({ state }) => (
               <>
-                {/* Tick Marks */}
                 {showTickMarks && orientation === "horizontal" && (
                   <div className={styles.tickMarksContainer}>
                     {tickMarks.map((tickVal, index) => {
@@ -117,16 +126,11 @@ export const Slider = forwardRef<HTMLDivElement, Props>(
                           key={key}
                           className={styles.tickMark}
                           data-active={isActive ? "" : undefined}
-                          // Style for positioning can be added here if needed,
-                          // but CSS handles space-between for now.
-                          // For precise positioning:
-                          // style={{ left: `${((tickVal - minValue) / (maxValue - minValue)) * 100}%` }}
                         />
                       );
                     })}
                   </div>
                 )}
-                {/* Track Fill */}
                 {state.values.length === 1 && (
                   <div
                     className={styles.trackFill}
@@ -144,17 +148,10 @@ export const Slider = forwardRef<HTMLDivElement, Props>(
                     }}
                   />
                 )}
-                {/* Thumbs */}
                 {state.values.map((_, i) => {
                   const key = `thumb-${i}`;
                   return (
-                    <SliderThumb
-                      key={key} // Using index as key is acceptable here as thumb count/order is stable.
-                      index={i}
-                      className={styles.thumb}
-                      // data-focus-visible, data-dragging are automatically applied by RAC
-                    >
-                      {/* SliderOutput is used for the value tooltip, now inside Thumb */}
+                    <SliderThumb key={key} index={i} className={styles.thumb}>
                       <SliderOutput className={styles.output}>
                         {({ state: thumbState }) =>
                           thumbState.getThumbValueLabel(i)

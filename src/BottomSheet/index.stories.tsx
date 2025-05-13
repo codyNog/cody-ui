@@ -9,18 +9,18 @@ type BottomSheetProps = ComponentProps<typeof Component>;
 const meta: Meta<typeof Component> = {
   component: Component,
   args: {
-    headline: "ボトムシートのタイトルだよ",
+    headline: "This is the BottomSheet Title",
     content: (
       <>
-        <p>これがボトムシートの中身だよん。</p>
-        <p>下から出てくるやつ！</p>
+        <p>This is the content of the bottom sheet.</p>
+        <p>It slides up from the bottom!</p>
         {[...Array(20)].map((_, i) => {
           const key = `scroll-item-${i}`;
-          return <p key={key}>スクロールもできるかな？ Item {i + 1}</p>;
+          return <p key={key}>Can it scroll? Item {i + 1}</p>;
         })}
       </>
     ),
-    children: <Button>ボトムシートを開く</Button>,
+    children: <Button>Open BottomSheet</Button>,
     showHandle: true,
     variant: "standard",
   },
@@ -30,22 +30,38 @@ export default meta;
 
 type Story = StoryObj<typeof Component>;
 
+/**
+ * Props for the StatefulBottomSheet wrapper component.
+ * This component manages the open/closed state of the BottomSheet for Storybook.
+ */
 type StatefulWrapperProps = Omit<
   BottomSheetProps,
   "onOpenChange" | "isOpen"
 > & {
+  /**
+   * The initial open state of the BottomSheet.
+   * @default false
+   */
   initialOpen?: boolean;
+  /**
+   * The trigger element for the BottomSheet.
+   */
   children: ReactNode;
 };
 
+/**
+ * A wrapper component for `BottomSheet` that manages its open/closed state internally.
+ * This is useful for Storybook stories where you want to demonstrate the BottomSheet's
+ * behavior without managing state externally in each story.
+ */
 const StatefulBottomSheet = (props: StatefulWrapperProps) => {
   const { initialOpen, children, ...restProps } = props;
   const [isOpen, setIsOpen] = useState(initialOpen ?? false);
 
   const completeProps = {
-    ...meta.args,
-    ...restProps,
-  } as BottomSheetProps;
+    ...meta.args, // Default args from meta
+    ...restProps, // Args passed to the story
+  } as BottomSheetProps; // Cast to ensure all required props are present
 
   return (
     <Component {...completeProps} isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -55,14 +71,14 @@ const StatefulBottomSheet = (props: StatefulWrapperProps) => {
 };
 
 export const Default: Story = {
-  args: {},
+  args: {}, // Uses default args from meta
   render: (args) => <StatefulBottomSheet {...(args as StatefulWrapperProps)} />,
 };
 
 export const ModalVariant: Story = {
   args: {
     variant: "modal",
-    children: <Button>ボトムシートを開く (Modal)</Button>,
+    children: <Button>Open BottomSheet (Modal)</Button>,
   },
   render: (args) => <StatefulBottomSheet {...(args as StatefulWrapperProps)} />,
 };
@@ -70,7 +86,7 @@ export const ModalVariant: Story = {
 export const NoHeader: Story = {
   args: {
     headline: undefined,
-    children: <Button>タイトルなし</Button>,
+    children: <Button>No Header</Button>,
   },
   render: (args) => <StatefulBottomSheet {...(args as StatefulWrapperProps)} />,
 };
@@ -78,7 +94,7 @@ export const NoHeader: Story = {
 export const NoHandle: Story = {
   args: {
     showHandle: false,
-    children: <Button>ハンドルなし</Button>,
+    children: <Button>No Handle</Button>,
   },
   render: (args) => <StatefulBottomSheet {...(args as StatefulWrapperProps)} />,
 };
@@ -87,7 +103,7 @@ export const OnlyContent: Story = {
   args: {
     headline: undefined,
     showHandle: false,
-    children: <Button>コンテンツのみ</Button>,
+    children: <Button>Content Only</Button>,
   },
   render: (args) => <StatefulBottomSheet {...(args as StatefulWrapperProps)} />,
 };
@@ -95,11 +111,11 @@ export const OnlyContent: Story = {
 export const Behavior: Story = {
   args: {
     variant: "modal",
-    children: <Button>テスト用 (Modal)</Button>,
+    children: <Button>Test (Modal)</Button>,
   },
   render: (args) => (
     <StatefulBottomSheet {...(args as StatefulWrapperProps)}>
-      {args.children ?? <Button>テスト用のボタン</Button>}
+      {args.children ?? <Button>Test Button</Button>}
     </StatefulBottomSheet>
   ),
   play: async ({ canvasElement, args }) => {
@@ -114,11 +130,11 @@ export const Behavior: Story = {
         "children" in args.children.props &&
         args.children.props.children
           ? (args.children.props.children as string)
-          : "テスト用のボタン",
+          : "Test Button",
     });
 
     await userEvent.click(triggerButton);
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for animation
 
     const sheetTitleText = args.headline;
     if (sheetTitleText) {
@@ -126,37 +142,44 @@ export const Behavior: Story = {
       expect(sheetTitle).toBeInTheDocument();
     }
 
+    // Test closing by clicking overlay (for modal) or outside (for standard)
     if (args.variant === "modal") {
       const overlay = document.querySelector('[data-vaul-overlay="true"]');
       expect(overlay).toBeInTheDocument();
       if (overlay instanceof HTMLElement) {
         await userEvent.click(overlay);
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for animation
         if (sheetTitleText) {
           expect(canvas.queryByText(sheetTitleText)).not.toBeInTheDocument();
         }
 
+        // Reopen to test Esc key
         await userEvent.click(triggerButton);
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for animation
         if (sheetTitleText) {
           const reappearedSheetTitle = await canvas.findByText(sheetTitleText);
           expect(reappearedSheetTitle).toBeInTheDocument();
         }
       }
     } else {
-      const overlay = document.querySelector('[data-vaul-overlay="true"]');
+      // For standard variant, clicking outside (e.g., on the body) should not close it
+      // Vaul's standard variant doesn't close on outside click by default.
+      // This part of the test might need adjustment based on desired standard behavior.
+      const overlay = document.querySelector('[data-vaul-overlay="true"]'); // Overlay still exists for standard
       if (overlay instanceof HTMLElement) {
+        // Clicking the overlay of a standard sheet does nothing by default in Vaul
         await userEvent.click(overlay);
         await new Promise((resolve) => setTimeout(resolve, 500));
         if (sheetTitleText) {
-          const sheetTitle = await canvas.findByText(sheetTitleText);
+          const sheetTitle = await canvas.findByText(sheetTitleText); // Should still be there
           expect(sheetTitle).toBeInTheDocument();
         }
       }
     }
 
+    // Test closing with Escape key
     await userEvent.keyboard("{escape}");
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for animation
     if (sheetTitleText) {
       expect(canvas.queryByText(sheetTitleText)).not.toBeInTheDocument();
     }
@@ -168,7 +191,7 @@ export const VisualComparison: Story = {
     <div style={{ display: "flex", flexDirection: "row", gap: "16px" }}>
       <StatefulBottomSheet
         headline="Standard Variant"
-        content={<p>これは Standard (非モーダル) のボトムシートだよ。</p>}
+        content={<p>This is a Standard (non-modal) bottom sheet.</p>}
         variant="standard"
         showHandle
       >
@@ -176,15 +199,15 @@ export const VisualComparison: Story = {
       </StatefulBottomSheet>
       <StatefulBottomSheet
         headline="Modal Variant"
-        content={<p>これは Modal のボトムシートだよ。</p>}
+        content={<p>This is a Modal bottom sheet.</p>}
         variant="modal"
         showHandle
       >
         <Button>Modal</Button>
       </StatefulBottomSheet>
       <StatefulBottomSheet
-        headline="Modal (ハンドルなし)"
-        content={<p>ハンドルがない Modal。</p>}
+        headline="Modal (No Handle)"
+        content={<p>A Modal bottom sheet without a handle.</p>}
         variant="modal"
         showHandle={false}
       >

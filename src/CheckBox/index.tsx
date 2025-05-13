@@ -1,19 +1,49 @@
 import { Checkbox as AriaCheckbox } from "react-aria-components";
-import { MdCheck, MdRemove } from "../Icons"; // react-icons/md からインポート
+import { MdCheck, MdRemove } from "../Icons";
 import styles from "./index.module.css";
 
+/**
+ * Props for the Checkbox component.
+ */
 type Props = {
+  /** The value associated with the checkbox. */
   value?: string;
+  /** The name of the checkbox, used when submitting an HTML form. */
   name?: string;
+  /** Whether the checkbox is read-only. */
   isReadOnly?: boolean;
+  /** An accessibility label for the checkbox, used when a visible label is not provided. */
   "aria-label"?: string;
+  /**
+   * The controlled checked state of the checkbox.
+   * Can be `true`, `false`, or `"indeterminate"`.
+   */
   checked?: boolean | "indeterminate";
+  /** Whether the checkbox is required. */
   required?: boolean;
+  /** Whether the checkbox is disabled. */
   disabled?: boolean;
+  /** Callback fired when the checked state changes. */
   onChangeChecked?: (isSelected: boolean) => void;
-  label?: string; // ★ ラベル用のpropsを追加
+  /** A visible label for the checkbox. If provided, `aria-label` will be ignored. */
+  label?: string;
 };
 
+/**
+ * A Checkbox component that allows users to select one or more options from a set.
+ * It supports checked, unchecked, and indeterminate states.
+ *
+ * @example
+ * ```tsx
+ * <Checkbox label="Subscribe to newsletter" />
+ *
+ * <Checkbox checked onChangeChecked={(isSelected) => console.log(isSelected)} />
+ *
+ * <Checkbox checked="indeterminate" label="Select all" />
+ *
+ * <Checkbox disabled label="Disabled checkbox" />
+ * ```
+ */
 export const Checkbox = (props: Props) => {
   const {
     checked,
@@ -23,7 +53,7 @@ export const Checkbox = (props: Props) => {
     isReadOnly,
     required,
     "aria-label": ariaLabel,
-    label, // ★ labelをpropsから取得
+    label,
   } = props;
 
   const isSelected = typeof checked === "boolean" ? checked : false;
@@ -41,7 +71,7 @@ export const Checkbox = (props: Props) => {
       name={name}
       isReadOnly={isReadOnly}
       isRequired={required}
-      aria-label={label ? undefined : ariaLabel} // ★ labelがある場合はaria-labelを使わない
+      aria-label={label ? undefined : ariaLabel}
       className={styles.root}
     >
       {(renderProps) => (

@@ -1,5 +1,5 @@
 "use client";
-import { type ReactNode, createContext, useContext } from "react"; // ReactNodeをインポート
+import { type ReactNode, createContext, useContext } from "react";
 import {
   Button,
   Text,
@@ -10,24 +10,39 @@ import {
 } from "react-aria-components";
 import styles from "./index.module.css";
 
-// Define the type for your toast content.
-// Propsを拡張してSnackbarのコンテンツとする
+/**
+ * Defines the content structure for a Snackbar message.
+ */
 export type SnackbarContent = {
+  /** The main text content of the Snackbar. */
   supportingText?: string;
+  /** Optional action button configuration. */
   action?: {
+    /** The label for the action button. */
     label: string;
-    onClick: () => void; // onPress を onClick に変更
+    /** Callback function invoked when the action button is clicked. */
+    onClick: () => void;
   };
-  closeable?: boolean; // デフォルトはtrue
+  /** Whether the Snackbar can be closed by the user. @default true */
+  closeable?: boolean;
 };
 
 const SnackbarContext = createContext<ToastQueue<SnackbarContent> | null>(null);
 
+/**
+ * Props for the SnackbarProvider component.
+ */
 type SnackbarProviderProps = {
+  /** The child elements to be rendered within the provider. */
   children: ReactNode;
+  /** The toast queue instance to manage Snackbar messages. */
   queue: ToastQueue<SnackbarContent>;
 };
 
+/**
+ * SnackbarProvider component sets up the context for displaying Snackbar messages.
+ * It uses `react-aria-components` ToastRegion to manage the queue and rendering of Snackbars.
+ */
 export const SnackbarProvider = ({
   children,
   queue,
@@ -51,7 +66,7 @@ export const SnackbarProvider = ({
               <div className={styles.actions}>
                 {action && (
                   <Button
-                    onClick={action.onClick} // onPress を onClick に変更
+                    onClick={action.onClick}
                     className={styles.actionButton}
                   >
                     {action.label}
@@ -59,7 +74,6 @@ export const SnackbarProvider = ({
                 )}
                 {closeable && (
                   <Button slot="close" className={styles.closeButton}>
-                    {/* アイコンやテキストなど、閉じるボタンの見た目をここに定義 */}
                     ✕
                   </Button>
                 )}
@@ -73,6 +87,29 @@ export const SnackbarProvider = ({
   );
 };
 
+/**
+ * Custom hook to access the Snackbar queue for adding new messages.
+ * This hook must be used within a `SnackbarProvider`.
+ *
+ * @returns An object with an `add` function to display new Snackbar messages.
+ * @throws Error if used outside of a `SnackbarProvider`.
+ *
+ * @example
+ * ```tsx
+ * const MyComponent = () => {
+ *   const { add: addSnackbar } = useSnackbar();
+ *
+ *   const showMessage = () => {
+ *     addSnackbar(
+ *       { supportingText: "This is a snackbar message!" },
+ *       { timeout: 5000 }
+ *     );
+ *   };
+ *
+ *   return <button onClick={showMessage}>Show Snackbar</button>;
+ * };
+ * ```
+ */
 export const useSnackbar = () => {
   const queue = useContext(SnackbarContext);
   if (!queue) {

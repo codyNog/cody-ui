@@ -16,28 +16,49 @@ type BaseProps = Omit<
   "className" | "style" | "children" | "onPress"
 >;
 
+/**
+ * Props for the Button component.
+ */
 type Props = BaseProps & {
   /**
-   * ボタンのスタイル種別
+   * The visual style of the button.
    * @default 'filled'
    */
   variant?: ButtonVariant;
   /**
-   * ボタンの左側に表示するアイコン
+   * An icon to display on the left side of the button.
    */
   icon?: ReactNode;
   /**
-  /**
-   * ボタンのラベルとして表示する内容
+   * The content to display as the button's label.
    */
   children: ReactNode;
   /**
-   * クリック時のコールバック関数
-   * react-aria-components の PressEvent を受け取ります
+   * Callback function for when the button is clicked.
+   * Receives a PressEvent from react-aria-components.
    */
   onClick?: (e: PressEvent) => void;
 };
 
+/**
+ * A button component that allows users to trigger an action.
+ * It supports different visual styles (variants) and can include an icon.
+ *
+ * @example
+ * ```tsx
+ * <Button onClick={() => console.log('Clicked!')}>
+ *   Click Me
+ * </Button>
+ *
+ * <Button variant="outlined" icon={<MyIcon />}>
+ *   Submit
+ * </Button>
+ *
+ * <Button variant="text" isDisabled>
+ *   Disabled
+ * </Button>
+ * ```
+ */
 export const Button = forwardRef<HTMLButtonElement, Props>(
   ({ variant = "filled", icon, children, onClick, ...props }: Props, ref) => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);

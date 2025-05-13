@@ -9,26 +9,27 @@ const meta = {
     variant: {
       control: "select",
       options: ["filled", "outlined", "text", "elevated", "tonal"],
-      description: "ボタンのスタイル種別",
+      description: "The visual style of the button.",
       defaultValue: "filled",
     },
     isDisabled: {
       control: "boolean",
-      description: "非活性状態にするか",
+      description: "Whether the button is disabled.",
       defaultValue: false,
     },
     icon: {
       control: "boolean",
-      description: "左側にアイコンを表示するか (例として boolean)",
+      description:
+        "Whether to display an icon on the left side (example uses boolean for control).",
     },
     children: {
       control: "text",
-      description: "ボタンのラベルテキスト",
+      description: "The label text of the button.",
       defaultValue: "Button",
     },
     onClick: {
       action: "clicked",
-      description: "ボタンがクリックされたときのイベント",
+      description: "Event handler for when the button is clicked.",
     },
   },
   args: { onClick: fn() },

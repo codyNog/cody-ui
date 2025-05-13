@@ -1,58 +1,66 @@
 "use client";
-import { type ReactElement, forwardRef, useRef } from "react"; // useRef をインポート
+import { type ReactElement, forwardRef, useRef } from "react";
 import {
-  type PressEvent, // PressEvent もインポート
+  type PressEvent,
   ToggleButton,
   type ToggleButtonProps,
 } from "react-aria-components";
 import styles from "./index.module.css";
 
+/**
+ * Defines the possible variants for the IconButton.
+ * - `standard`: A standard icon button.
+ * - `filled`: A filled icon button.
+ * - `tonal`: A tonal icon button.
+ * - `outlined`: An outlined icon button.
+ */
 type IconButtonVariant = "standard" | "filled" | "tonal" | "outlined";
 
-// onPress の型を変更: (newSelectedState: boolean, pressEvent: PressEvent) => void
+/**
+ * Props for the IconButton component.
+ */
 type Props = {
+  /** The visual style of the icon button. @default "standard" */
   variant?: IconButtonVariant;
-  // isSelected は ToggleButtonProps に含まれる
-  // onChange も ToggleButtonProps に含まれる (状態管理のために親が必要な場合)
   /**
-   * ボタンが押されたときの処理だよ。
-   * 第1引数にトグル後の選択状態、第2引数にプレスイベントが渡るよ。
+   * Callback fired when the button is clicked.
+   * The first argument is the new selected state of the button.
+   * The second argument is the press event.
    */
-  onClick?: (newSelectedState: boolean, pressEvent: PressEvent) => void; // onPress を onClick に変更
+  onClick?: (newSelectedState: boolean, pressEvent: PressEvent) => void;
+  /** The icon element to display within the button. */
   icon: ReactElement;
-} & Omit<ToggleButtonProps, "children" | "onPress" | "onClick">; // ToggleButtonProps の onPress は使わないので Omit
+} & Omit<ToggleButtonProps, "children" | "onPress" | "onClick">;
 
+/**
+ * IconButton component.
+ * This component is a toggle button that displays an icon.
+ */
 export const IconButton = forwardRef<HTMLButtonElement, Props>(
   (
     {
       icon,
       className,
       variant = "standard",
-      isSelected, // isSelected は Props から受け取る
-      onClick: propsOnClick, // onPress を onClick に、propsOnPress を propsOnClick に変更
-      onChange: propsOnChange, // Props で受け取る onChange (親が状態管理する場合)
-      ...otherProps // isDisabled などが含まれる
+      isSelected,
+      onClick: propsOnClick,
+      onChange: propsOnChange,
+      ...otherProps
     },
     ref,
   ) => {
-    // プレスイベントを一時的に保存するための ref だよ
     const pressEventRef = useRef<PressEvent | null>(null);
 
     const handlePress = (e: PressEvent) => {
-      // 押されたときのイベントを保存しておく
       pressEventRef.current = e;
-      // ここではまだ propsOnClick は呼ばないよ
     };
 
     const handleChange = (newlySelected: boolean) => {
-      // まず、親コンポーネントに状態変更を通知する (もし propsOnChange があれば)
       propsOnChange?.(newlySelected);
 
-      // 次に、保存しておいたプレスイベントと一緒に、新しい選択状態を propsOnClick で通知する
       if (propsOnClick && pressEventRef.current) {
-        propsOnClick(newlySelected, pressEventRef.current); // propsOnPress を propsOnClick に変更
+        propsOnClick(newlySelected, pressEventRef.current);
       }
-      // 使ったらクリアしておく
       pressEventRef.current = null;
     };
 

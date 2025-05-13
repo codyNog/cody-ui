@@ -14,22 +14,61 @@ import { Typography } from "../Typography";
 import { MdArrowDropDown, MdArrowDropUp } from "../Icons";
 import styles from "./index.module.css";
 
+/**
+ * Defines the basic structure for an accordion item.
+ */
 type Item = {
+  /**
+   * A unique identifier for the item.
+   */
   id: string;
+  /**
+   * The title of the item, displayed in the trigger.
+   */
   title: string;
+  /**
+   * The content of the item, displayed when the item is expanded.
+   */
   content: ReactNode;
 };
 
+/**
+ * Props for an individual accordion item.
+ * Extends {@link Item}.
+ */
 type DisclosureItemProps = Item & {
+  /**
+   * Whether the item is disabled.
+   * @default false
+   */
   isDisabled?: boolean;
+  /**
+   * Whether the item is expanded.
+   * This is controlled by `expandedKeys` or `defaultExpandedKeys` in the `Accordion` component.
+   */
   isExpanded?: boolean;
+  /**
+   * Callback fired when the item's expanded state changes.
+   */
   onExpandedChange?: (isExpanded: boolean) => void;
 };
 
+/**
+ * @internal
+ * Context for managing the state of a group of disclosures (accordion items).
+ */
 const DisclosureGroupStateContext = createContext<ReturnType<
   typeof useDisclosureGroupState
 > | null>(null);
 
+/**
+ * Represents an individual item within an Accordion.
+ *
+ * @example
+ * ```tsx
+ * <AccordionItem id="item1" title="Item 1" content="Content for item 1" />
+ * ```
+ */
 const AccordionItem = forwardRef<HTMLDivElement, DisclosureItemProps>(
   (props, ref) => {
     const defaultId = useId();
@@ -67,7 +106,7 @@ const AccordionItem = forwardRef<HTMLDivElement, DisclosureItemProps>(
     const { isFocusVisible, focusProps } = useFocusRing();
 
     return (
-      <div className={styles.disclosure} ref={ref}>
+      <div ref={ref}>
         <button
           className={`${styles.trigger} ${styles.triggerHeading}`}
           ref={triggerRef}
@@ -97,36 +136,111 @@ const AccordionItem = forwardRef<HTMLDivElement, DisclosureItemProps>(
 );
 AccordionItem.displayName = "AccordionItem";
 
+/**
+ * Base props for the Accordion component.
+ */
 type BaseAccordionProps = {
+  /**
+   * Whether all accordion items are disabled.
+   * @default false
+   */
   isDisabled?: boolean;
+  /**
+   * An array of items to render in the accordion.
+   * See {@link Item}.
+   */
   items: Item[];
+  /**
+   * The currently expanded keys in the accordion (controlled).
+   */
   expandedKeys?: Iterable<Key>;
+  /**
+   * Callback fired when the expanded keys change.
+   */
   onExpandedChange?: (keys: Set<Key>) => void;
 };
 
+/**
+ * Props for Accordion when using `defaultExpandedKeys`.
+ * Allows multiple items to be expanded by default.
+ */
 type AccordionWithDefaultKeys = BaseAccordionProps & {
+  /**
+   * The keys of the items that are expanded by default (uncontrolled).
+   */
   defaultExpandedKeys: Iterable<Key>;
+  /**
+   * @deprecated Use `defaultExpandedKeys` with all item keys instead.
+   */
   defaultExpandedAll?: never;
+  /**
+   * Whether multiple accordion items can be expanded simultaneously.
+   * Implicitly true when `defaultExpandedKeys` is provided.
+   * @default false (or true if defaultExpandedKeys is set)
+   */
   allowsMultipleExpanded?: true;
 };
 
+/**
+ * Props for Accordion when using `defaultExpandedAll`.
+ * All items are expanded by default, and multiple expansions are allowed.
+ */
 type AccordionWithDefaultAll = BaseAccordionProps & {
   defaultExpandedKeys?: never;
+  /**
+   * Whether all accordion items are expanded by default (uncontrolled).
+   * If true, `allowsMultipleExpanded` is also implicitly true.
+   */
   defaultExpandedAll: boolean;
+  /**
+   * Whether multiple accordion items can be expanded simultaneously.
+   * Implicitly true when `defaultExpandedAll` is true.
+   * @default true (if defaultExpandedAll is true)
+   */
   allowsMultipleExpanded?: true;
 };
 
+/**
+ * Props for Accordion with default behavior (no specific default expansion, single or multiple allowed based on `allowsMultipleExpanded`).
+ */
 type AccordionDefaultBehavior = BaseAccordionProps & {
   defaultExpandedKeys?: never;
   defaultExpandedAll?: never;
+  /**
+   * Whether multiple accordion items can be expanded simultaneously.
+   * @default false
+   */
   allowsMultipleExpanded?: boolean;
 };
 
+/**
+ * Props for the Accordion component.
+ * This is a union of different ways to control the default expanded state.
+ */
 type Props =
   | AccordionWithDefaultKeys
   | AccordionWithDefaultAll
   | AccordionDefaultBehavior;
 
+/**
+ * A vertically stacked set of interactive headings that each reveal a section of content.
+ *
+ * @example
+ * ```tsx
+ * const items = [
+ *   { id: '1', title: 'Section 1', content: 'Content for section 1' },
+ *   { id: '2', title: 'Section 2', content: 'Content for section 2' },
+ * ];
+ *
+ * <Accordion items={items} />
+ *
+ * <Accordion items={items} defaultExpandedKeys={['1']} />
+ *
+ * <Accordion items={items} defaultExpandedAll />
+ *
+ * <Accordion items={items} allowsMultipleExpanded />
+ * ```
+ */
 export const Accordion = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { items, ...rest } = props;
   let resolvedDefaultExpandedKeys = props.defaultExpandedKeys;

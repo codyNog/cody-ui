@@ -1,55 +1,75 @@
 "use client";
 import {
   type ComponentProps,
-  type ElementType, // ElementType をインポート
+  type ElementType,
   type ReactNode,
   forwardRef,
   useCallback,
-  // useState, // useState を削除 (activeId state を削除したため)
 } from "react";
 import { useFocusRing } from "react-aria";
-import { Link } from "react-aria-components"; // Button のインポートを削除
-import { Badge } from "../Badge"; // Badgeコンポーネントをインポート (パス修正)
+import { Link } from "react-aria-components";
+import { Badge } from "../Badge";
 import styles from "./index.module.css";
 
+/**
+ * Represents a single item in the NavigationRail.
+ */
 export type NavigationItem = {
-  // export を追加
+  /** Unique identifier for the item. */
   id: string;
+  /** The label text for the item. */
   label: string;
+  /** The icon element to display. */
   icon: ReactNode;
+  /** Optional badge to display on the item. Can be a number, "large", or "small". */
   badge?: number | "large" | "small";
+  /** Whether the item is disabled. */
   disabled?: boolean;
+  /** Optional click handler for the item. */
   onClick?: () => void;
+  /** Optional URL to navigate to when the item is clicked. */
   href?: string;
-  isActive?: boolean; // isActive プロパティを追加
+  /** Whether the item is currently active. */
+  isActive?: boolean;
 };
 
+/**
+ * Props for the NavigationRail component.
+ */
 type Props = {
+  /** An array of NavigationItem objects to display in the rail. */
   items: NavigationItem[];
+  /** Optional Floating Action Button (FAB) to display at the top of the rail. */
   fab?: ReactNode;
-  // defaultSelectedId?: string; // defaultSelectedId を削除
+  /** Callback function invoked when the selected item changes. */
   onSelectionChange?: (id: string) => void;
+  /** Optional custom component to be used for rendering links. Defaults to a standard `<a>` tag or `react-aria-components/Link`. */
   linkComponent?: ElementType;
-  onHoverChange?: (key: string | undefined) => void; // key を string | undefined に変更
+  /** Callback function invoked when the hover state of an item changes. */
+  onHoverChange?: (key: string | undefined) => void;
 } & Omit<ComponentProps<"div">, "children">;
 
+/**
+ * Props for the internal NavigationRailItem component.
+ */
 type NavigationRailItemProps = {
-  item: NavigationItem; // item が isActive を持つようになる
-  // isActive: boolean; // item.isActive を使うため削除
+  /** The navigation item data. */
+  item: NavigationItem;
+  /** Callback function invoked when the item is pressed. */
   onPress: () => void;
+  /** Optional custom component for rendering links. */
   linkComponent?: ElementType;
-  onHoverChange?: (key: string | undefined) => void; // key を string | undefined に変更
+  /** Callback for hover state changes. */
+  onHoverChange?: (key: string | undefined) => void;
 };
 
-// eslint-disable-next-line react/display-name
 const NavigationRailItem = ({
   item,
-  // isActive, // item.isActive を使うため削除
   onPress,
   linkComponent: LinkComponentProp,
   onHoverChange,
 }: NavigationRailItemProps) => {
-  const { isFocused, focusProps } = item.href // useFocusRing を再度使う
+  const { isFocused, focusProps } = item.href
     ? { isFocused: false, focusProps: {} }
     : useFocusRing();
 
@@ -57,17 +77,12 @@ const NavigationRailItem = ({
     <>
       <div className={styles.iconContainer}>
         <span className={styles.icon}>{item.icon}</span>
-        {/* 新しいBadgeコンポーネントを使用 */}
         {item.badge !== undefined && (
           <div className={styles.badgeContainer}>
-            {" "}
-            {/* Badgeの位置調整用コンテナ */}
             {typeof item.badge === "number" && (
               <Badge variant="large" count={item.badge} />
             )}
             {item.badge === "small" && <Badge variant="small" />}
-            {/* item.badge === "large" の場合、M3のlargeはcountが必須なため、smallで代用 */}
-            {/* もしテキスト等を表示したい場合はBadgeコンポーネントの改修かNavigationItemの型変更が必要 */}
             {item.badge === "large" && <Badge variant="small" />}
           </div>
         )}
@@ -77,22 +92,19 @@ const NavigationRailItem = ({
   );
 
   const itemClassName = `${styles.item} ${
-    item.isActive ? styles.active : "" // item.isActive を使用
+    item.isActive ? styles.active : ""
   } ${item.disabled ? styles.disabled : ""} ${
     isFocused && !item.href ? styles.focused : ""
   }`;
 
   if (item.href) {
-    // linkComponent が指定されていればそれを使う、なければデフォルトの Link を使う
     const LinkComponent = LinkComponentProp || Link;
     const commonLinkProps = {
       className: itemClassName,
       children: itemContent,
-      // Link とカスタムコンポーネントで共通して渡せるプロパティ
     };
 
     if (LinkComponent === Link) {
-      // デフォルトの react-aria-components の Link を使う場合
       return (
         <Link
           {...commonLinkProps}
@@ -108,22 +120,17 @@ const NavigationRailItem = ({
               onHoverChange?.(item.id);
             }
           }}
-          // tabIndex は Link が管理
         />
       );
     }
-    // カスタムの linkComponent を使う場合
-    // 注意: カスタムコンポーネントは LinkProps と互換性のある props を受け取る想定
-    // 必要に応じて onClick や aria-disabled のハンドリングが必要
     return (
       <LinkComponent
         {...commonLinkProps}
         href={item.href}
-        aria-disabled={item.disabled} // aria-disabled を渡す
+        aria-disabled={item.disabled}
         onClick={() => {
-          // href がある場合は、onPress (onSelectionChange) と item.onClick の両方を考慮
           if (!item.disabled) {
-            onPress(); // onSelectionChange をトリガー
+            onPress();
             item.onClick?.();
           }
         }}
@@ -149,7 +156,7 @@ const NavigationRailItem = ({
       onMouseEnter={() => onHoverChange?.(item.id)}
       role="button"
       tabIndex={item.disabled ? -1 : 0}
-      aria-pressed={item.isActive && !item.disabled} // item.isActive を使用
+      aria-pressed={item.isActive && !item.disabled}
       aria-disabled={item.disabled}
       aria-label={item.label}
     >
@@ -158,12 +165,17 @@ const NavigationRailItem = ({
   );
 };
 
+NavigationRailItem.displayName = "NavigationRailItem";
+
+/**
+ * NavigationRail component provides a persistent vertical navigation bar.
+ * It typically displays icons and labels for top-level navigation destinations.
+ */
 export const NavigationRail = forwardRef<HTMLDivElement, Props>(
   (
     {
       items,
       fab,
-      // defaultSelectedId, // 削除
       onSelectionChange,
       linkComponent,
       className,
@@ -172,21 +184,15 @@ export const NavigationRail = forwardRef<HTMLDivElement, Props>(
     },
     ref,
   ) => {
-    // const [activeId, setActiveId] = useState<string | undefined>(
-    //   defaultSelectedId,
-    // ); // activeId state を削除
-
     const handlePress = useCallback(
       (pressedItem: NavigationItem) => {
-        // item を pressedItem に変更
         if (pressedItem.disabled) {
           return;
         }
-        // setActiveId(pressedItem.id); // activeId の更新を削除
         pressedItem.onClick?.();
-        onSelectionChange?.(pressedItem.id); // 選択されたアイテムのIDを通知
+        onSelectionChange?.(pressedItem.id);
       },
-      [onSelectionChange], // 依存配列から activeId を削除
+      [onSelectionChange],
     );
 
     return (
@@ -200,8 +206,7 @@ export const NavigationRail = forwardRef<HTMLDivElement, Props>(
         {items.map((item) => (
           <NavigationRailItem
             key={item.id}
-            item={item} // item をそのまま渡す (isActive を含む)
-            // isActive={activeId === item.id} // item.isActive を使うため削除
+            item={item}
             onPress={() => handlePress(item)}
             linkComponent={linkComponent}
             onHoverChange={onHoverChange}

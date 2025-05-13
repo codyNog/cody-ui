@@ -4,64 +4,82 @@ import { ProgressBar } from "react-aria-components";
 import styles from "./index.module.css";
 
 /**
- * プログレスインジケーターの基本的な Props です。
+ * Base props for the ProgressIndicator component.
  */
 type ProgressIndicatorBaseProps = {
   /**
-   * プログレスインジケーターのサイズを指定します。
-   * 省略した場合、デフォルトのサイズが適用されます。
+   * Specifies the size of the progress indicator.
+   * If omitted, the default size will be applied.
    */
   size?: "small" | "medium" | "large";
   /**
-   * スクリーンリーダーが読み上げるためのアクセシビリティラベルです。
+   * Accessibility label for screen readers.
    */
   ariaLabel?: string;
 };
 
 /**
- * 確定的な線形プログレスインジケーターの Props です。
+ * Props for a determinate linear progress indicator.
  */
 type DeterminateLinearProgressIndicatorProps = ProgressIndicatorBaseProps & {
+  /** The visual style of the progress indicator. */
   variant: "linear";
+  /** Whether the progress is indeterminate. */
   indeterminate?: false;
+  /** The current value of the progress (0-100). */
   value: number;
+  /** Textual representation of the current value for accessibility. */
   ariaValueText?: string;
 };
 
 /**
- * 不確定な線形プログレスインジケーターの Props です。
+ * Props for an indeterminate linear progress indicator.
  */
 type IndeterminateLinearProgressIndicatorProps = ProgressIndicatorBaseProps & {
+  /** The visual style of the progress indicator. */
   variant: "linear";
+  /** Whether the progress is indeterminate. */
   indeterminate: true;
+  /** The current value (not applicable for indeterminate). */
   value?: never;
+  /** Textual representation of the current value (not applicable for indeterminate). */
   ariaValueText?: never;
 };
 
 /**
- * 確定的な円形プログレスインジケーターの Props です。
+ * Props for a determinate circular progress indicator.
  */
 type DeterminateCircularProgressIndicatorProps = ProgressIndicatorBaseProps & {
+  /** The visual style of the progress indicator. */
   variant: "circular";
+  /** Whether the progress is indeterminate. */
   indeterminate?: false;
+  /** The current value of the progress (0-100). */
   value: number;
+  /** Textual representation of the current value for accessibility. */
   ariaValueText?: string;
 };
 
 /**
- * 不確定な円形プログレスインジケーターの Props です。
+ * Props for an indeterminate circular progress indicator.
  */
 type IndeterminateCircularProgressIndicatorProps =
   ProgressIndicatorBaseProps & {
+    /** The visual style of the progress indicator. */
     variant: "circular";
+    /** Whether the progress is indeterminate. */
     indeterminate: true;
+    /** The current value (not applicable for indeterminate). */
     value?: never;
+    /** Textual representation of the current value (not applicable for indeterminate). */
     ariaValueText?: never;
+    /** Whether to use four colors for the indeterminate circular indicator. */
     fourColor?: boolean;
   };
 
 /**
- * プログレスインジケーターコンポーネントの Props です。
+ * Props for the ProgressIndicator component.
+ * This is a union of different progress indicator types.
  */
 type ProgressIndicatorProps =
   | DeterminateLinearProgressIndicatorProps
@@ -70,8 +88,26 @@ type ProgressIndicatorProps =
   | IndeterminateCircularProgressIndicatorProps;
 
 /**
- * ProgressIndicator コンポーネントは、タスクの進捗状況を視覚的に示します。
- * 線形または円形のスタイル、確定的または不確定的な状態をサポートします。
+ * The ProgressIndicator component visually displays the progress of a task.
+ * It supports linear or circular styles, and determinate or indeterminate states.
+ *
+ * @example
+ * ```tsx
+ * // Determinate Linear
+ * <ProgressIndicator variant="linear" value={50} ariaLabel="Loading data" />
+ *
+ * // Indeterminate Linear
+ * <ProgressIndicator variant="linear" indeterminate ariaLabel="Processing" />
+ *
+ * // Determinate Circular
+ * <ProgressIndicator variant="circular" value={75} ariaLabel="Uploading file" />
+ *
+ * // Indeterminate Circular
+ * <ProgressIndicator variant="circular" indeterminate ariaLabel="Please wait" />
+ *
+ * // Indeterminate Circular with four colors
+ * <ProgressIndicator variant="circular" indeterminate fourColor ariaLabel="Loading..." />
+ * ```
  */
 export const ProgressIndicator = forwardRef(
   (props: ProgressIndicatorProps, ref: ForwardedRef<HTMLDivElement>) => {

@@ -5,37 +5,49 @@ import {
   forwardRef,
   useEffect,
   useState,
-} from "react"; // ElementType をインポート
+} from "react";
 import { Drawer } from "vaul";
 import { Divider } from "../Divider";
-import { MdArrowDropDown, MdArrowDropUp } from "../Icons"; // アイコンをインポート
-import { Typography } from "../Typography"; // Typography をインポート
+import { MdArrowDropDown, MdArrowDropUp } from "../Icons";
+import { Typography } from "../Typography";
 import styles from "./index.module.css";
 
-// ItemType を定義
+/**
+ * Defines the possible types for a navigation drawer item.
+ */
 type NavigationDrawerItemType = "link" | "header" | "divider" | "group";
 
-// ベースとなる Item の型定義
-// id は React の key や選択状態の管理に使うため必須とする
+/**
+ * Base type for all navigation drawer items.
+ * @template T - The specific type of the navigation drawer item.
+ */
 type BaseNavigationDrawerItem<T extends NavigationDrawerItemType> = {
+  /** Unique identifier for the item. Required for React keys and selection management. */
   id: string;
+  /** The type of the navigation item. */
   type: T;
-  // divider には label は不要
+  /** The display label for the item. Not applicable to 'divider' type. */
   label?: T extends "divider" ? never : string;
-  // link と group のみが icon を持てる想定 (M3 の Standard drawer の Section header には icon がないため)
+  /** An optional icon for the item. Not applicable to 'divider' or 'header' types. */
   icon?: T extends "divider" | "header" ? never : ReactNode;
-  level?: number; // ネストレベル
+  /** The nesting level of the item, used for indentation. */
+  level?: number;
 };
 
-// Conditional Types を使って Item 型を定義
+/**
+ * Represents the data structure for a navigation drawer item.
+ * This type uses conditional types to define specific properties based on the `type` field.
+ * @template T - The specific type of the navigation drawer item.
+ */
 type NavigationDrawerItemData<
-  // 型名を変更して Data サフィックスを追加
   T extends NavigationDrawerItemType = NavigationDrawerItemType,
 > = T extends "link"
   ? BaseNavigationDrawerItem<"link"> & {
+      /** The URL the link points to. */
       href: string;
+      /** An optional badge to display next to the link. */
       badge?: string | number;
-      // active 状態を示すプロパティ（例: 現在のパスと href が一致する場合など）
+      /** Indicates if the link is currently active (e.g., matches the current URL path). */
       isActive?: boolean;
     }
   : T extends "header"
@@ -44,14 +56,18 @@ type NavigationDrawerItemData<
       ? BaseNavigationDrawerItem<"divider">
       : T extends "group"
         ? BaseNavigationDrawerItem<"group"> & {
-            // group の items は一旦 link と divider のみとする (M3 の例参考)
-            // ネストした group が必要な場合は Item[] に変更する
-            items: Array<NavigationDrawerItemData<"link" | "divider">>; // ここも変更
-            isInitiallyExpanded?: boolean; // 初期状態で展開しておくか
+            /** An array of items within the group. Currently supports 'link' and 'divider' types. */
+            items: Array<NavigationDrawerItemData<"link" | "divider">>;
+            /** Whether the group should be expanded by default. */
+            isInitiallyExpanded?: boolean;
           }
         : never;
 
-// --- Item Components ---
+// Item Components
+
+/**
+ * Props for the LinkItemComponent.
+ */
 type LinkItemProps = {
   /** The link item data. */
   item: NavigationDrawerItemData<"link">;
@@ -60,7 +76,7 @@ type LinkItemProps = {
   /** Callback function when the item is clicked. */
   onClick?: (item: NavigationDrawerItemData<"link">) => void;
   /** Custom component to render the link. Defaults to 'a'. */
-  linkComponent?: ElementType; // React. を削除
+  linkComponent?: ElementType;
   /** The nesting level of the item. */
   level?: number;
 };
@@ -71,7 +87,7 @@ const LinkItemComponent = ({
   linkComponent: LinkComponent = "a",
   level = 0,
 }: LinkItemProps) => {
-  const paddingLeft = 12 + level * 24; // ベース12px + levelごとに24pxインデント
+  const paddingLeft = 12 + level * 24;
 
   return (
     <LinkComponent
@@ -107,7 +123,11 @@ const LinkItemComponent = ({
   );
 };
 
+/**
+ * Props for the HeaderItemComponent.
+ */
 type HeaderItemProps = {
+  /** The header item data. */
   item: NavigationDrawerItemData<"header">;
 };
 const HeaderItemComponent = ({ item }: HeaderItemProps) => (
@@ -118,17 +138,27 @@ const HeaderItemComponent = ({ item }: HeaderItemProps) => (
   </div>
 );
 
+/**
+ * Props for the GroupItemComponent.
+ */
 type GroupItemProps = {
+  /** The group item data. */
   item: NavigationDrawerItemData<"group">;
+  /** Whether the group is currently expanded. */
   isExpanded: boolean;
+  /** Callback function to toggle the expanded state of the group. */
   onToggleGroup: (groupId: string) => void;
+  /** Function to render the sub-items of the group. */
   renderSubItems: (
     itemsToRender: Array<NavigationDrawerItemData>,
     currentLevel: number,
-  ) => ReactNode; // 型変更 + currentLevel
-  selectedItemId?: string; // selectedItemId を GroupItem にも渡す
-  onItemClick?: (item: NavigationDrawerItemData<"link">) => void; // onItemClick を GroupItem にも渡す
-  level?: number; // ネストレベル
+  ) => ReactNode;
+  /** The ID of the currently selected item. */
+  selectedItemId?: string;
+  /** Callback function when a link item within the group is clicked. */
+  onItemClick?: (item: NavigationDrawerItemData<"link">) => void;
+  /** The nesting level of the group item. */
+  level?: number;
 };
 const GroupItemComponent = ({
   item,
@@ -137,7 +167,7 @@ const GroupItemComponent = ({
   renderSubItems,
   level = 0,
 }: GroupItemProps) => {
-  const paddingLeft = 12 + level * 24; // ベース12px + levelごとに24pxインデント
+  const paddingLeft = 12 + level * 24;
   return (
     <div key={item.id} className={styles.groupItem}>
       <div
@@ -172,31 +202,33 @@ const GroupItemComponent = ({
     </div>
   );
 };
-// --- End Item Components ---
 
+/**
+ * Internal recursive component to render navigation items.
+ */
 const Component = ({
   items,
   selectedItemId,
   onItemClick,
   expandedGroups,
   toggleGroup,
-  linkComponent, // Pass linkComponent down
-  currentLevel = 0, // Add currentLevel with a default value
+  linkComponent,
+  currentLevel = 0,
 }: {
   items: Array<NavigationDrawerItemData>;
   selectedItemId?: string;
   onItemClick?: (item: NavigationDrawerItemData<"link">) => void;
   expandedGroups: Record<string, boolean>;
   toggleGroup: (groupId: string) => void;
-  linkComponent?: ElementType; // React. を削除
-  currentLevel?: number; // Add currentLevel to props type
+  linkComponent?: ElementType;
+  currentLevel?: number;
 }) => {
   return (
     <>
       {items.map((item) => {
         const isActive =
           item.id === selectedItemId || (item.type === "link" && item.isActive);
-        const itemLevel = item.level ?? currentLevel; // Use item.level if defined, otherwise currentLevel
+        const itemLevel = item.level ?? currentLevel;
 
         switch (item.type) {
           case "link":
@@ -206,15 +238,13 @@ const Component = ({
                 item={item}
                 isActive={!!isActive}
                 onClick={onItemClick}
-                linkComponent={linkComponent} // Pass linkComponent to LinkItemComponent
-                level={itemLevel} // Pass level to LinkItemComponent
+                linkComponent={linkComponent}
+                level={itemLevel}
               />
             );
           case "header":
-            // HeaderItemComponent にも level を渡す場合は、props とスタイル調整が必要
             return <HeaderItemComponent key={item.id} item={item} />;
           case "divider":
-            // Divider にも level に応じた margin/padding が必要な場合は調整
             return <Divider />;
           case "group": {
             return (
@@ -223,23 +253,20 @@ const Component = ({
                 item={item}
                 isExpanded={!!expandedGroups[item.id]}
                 onToggleGroup={toggleGroup}
-                renderSubItems={(
-                  subItems,
-                  nextLevel, // renderSubItems に nextLevel を追加
-                ) => (
+                renderSubItems={(subItems, nextLevel) => (
                   <Component
                     items={subItems}
                     selectedItemId={selectedItemId}
                     onItemClick={onItemClick}
                     expandedGroups={expandedGroups}
                     toggleGroup={toggleGroup}
-                    linkComponent={linkComponent} // Pass linkComponent recursively
-                    currentLevel={nextLevel} // Pass nextLevel as currentLevel for recursion
+                    linkComponent={linkComponent}
+                    currentLevel={nextLevel}
                   />
                 )}
-                selectedItemId={selectedItemId} // selectedItemId を渡す
-                onItemClick={onItemClick} // onItemClick を渡す
-                level={itemLevel} // Pass level to GroupItemComponent
+                selectedItemId={selectedItemId}
+                onItemClick={onItemClick}
+                level={itemLevel}
               />
             );
           }
@@ -251,7 +278,9 @@ const Component = ({
   );
 };
 
-// セクションごとのデータを定義する型
+/**
+ * Defines the structure for a section within the NavigationDrawer.
+ */
 export type NavigationDrawerSection = {
   /** Unique identifier for the section (for React key). */
   id: string;
@@ -261,36 +290,40 @@ export type NavigationDrawerSection = {
   items: Array<NavigationDrawerItemData>;
 };
 
+/**
+ * Props for the NavigationDrawer component.
+ */
 type Props = {
-  /** The variant of the navigation drawer. */
+  /** The variant of the navigation drawer. @default "standard" */
   variant?: "standard" | "modal";
   /** The list of sections to display in the drawer. */
-  sections: Array<NavigationDrawerSection>; // items を sections に変更
-  // headline?: string; // トップレベルの headline は削除
+  sections: Array<NavigationDrawerSection>;
   /** Controls the open state for the modal variant. */
   open?: boolean;
   /** Callback function when the modal drawer is closed. */
   onClose?: () => void;
   /** Callback function when a link item is clicked. */
-  onItemClick?: (item: NavigationDrawerItemData<"link">) => void; // 型変更
+  onItemClick?: (item: NavigationDrawerItemData<"link">) => void;
   /** The ID of the currently selected item. */
   selectedItemId?: string;
   /** Custom component to render links. Defaults to 'a'. */
-  linkComponent?: ElementType; // React. を削除
+  linkComponent?: ElementType;
 };
 
+/**
+ * NavigationDrawer component provides a slide-out panel for navigation.
+ * It supports standard and modal variants, sections, and nested groups.
+ */
 export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
   (
     {
       variant = "standard",
-      // items, // items を削除
-      // headline, // headline を削除
-      sections, // sections を追加
+      sections,
       open,
       onClose,
       onItemClick,
       selectedItemId,
-      linkComponent, // Destructure linkComponent
+      linkComponent,
     },
     ref,
   ) => {
@@ -304,18 +337,15 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
 
     useEffect(() => {
       const initialExpansionState: Record<string, boolean> = {};
-      // sections を走査するように変更
       for (const section of sections) {
         for (const item of section.items) {
           if (item.type === "group" && item.isInitiallyExpanded) {
             initialExpansionState[item.id] = true;
-            // Note: If groups can be nested, this needs to be recursive
-            // if (item.items) setupInitialExpansion(item.items); // Group 内の Group は現状未対応
           }
         }
       }
       setExpandedGroups(initialExpansionState);
-    }, [sections]); // items を sections に変更
+    }, [sections]);
 
     if (variant === "modal") {
       return (
@@ -323,9 +353,7 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
           <Drawer.Portal>
             <Drawer.Overlay className={styles.modalOverlay} />
             <Drawer.Content ref={ref} className={styles.modalContent}>
-              {/* headline は削除 */}
               <ul className={styles.list}>
-                {/* sections をループして表示 */}
                 {sections.map((section) => (
                   <li key={section.id} className={styles.section}>
                     {section.headline && (
@@ -339,12 +367,12 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
                       </div>
                     )}
                     <Component
-                      items={section.items} // section.items を渡す
+                      items={section.items}
                       selectedItemId={selectedItemId}
                       onItemClick={onItemClick}
                       expandedGroups={expandedGroups}
                       toggleGroup={toggleGroup}
-                      linkComponent={linkComponent} // Pass linkComponent to Component
+                      linkComponent={linkComponent}
                     />
                   </li>
                 ))}
@@ -355,11 +383,8 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
       );
     }
 
-    // Standard Navigation Drawer
-    // Add standardVisible class when open is true for animation
     const standardClassName = `${styles.root} ${styles.standard} ${open ? styles.standardVisible : ""}`;
 
-    // Standard Navigation Drawer
     return (
       <div ref={ref} className={standardClassName}>
         <ul className={styles.list}>
@@ -373,12 +398,12 @@ export const NavigationDrawer = forwardRef<HTMLDivElement, Props>(
                 </div>
               )}
               <Component
-                items={section.items} // section.items を渡す
+                items={section.items}
                 selectedItemId={selectedItemId}
                 onItemClick={onItemClick}
                 expandedGroups={expandedGroups}
                 toggleGroup={toggleGroup}
-                linkComponent={linkComponent} // Pass linkComponent to Component
+                linkComponent={linkComponent}
               />
             </li>
           ))}

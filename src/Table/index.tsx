@@ -1,14 +1,21 @@
 import { flexRender } from "@tanstack/react-table";
-import { Button } from "../Button"; // Button をインポート
+import { Button } from "../Button";
 import { Chip } from "../Chip";
 import { DraggableHeader } from "./DraggableHeader";
 import { DraggableRow } from "./DraggableRow";
 import { Pagination } from "./Pagination";
-import { useTable } from "./hooks"; // useTable をインポート
+import { useTable } from "./hooks";
 import styles from "./index.module.css";
 import type { DataWithId, TableProps } from "./types";
-// 不要になったインポートを削除: unparse, format, useCallback
 
+/**
+ * Table component that displays data in a tabular format.
+ * It supports features like sorting, pagination, row/column reordering, and CSV download.
+ * Built using `@tanstack/react-table` for core table logic and `@dnd-kit` for drag-and-drop functionality.
+ *
+ * @template TData - The type of the data for each row, which must extend `DataWithId`.
+ * @param props - The properties for the Table component.
+ */
 export const Table = <TData extends DataWithId>(props: TableProps<TData>) => {
   const {
     table,
@@ -22,35 +29,30 @@ export const Table = <TData extends DataWithId>(props: TableProps<TData>) => {
     CSS,
     DndContext,
     closestCenter,
-    isDownloadingCsv, // フックから取得
-    handleCsvDownload, // フックから取得
-  } = useTable(props); // useTable フックを使用
+    isDownloadingCsv,
+    handleCsvDownload,
+  } = useTable(props);
 
-  // props から必要な値を取得
   const {
     className,
     caption,
-    isLoading, // テーブル自体のローディング状態
+    isLoading,
     isError,
     noDataMessage = "データがありません",
     onRowOrderChange,
     onColumnOrderChange,
     onPaginationChange,
-    onCsvDownloadRequest, // ボタン表示の判定に使用
+    onCsvDownloadRequest,
     filter,
   } = props;
 
-  // ページネーションが必要かどうかを判断
   const showPagination =
     onPaginationChange &&
     table.options.pageCount !== undefined &&
     table.options.pageCount > 0;
 
-  // カラム数を計算
   const colSpan = table.getAllColumns().length + (onRowOrderChange ? 1 : 0);
   const rows = table.getRowModel().rows;
-
-  // 不要になった downloadCsv 関数を削除
 
   return (
     <DndContext
@@ -109,13 +111,11 @@ export const Table = <TData extends DataWithId>(props: TableProps<TData>) => {
             ))}
           </thead>
           <tbody>
-            {/* テーブル自体のローディング表示 */}
-            {isLoading &&
-              !isDownloadingCsv && ( // CSVダウンロード中は何もしない
-                <tr>
-                  <td colSpan={colSpan}>ローディング中...</td>
-                </tr>
-              )}
+            {isLoading && !isDownloadingCsv && (
+              <tr>
+                <td colSpan={colSpan}>ローディング中...</td>
+              </tr>
+            )}
             {isError && (
               <tr>
                 <td colSpan={colSpan}>エラーが発生しました。</td>
@@ -162,19 +162,16 @@ export const Table = <TData extends DataWithId>(props: TableProps<TData>) => {
             </SortableContext>
           </tbody>
         </table>
-        {/* フッター: CSVダウンロードボタンとページネーション */}
-        {(onCsvDownloadRequest || showPagination) && ( // どちらかがあればフッター表示
+        {(onCsvDownloadRequest || showPagination) && (
           <div>
-            {/* CSVダウンロードボタン */}
             {onCsvDownloadRequest && (
               <Button
                 onClick={handleCsvDownload}
-                isDisabled={isDownloadingCsv || isLoading} // CSVダウンロード中かテーブル読み込み中は無効
+                isDisabled={isDownloadingCsv || isLoading}
               >
                 {isDownloadingCsv ? "ダウンロード中..." : "CSVダウンロード"}
               </Button>
             )}
-            {/* ページネーション */}
             {showPagination && <Pagination table={table} />}
           </div>
         )}
