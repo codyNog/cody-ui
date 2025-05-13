@@ -4,6 +4,7 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--space-2); /* モバイル用の小さいgap */
   width: 100%;
+  padding-inline: var(--space-4); /* Compact: 16px */
 }
 
 /* BentoGrid特有のスタイル */
@@ -131,6 +132,23 @@
 @media (min-width: 1024px) {
   .grid:not(.bentoGrid) {
     gap: var(--space-4); /* デスクトップ用の大きいgap */
+  }
+}
+
+/* M3 Window Size Classesに基づくpadding調整 */
+@media (min-width: var(--media-compact)) {
+  /* 600px以上 */
+  .grid {
+    padding-inline: var(--space-6); /* Medium & Expanded: 24px */
+  }
+}
+
+/* M3 Canonical Layoutに基づくmax-width設定 */
+@media (min-width: var(--media-expanded)) {
+  /* 1200px以上 */
+  .grid {
+    max-width: 1040px; /* Expanded/Large/Extra-large Body max-width */
+    margin-inline: auto; /* 中央揃え */
   }
 }
 

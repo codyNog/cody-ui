@@ -11,23 +11,23 @@
 }
 
 .standard {
-  width: 360px;
+  width: 0; /* Initially hidden, so width is 0 */
   /* background-color: var(--md-sys-color-surface, #fafdfd); */ /* .root で指定するため削除 */
   /* border-right: 1px solid var(--md-sys-color-outline-variant, #cac4d0); */ /* 角丸にするため削除 */
   height: 100%; /* Ensure it takes full viewport height */
   /* Animation */
-  transform: translateX(-100%); /* Initially hidden */
   opacity: 0;
-  transition: transform 300ms ease-out, opacity 300ms ease-out; /* Smooth transition */
+  transition: width 300ms ease-out, opacity 300ms ease-out; /* Smooth transition for width and opacity */
   border-top-right-radius: 16px; /* ユーザーの意図通り再度追加 */
   border-bottom-right-radius: 16px; /* ユーザーの意図通り再度追加 */
   /* 角丸を適用する場合、内容がはみ出ないように overflow: hidden が必要な場合がある */
   /* ただし、.root に overflow-y: auto があるため、競合や意図しない動作に注意 */
   /* 必要であれば .root の overflow 設定も見直す */
+  overflow: hidden; /* Prevent content from overflowing when width is 0 */
 }
 
 .standardVisible {
-  transform: translateX(0); /* Visible state */
+  width: 360px; /* Visible state width */
   opacity: 1;
 }
 
@@ -311,8 +311,23 @@
   /* セクションの見出し (Typography をラップする div) */
   /* .sectionHeader と同様のスタイルを適用 */
   height: 48px; /* M3 Section Header height */
-  padding: 0 16px; /* 左右のパディング */
+  padding: 0 12px; /* 左右のパディング */
   display: flex;
   align-items: center;
   margin-top: 8px; /* 前のセクションやアイテムとのスペース */
+}
+
+.itemBadgeContainer {
+  margin-left: auto;
+  display: flex; /* アイコンとテキストが縦に並ぶのを防ぐため */
+  align-items: center; /* アイコンとテキストを中央揃えにするため */
+}
+
+.groupLabelText {
+  flex-grow: 1;
+  /* テキストが長くなった場合に省略されるように */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 8px; /* アイコンとの間に少しスペース */
 }

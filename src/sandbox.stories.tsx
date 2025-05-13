@@ -11,13 +11,14 @@ import { Switch } from "./Switch";
 import { TextField } from "./TextField";
 
 const meta = {
-  title: "Sandbox",
+  title: "playground/Sandbox",
+  tags: ["!autodocs"],
 } satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const FormExample: Story = {
+export const Sandbox: Story = {
   render: () => {
     const [formState, setFormState] = useState({
       name: "",
@@ -33,85 +34,6 @@ export const FormExample: Story = {
       alert(JSON.stringify(formState, null, 2));
     };
 
-    return (
-      <Grid>
-        <GridItem colSpan={12}>
-          <h2>Contact Form Example</h2>
-        </GridItem>
-        <form onSubmit={handleSubmit} style={{ display: "contents" }}>
-          {/* formがGridレイアウトを壊さないように */}
-          {/* 名前とメールアドレスを横に並べる */}
-          <GridRow>
-            <TextField
-              label="Name"
-              value={formState.name}
-              onChangeText={(e) => setFormState({ ...formState, name: e })}
-              required
-            />
-            <TextField
-              label="Email"
-              type="email"
-              value={formState.email}
-              onChangeText={(e) => setFormState({ ...formState, email: e })}
-              required
-            />
-          </GridRow>
-          <GridItem colSpan={12}>
-            <TextField
-              label="Message"
-              value={formState.message}
-              onChangeText={(e) => setFormState({ ...formState, message: e })}
-              multiline
-              required
-            />
-          </GridItem>
-          <GridItem colSpan={12}>
-            <RadioGroup
-              label="Preferred contact method"
-              value={formState.contactPreference}
-              onChange={(value) =>
-                setFormState({ ...formState, contactPreference: value })
-              }
-              options={[
-                { value: "email", label: "Email" },
-                { value: "phone", label: "Phone" },
-                { value: "mail", label: "Mail" },
-              ]}
-            />
-          </GridItem>
-          {/* スイッチとチェックボックスを横に並べる */}
-          <GridRow colSpan={12} spacing="var(--space-4)" align="center">
-            <Switch
-              checked={formState.subscribe}
-              onChange={(checked) =>
-                setFormState({ ...formState, subscribe: checked })
-              }
-            >
-              Subscribe to newsletter
-            </Switch>
-            <Checkbox
-              checked={formState.termsAccepted}
-              onChangeChecked={(checked) =>
-                setFormState({ ...formState, termsAccepted: checked })
-              }
-              label="I accept the terms and conditions"
-              required
-            />
-          </GridRow>
-          {/* 送信ボタンを右寄せ */}
-          <GridItem colSpan={12}>
-            <div style={{ marginTop: "16px", textAlign: "right" }}>
-              <Button type="submit">Submit</Button>
-            </div>
-          </GridItem>
-        </form>
-      </Grid>
-    );
-  },
-};
-
-export const NavigationExample: Story = {
-  render: () => {
     const railItems: ComponentProps<typeof Navigation>["railItems"] = [
       {
         id: "home",
@@ -127,14 +49,12 @@ export const NavigationExample: Story = {
         id: "notifications",
         label: "Notifications",
         icon: <MdNotifications size={24} />,
-        badge: 3, // Changed from object to number
+        badge: 3,
       },
     ];
 
     const drawerSections: ComponentProps<typeof Navigation>["drawerSections"] =
       (key) => {
-        // key に基づいてセクションの内容を動的に生成する例
-        // 実際には、より複雑なロジックやデータソースから取得することが多い
         if (key === "home") {
           return [
             {
@@ -181,29 +101,82 @@ export const NavigationExample: Story = {
             },
           ];
         }
-        return []; //該当するキーがなければ空のセクションを返す
+        return [];
       };
 
     return (
       <div style={{ display: "flex", height: "100vh" }}>
-        <Navigation
-          railItems={railItems}
-          drawerSections={drawerSections}
-          // 必要に応じて他のpropsを追加
-        />
-        <div style={{ flex: 1, backgroundColor: "red" }}>
+        <Navigation railItems={railItems} drawerSections={drawerSections} />
+        <div style={{ flex: 1 }}>
           <Grid>
             <GridItem colSpan={12}>
-              <h1>Content</h1>
+              <h2>Contact Form Example</h2>
             </GridItem>
-            <GridRow>
-              <GridItem colSpan={6}>
-                <h1>Content</h1>
+            <form onSubmit={handleSubmit} style={{ display: "contents" }}>
+              <GridRow>
+                <TextField
+                  label="Name"
+                  value={formState.name}
+                  onChangeText={(e) => setFormState({ ...formState, name: e })}
+                  required
+                />
+                <TextField
+                  label="Email"
+                  type="email"
+                  value={formState.email}
+                  onChangeText={(e) => setFormState({ ...formState, email: e })}
+                  required
+                />
+              </GridRow>
+              <GridItem colSpan={12}>
+                <TextField
+                  label="Message"
+                  value={formState.message}
+                  onChangeText={(e) =>
+                    setFormState({ ...formState, message: e })
+                  }
+                  multiline
+                  required
+                />
               </GridItem>
-              <GridItem colSpan={6}>
-                <h1>Content</h1>
+              <GridItem colSpan={12}>
+                <RadioGroup
+                  label="Preferred contact method"
+                  value={formState.contactPreference}
+                  onChange={(value) =>
+                    setFormState({ ...formState, contactPreference: value })
+                  }
+                  options={[
+                    { value: "email", label: "Email" },
+                    { value: "phone", label: "Phone" },
+                    { value: "mail", label: "Mail" },
+                  ]}
+                />
               </GridItem>
-            </GridRow>
+              <GridRow colSpan={12} spacing="var(--space-4)" align="center">
+                <Switch
+                  checked={formState.subscribe}
+                  onChange={(checked) =>
+                    setFormState({ ...formState, subscribe: checked })
+                  }
+                >
+                  Subscribe to newsletter
+                </Switch>
+                <Checkbox
+                  checked={formState.termsAccepted}
+                  onChangeChecked={(checked) =>
+                    setFormState({ ...formState, termsAccepted: checked })
+                  }
+                  label="I accept the terms and conditions"
+                  required
+                />
+              </GridRow>
+              <GridItem colSpan={12}>
+                <div style={{ marginTop: "16px", textAlign: "right" }}>
+                  <Button type="submit">Submit</Button>
+                </div>
+              </GridItem>
+            </form>
           </Grid>
         </div>
       </div>

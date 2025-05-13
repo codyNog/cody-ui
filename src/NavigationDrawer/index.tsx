@@ -7,7 +7,7 @@ import {
   useState,
 } from "react"; // ElementType をインポート
 import { Drawer } from "vaul";
-import { MdChevronRight, MdExpandMore } from "../Icons"; // アイコンをインポート
+import { MdArrowDropDown, MdArrowDropUp } from "../Icons"; // アイコンをインポート
 import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
 
@@ -85,12 +85,14 @@ const LinkItemComponent = ({
         {item.label}
       </Typography>
       {item.badge != null && (
-        <Typography
-          variant="labelLarge"
-          color={isActive ? "onSecondaryContainer" : "onSurfaceVariant"}
-        >
-          {item.badge}
-        </Typography>
+        <span className={styles.itemBadgeContainer}>
+          <Typography
+            variant="labelLarge"
+            color={isActive ? "onSecondaryContainer" : "onSurfaceVariant"}
+          >
+            {item.badge}
+          </Typography>
+        </span>
       )}
     </LinkComponent>
   </li>
@@ -143,11 +145,13 @@ const GroupItemComponent = ({
       aria-controls={`group-content-${item.id}`}
     >
       {item.icon && <span className={styles.itemIcon}>{item.icon}</span>}
-      <Typography variant="labelLarge" color="onSurfaceVariant">
-        {item.label}
-      </Typography>
+      <span className={styles.groupLabelText}>
+        <Typography variant="labelLarge" color="onSurfaceVariant">
+          {item.label}
+        </Typography>
+      </span>
       <span className={styles.groupExpandIcon}>
-        {isExpanded ? <MdExpandMore /> : <MdChevronRight />}
+        {isExpanded ? <MdArrowDropUp /> : <MdArrowDropDown />}
       </span>
     </div>
     {isExpanded && (

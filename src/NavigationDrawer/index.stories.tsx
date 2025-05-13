@@ -13,7 +13,6 @@ import {
   MdPeople,
   MdReport,
   MdSend,
-  MdSettings,
   MdStar,
 } from "../Icons";
 
@@ -61,7 +60,7 @@ const homeSection: ComponentProps<typeof NavigationDrawer>["sections"] = [
   },
 ];
 
-const mailSection: ComponentProps<typeof NavigationDrawer>["sections"] = [
+const settingsSection: ComponentProps<typeof NavigationDrawer>["sections"] = [
   {
     id: "mail_section",
     items: [
@@ -192,58 +191,9 @@ const mailSection: ComponentProps<typeof NavigationDrawer>["sections"] = [
   },
 ];
 
-const settingsSection: ComponentProps<typeof NavigationDrawer>["sections"] = [
-  {
-    id: "settings_section",
-    items: [
-      {
-        id: "general",
-        type: "link",
-        label: "General",
-        icon: <MdSettings />,
-        href: "/settings/general",
-      },
-      {
-        id: "account",
-        type: "link",
-        label: "Account",
-        icon: <MdPeople />,
-        href: "/settings/account",
-      },
-      {
-        id: "notifications",
-        type: "link",
-        label: "Notifications",
-        icon: <MdReport />,
-        href: "/settings/notifications",
-      },
-      { type: "divider", id: "divider_settings" },
-      {
-        id: "help",
-        type: "link",
-        label: "Help & Support",
-        icon: <MdEdit />,
-        href: "/settings/help",
-      },
-    ],
-  },
-];
-
-// Story で再利用するために export する
-export const sampleSections = (
-  id: string,
-): ComponentProps<typeof NavigationDrawer>["sections"] => {
-  switch (id) {
-    case "home":
-      return homeSection;
-    case "mail":
-      return mailSection;
-    case "settings":
-      return settingsSection;
-    default:
-      return homeSection;
-  }
-};
+const sampleSections = (
+  _id: string,
+): ComponentProps<typeof NavigationDrawer>["sections"] => settingsSection;
 
 export const Standard: Story = {
   args: {
