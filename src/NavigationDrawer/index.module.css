@@ -266,11 +266,13 @@
 }
 
 /* Styles for items directly within a group, to indent them */
+/* These are now handled by inline styles based on the 'level' prop */
+/*
 .groupItems > li > .item,
 .groupItems > li > .groupLabel {
-  /* groupLabelもネストされる可能性を考慮（現状は非対応だが将来的に） */
-  padding-left: calc(12px + 24px); /* 通常の左パディング12px + インデント24px */
+  padding-left: calc(12px + 24px);
 }
+*/
 
 .groupItems > li > .divider {
   margin-left: calc(16px + 24px); /* 通常の左右マージン16px + インデント24px */

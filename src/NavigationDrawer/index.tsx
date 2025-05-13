@@ -10,6 +10,7 @@ import { Drawer } from "vaul";
 import { MdArrowDropDown, MdArrowDropUp } from "../Icons"; // アイコンをインポート
 import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
+import { Divider } from "../Divider";
 
 // ItemType を定義
 type NavigationDrawerItemType = "link" | "header" | "divider" | "group";
@@ -23,6 +24,7 @@ type BaseNavigationDrawerItem<T extends NavigationDrawerItemType> = {
   label?: T extends "divider" ? never : string;
   // link と group のみが icon を持てる想定 (M3 の Standard drawer の Section header には icon がないため)
   icon?: T extends "divider" | "header" ? never : ReactNode;
+  level?: number; // ネストレベル
 };
 
 // Conditional Types を使って Item 型を定義
@@ -59,15 +61,21 @@ type LinkItemProps = {
   onClick?: (item: NavigationDrawerItemData<"link">) => void;
   /** Custom component to render the link. Defaults to 'a'. */
   linkComponent?: ElementType; // React. を削除
+  /** The nesting level of the item. */
+  level?: number;
 };
 const LinkItemComponent = ({
   item,
   isActive,
   onClick,
   linkComponent: LinkComponent = "a",
-}: LinkItemProps) => (
-  <li key={item.id}>
+  level = 0,
+}: LinkItemProps) => {
+  const paddingLeft = 12 + level * 24; // ベース12px + levelごとに24pxインデント
+
+  return (
     <LinkComponent
+      key={item.id}
       href={item.href}
       to={item.href}
       onClick={() => {
@@ -75,6 +83,7 @@ const LinkItemComponent = ({
       }}
       className={`${styles.item} ${isActive ? styles.itemActive : ""}`}
       aria-current={isActive ? "page" : undefined}
+      style={{ paddingLeft: `${paddingLeft}px` }}
     >
       <div className={styles.stateLayer} />
       {item.icon && <span className={styles.itemIcon}>{item.icon}</span>}
@@ -95,72 +104,74 @@ const LinkItemComponent = ({
         </span>
       )}
     </LinkComponent>
-  </li>
-);
+  );
+};
 
 type HeaderItemProps = {
   item: NavigationDrawerItemData<"header">;
 };
 const HeaderItemComponent = ({ item }: HeaderItemProps) => (
-  <li key={item.id} className={styles.sectionHeader}>
+  <div key={item.id} className={styles.sectionHeader}>
     <Typography variant="titleSmall" color="onSurfaceVariant">
       {item.label}
     </Typography>
-  </li>
-);
-
-type DividerItemProps = {
-  item: NavigationDrawerItemData<"divider">;
-};
-const DividerItemComponent = ({ item }: DividerItemProps) => (
-  <li key={item.id} className={styles.divider} />
+  </div>
 );
 
 type GroupItemProps = {
   item: NavigationDrawerItemData<"group">;
   isExpanded: boolean;
   onToggleGroup: (groupId: string) => void;
-  renderSubItems: (itemsToRender: Array<NavigationDrawerItemData>) => ReactNode; // 型変更
+  renderSubItems: (
+    itemsToRender: Array<NavigationDrawerItemData>,
+    currentLevel: number,
+  ) => ReactNode; // 型変更 + currentLevel
   selectedItemId?: string; // selectedItemId を GroupItem にも渡す
   onItemClick?: (item: NavigationDrawerItemData<"link">) => void; // onItemClick を GroupItem にも渡す
+  level?: number; // ネストレベル
 };
 const GroupItemComponent = ({
   item,
   isExpanded,
   onToggleGroup,
   renderSubItems,
-}: GroupItemProps) => (
-  <li key={item.id} className={styles.groupItem}>
-    <div
-      className={styles.groupLabel}
-      onClick={() => onToggleGroup(item.id)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          onToggleGroup(item.id);
-        }
-      }}
-      role="button"
-      tabIndex={0}
-      aria-expanded={isExpanded}
-      aria-controls={`group-content-${item.id}`}
-    >
-      {item.icon && <span className={styles.itemIcon}>{item.icon}</span>}
-      <span className={styles.groupLabelText}>
-        <Typography variant="labelLarge" color="onSurfaceVariant">
-          {item.label}
-        </Typography>
-      </span>
-      <span className={styles.groupExpandIcon}>
-        {isExpanded ? <MdArrowDropUp /> : <MdArrowDropDown />}
-      </span>
+  level = 0,
+}: GroupItemProps) => {
+  const paddingLeft = 12 + level * 24; // ベース12px + levelごとに24pxインデント
+  return (
+    <div key={item.id} className={styles.groupItem}>
+      <div
+        className={styles.groupLabel}
+        style={{ paddingLeft: `${paddingLeft}px` }}
+        onClick={() => onToggleGroup(item.id)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            onToggleGroup(item.id);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-expanded={isExpanded}
+        aria-controls={`group-content-${item.id}`}
+      >
+        {item.icon && <span className={styles.itemIcon}>{item.icon}</span>}
+        <span className={styles.groupLabelText}>
+          <Typography variant="labelLarge" color="onSurfaceVariant">
+            {item.label}
+          </Typography>
+        </span>
+        <span className={styles.groupExpandIcon}>
+          {isExpanded ? <MdArrowDropUp /> : <MdArrowDropDown />}
+        </span>
+      </div>
+      {isExpanded && (
+        <ul className={styles.groupItems} id={`group-content-${item.id}`}>
+          {renderSubItems(item.items, level + 1)}
+        </ul>
+      )}
     </div>
-    {isExpanded && (
-      <ul className={styles.groupItems} id={`group-content-${item.id}`}>
-        {renderSubItems(item.items)}
-      </ul>
-    )}
-  </li>
-);
+  );
+};
 // --- End Item Components ---
 
 const Component = ({
@@ -170,6 +181,7 @@ const Component = ({
   expandedGroups,
   toggleGroup,
   linkComponent, // Pass linkComponent down
+  currentLevel = 0, // Add currentLevel with a default value
 }: {
   items: Array<NavigationDrawerItemData>;
   selectedItemId?: string;
@@ -177,12 +189,15 @@ const Component = ({
   expandedGroups: Record<string, boolean>;
   toggleGroup: (groupId: string) => void;
   linkComponent?: ElementType; // React. を削除
+  currentLevel?: number; // Add currentLevel to props type
 }) => {
   return (
     <>
       {items.map((item) => {
         const isActive =
           item.id === selectedItemId || (item.type === "link" && item.isActive);
+        const itemLevel = item.level ?? currentLevel; // Use item.level if defined, otherwise currentLevel
+
         switch (item.type) {
           case "link":
             return (
@@ -192,12 +207,15 @@ const Component = ({
                 isActive={!!isActive}
                 onClick={onItemClick}
                 linkComponent={linkComponent} // Pass linkComponent to LinkItemComponent
+                level={itemLevel} // Pass level to LinkItemComponent
               />
             );
           case "header":
+            // HeaderItemComponent にも level を渡す場合は、props とスタイル調整が必要
             return <HeaderItemComponent key={item.id} item={item} />;
           case "divider":
-            return <DividerItemComponent key={item.id} item={item} />;
+            // Divider にも level に応じた margin/padding が必要な場合は調整
+            return <Divider />;
           case "group": {
             return (
               <GroupItemComponent
@@ -205,7 +223,10 @@ const Component = ({
                 item={item}
                 isExpanded={!!expandedGroups[item.id]}
                 onToggleGroup={toggleGroup}
-                renderSubItems={(subItems) => (
+                renderSubItems={(
+                  subItems,
+                  nextLevel, // renderSubItems に nextLevel を追加
+                ) => (
                   <Component
                     items={subItems}
                     selectedItemId={selectedItemId}
@@ -213,10 +234,12 @@ const Component = ({
                     expandedGroups={expandedGroups}
                     toggleGroup={toggleGroup}
                     linkComponent={linkComponent} // Pass linkComponent recursively
+                    currentLevel={nextLevel} // Pass nextLevel as currentLevel for recursion
                   />
-                )} // 再帰的に自身を渡す
+                )}
                 selectedItemId={selectedItemId} // selectedItemId を渡す
                 onItemClick={onItemClick} // onItemClick を渡す
+                level={itemLevel} // Pass level to GroupItemComponent
               />
             );
           }
