@@ -1,0 +1,41 @@
+/* src/Accordion/index.module.css */
+.disclosureItem {
+  /* Disclosureコンポーネントに適用するスタイル */
+  /* 必要であればここにスタイルを追加 */
+}
+
+/* DisclosureTitleのデフォルトの挙動に依存するため、一旦削除またはコメントアウト */
+/* .disclosureTitle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+} */
+
+.titleText {
+  /* タイトルテキスト用のスタイル */
+  flex-grow: 1; /* 親要素がflexコンテナの場合に有効 */
+  margin-right: 8px; /* アイコンとの間に少しスペース */
+}
+
+.icon {
+  /* アイコン用のスタイル */
+  /* margin-left: auto; */ /* 親要素のflexの挙動に依存するため、一旦コメントアウト */
+  display: flex;
+  align-items: center;
+}
+
+/* DisclosureTitleの直接の子要素としてアイコンを配置し、
+   親のDisclosureTitleがflexコンテナとして振る舞うことを期待する。
+   もしそうでなければ、DisclosureTitleの内部構造を再度見直す必要がある。
+   ここでは、DisclosureTitleが内部的にflexのようなレイアウトを
+   持っているか、あるいは子要素の配置を制御できることを期待する。
+*/
+/* もしDisclosureTitleがflexでない場合、以下のようなアプローチも考えられるが、
+   まずはシンプルな構造で試す。
+.disclosureItem > button > span:last-child {
+  margin-left: auto;
+}
+*/
+
+.content {
+}

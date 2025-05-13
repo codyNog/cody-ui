@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 import type { ComponentProps } from "react";
 import { Navigation } from ".";
 import {
@@ -17,7 +18,6 @@ import {
   MdSettings,
   MdStar,
 } from "../Icons";
-import { fn } from "@storybook/test";
 
 const meta = {
   component: Navigation,

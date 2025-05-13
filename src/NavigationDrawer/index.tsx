@@ -7,10 +7,10 @@ import {
   useState,
 } from "react"; // ElementType をインポート
 import { Drawer } from "vaul";
+import { Divider } from "../Divider";
 import { MdArrowDropDown, MdArrowDropUp } from "../Icons"; // アイコンをインポート
 import { Typography } from "../Typography"; // Typography をインポート
 import styles from "./index.module.css";
-import { Divider } from "../Divider";
 
 // ItemType を定義
 type NavigationDrawerItemType = "link" | "header" | "divider" | "group";
