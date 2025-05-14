@@ -1,5 +1,5 @@
 "use client";
-import { type ReactElement, type Ref, forwardRef } from "react";
+import { type Ref, forwardRef } from "react";
 import { DockedDatePicker } from "./Docked";
 import { ModalDatePicker } from "./Modal";
 import type { DatePickerType, Props } from "./types";
@@ -31,14 +31,11 @@ import type { DatePickerType, Props } from "./types";
  * <DatePicker variant="modal" label="Start Date" defaultValue={new Date()} />
  * ```
  */
-export const DatePicker = forwardRef(function DatePicker(
-  props: Props<DatePickerType>,
-  ref: Ref<HTMLDivElement>,
-) {
+export const DatePicker = forwardRef(function DatePicker<
+  T extends DatePickerType,
+>(props: Props<T>, ref: Ref<HTMLDivElement>) {
   if (props.variant === "docked") {
     return <DockedDatePicker {...props} ref={ref} />;
   }
   return <ModalDatePicker {...props} ref={ref} />;
-}) as <T extends DatePickerType>(
-  props: Props<T> & { ref?: Ref<HTMLDivElement> },
-) => ReactElement;
+});

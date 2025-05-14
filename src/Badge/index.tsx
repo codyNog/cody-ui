@@ -54,10 +54,10 @@ export type Props =
  * ```
  */
 export const Badge = forwardRef<HTMLDivElement, Props>(
-  ({ variant = "small", ...props }, ref) => {
+  ({ variant = "small", count }, ref) => {
     const getBadgeContent = () => {
       if (variant === "large") {
-        const currentCount = (props as { count?: number }).count;
+        const currentCount = count;
         if (typeof currentCount === "number") {
           if (currentCount > 99) {
             return "99+";
@@ -73,7 +73,7 @@ export const Badge = forwardRef<HTMLDivElement, Props>(
         return styles.small;
       }
       if (variant === "large") {
-        return typeof (props as { count?: number }).count === "number"
+        return typeof count === "number"
           ? styles.largeWithCount
           : styles.largeNoCount;
       }
@@ -84,9 +84,7 @@ export const Badge = forwardRef<HTMLDivElement, Props>(
       .filter(Boolean)
       .join(" ");
 
-    const shouldRenderSpan =
-      variant === "large" &&
-      typeof (props as { count?: number }).count === "number";
+    const shouldRenderSpan = variant === "large" && typeof count === "number";
 
     return (
       <div ref={ref} className={badgeClassName}>

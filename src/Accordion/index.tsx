@@ -252,7 +252,7 @@ export const Accordion = forwardRef<HTMLDivElement, Props>((props, ref) => {
   }
 
   const state = useDisclosureGroupState({
-    ...(rest as BaseProps),
+    ...rest,
     defaultExpandedKeys: resolvedDefaultExpandedKeys,
     allowsMultipleExpanded: resolvedAllowsMultipleExpanded,
   });
