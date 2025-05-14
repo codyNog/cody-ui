@@ -13,5 +13,17 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
+  typescript: {
+    reactDocgen: "react-docgen-typescript",
+    reactDocgenTypescriptOptions: {
+      shouldExtractLiteralValuesFromEnum: true,
+      // JSDocのコメントをパースに含めるようにする
+      // (プロジェクトのtsconfig.jsonと設定を合わせるのが理想)
+      // compilerOptions: { jsx: 'react-jsx' },
+    },
+  },
+  docs: {
+    autodocs: "tag", // preview.tsxの設定と合わせる
+  },
 };
 export default config;
