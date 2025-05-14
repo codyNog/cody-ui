@@ -1,7 +1,5 @@
 import type { CalendarDate, DateValue } from "@internationalized/date";
-import type { ComponentProps } from "react";
 import type {
-  Calendar as AriaCalendar,
   CalendarProps as AriaCalendarPropsBase,
   RangeCalendarProps as AriaRangeCalendarPropsBase,
 } from "react-aria-components";
@@ -65,12 +63,3 @@ export type MultipleCalendarProps = CalendarProps<"multiple">;
 export type IsVariant<T extends CalendarVariant> = (
   props: CalendarProps<CalendarVariant>,
 ) => props is CalendarProps<T>;
-
-type MultipleSelectionCalendarProps = Omit<
-  ComponentProps<typeof AriaCalendar>,
-  "value" | "defaultValue" | "onChange"
-> & {
-  value?: InternalDateArray;
-  defaultValue?: InternalDateArray;
-  onChange?: (dates: DateValue[]) => void;
-};

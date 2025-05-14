@@ -1,4 +1,5 @@
-import type { ComponentProps, ReactNode } from "react";
+import type { ComponentProps, ForwardedRef, ReactNode } from "react";
+import { forwardRef } from "react";
 import {
   MenuTrigger,
   Popover,
@@ -166,44 +167,50 @@ const renderMenuItems = (items: ReadonlyArray<MenuItemData>): ReactNode[] => {
  * It can be triggered by a button or other element.
  * Supports submenus and selection modes.
  */
-export const Menu = ({
-  children,
-  items,
-  onAction,
-  placement = "bottom start",
-  offset,
-  matchTriggerWidth = true,
-  isDisabled,
-  "aria-label": ariaLabel,
-  selectionMode = "none",
-  selectedKeys,
-  defaultSelectedKeys,
-  onSelectionChange,
-}: Props) => {
-  const menuProps: RACMenuProps<object> = {
-    onAction,
-    "aria-label": ariaLabel,
-    selectionMode,
-    selectedKeys,
-    defaultSelectedKeys,
-    onSelectionChange,
-    disabledKeys: isDisabled
-      ? items.map((item: MenuItemData) => item.id)
-      : undefined,
-  };
+export const Menu = forwardRef<HTMLDivElement, Props>(
+  (
+    {
+      children,
+      items,
+      onAction,
+      placement = "bottom start",
+      offset,
+      matchTriggerWidth = true,
+      isDisabled,
+      "aria-label": ariaLabel,
+      selectionMode = "none",
+      selectedKeys,
+      defaultSelectedKeys,
+      onSelectionChange,
+    }: Props,
+    ref: ForwardedRef<HTMLDivElement>,
+  ) => {
+    const menuProps: RACMenuProps<object> = {
+      onAction,
+      "aria-label": ariaLabel,
+      selectionMode,
+      selectedKeys,
+      defaultSelectedKeys,
+      onSelectionChange,
+      disabledKeys: isDisabled
+        ? items.map((item: MenuItemData) => item.id)
+        : undefined,
+    };
 
-  return (
-    <MenuTrigger>
-      {children}
-      <Popover
-        placement={placement}
-        offset={offset}
-        className={`${styles.popover} ${matchTriggerWidth ? styles.matchTriggerWidthPopover : ""}`}
-      >
-        <RACMenu {...menuProps} className={styles.menu}>
-          {renderMenuItems(items)}
-        </RACMenu>
-      </Popover>
-    </MenuTrigger>
-  );
-};
+    return (
+      <MenuTrigger>
+        {children}
+        <Popover
+          ref={ref}
+          placement={placement}
+          offset={offset}
+          className={`${styles.popover} ${matchTriggerWidth ? styles.matchTriggerWidthPopover : ""}`}
+        >
+          <RACMenu {...menuProps} className={styles.menu}>
+            {renderMenuItems(items)}
+          </RACMenu>
+        </Popover>
+      </MenuTrigger>
+    );
+  },
+);

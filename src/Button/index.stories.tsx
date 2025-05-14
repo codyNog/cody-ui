@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { MdFavorite } from "../Icons";
 import { Button } from ".";
+import { MdFavorite } from "../Icons";
 
 const meta = {
   component: Button,

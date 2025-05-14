@@ -1,10 +1,10 @@
+import type { Key } from "@react-types/shared";
+import { action } from "@storybook/addon-actions";
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
+import { useState } from "react";
 import { Accordion as Component } from ".";
 import { getCanvas } from "../libs/storybook";
-import { useState } from "react";
-import { action } from "@storybook/addon-actions";
-import type { Key } from "@react-types/shared";
 
 const meta: Meta<typeof Component> = {
   component: Component,
