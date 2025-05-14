@@ -21,7 +21,7 @@ import styles from "../index.module.css";
 import type { InternalDateValue } from "../types"; // Import internal type
 
 // Define props based on internal types
-type InternalSingleCalendarProps = Omit<
+type Props = Omit<
   AriaCalendarProps<CalendarDate>, // Use CalendarDate here
   "value" | "defaultValue" | "onChange" // Omit original value/onChange
 > & {
@@ -30,7 +30,7 @@ type InternalSingleCalendarProps = Omit<
   onChange?: (value: InternalDateValue | null) => void; // Expect internal date type in callback
 };
 
-export const SingleCalendar = (props: InternalSingleCalendarProps) => {
+export const SingleCalendar = (props: Props) => {
   // Props are now already in the internal format, destructure directly
   const { value, defaultValue, onChange, ...rest } = props;
 

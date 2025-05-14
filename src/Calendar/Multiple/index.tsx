@@ -24,7 +24,7 @@ import type { InternalDateArray } from "../types"; // Import internal type
 // --- Internal Multiple Selection Calendar ---
 
 // Define props for the internal multiple selection logic component
-type InternalMultipleSelectionCalendarProps = Omit<
+type SelectionProps = Omit<
   AriaCalendarProps<CalendarDate>, // Use CalendarDate here
   "value" | "defaultValue" | "onChange" // Omit original value/onChange
 > & {
@@ -34,9 +34,7 @@ type InternalMultipleSelectionCalendarProps = Omit<
 };
 
 // Custom component to handle multiple selection logic on top of AriaCalendar
-const MultipleSelectionCalendar = (
-  props: InternalMultipleSelectionCalendarProps,
-) => {
+const MultipleSelectionCalendar = (props: SelectionProps) => {
   const { value = [], defaultValue, onChange, ...rest } = props;
 
   // AriaCalendar expects a single DateValue for its value prop for focus management.
@@ -91,7 +89,7 @@ const MultipleSelectionCalendar = (
 // --- Exported MultipleCalendar Component ---
 
 // Define props based on internal types for the exported component
-type InternalMultipleCalendarProps = Omit<
+type Props = Omit<
   AriaCalendarProps<CalendarDate>, // Base props from Aria
   "value" | "defaultValue" | "onChange" // Omit conflicting props
 > & {
@@ -100,7 +98,7 @@ type InternalMultipleCalendarProps = Omit<
   onChange?: (value: InternalDateArray) => void; // Expect internal array type in callback
 };
 
-export const MultipleCalendar = (props: InternalMultipleCalendarProps) => {
+export const MultipleCalendar = (props: Props) => {
   // Props are now already in the internal format
   const { value, defaultValue, onChange, ...rest } = props;
 

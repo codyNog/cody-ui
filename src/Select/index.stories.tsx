@@ -20,12 +20,12 @@ export default meta;
 type Story = StoryObj<typeof Component>;
 
 // ComponentProps を使用して型を取得
-type SelectComponentProps = ComponentProps<typeof Component>;
+type Props = ComponentProps<typeof Component>;
 
 // Storybook の render 関数内で状態を管理するためのヘルパーコンポーネント
 const InteractiveSelect = (
   // Omit を使って value と onChange を除外し、initialValue を追加
-  props: Omit<SelectComponentProps, "value" | "onChange"> & {
+  props: Omit<Props, "value" | "onChange"> & {
     initialValue?: string | number;
   },
 ) => {

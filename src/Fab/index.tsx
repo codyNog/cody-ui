@@ -28,7 +28,7 @@ type FabSizeValue = "small" | "medium" | "large";
 /**
  * Common properties shared across all FAB variants.
  */
-type FabCommonProps = {
+type CommonProps = {
   /** The size of the FAB. @default "medium" */
   size?: FabSizeValue;
   /** Aria-label for accessibility. Crucial if the FAB only contains an icon. */
@@ -38,7 +38,7 @@ type FabCommonProps = {
 /**
  * Specific properties for the "standard" FAB variant.
  */
-type StandardFabSpecificProps = {
+type StandardSpecificProps = {
   /** The variant of the FAB. */
   variant?: "standard";
   /** The icon to display in the FAB. Required for standard FAB. */
@@ -50,7 +50,7 @@ type StandardFabSpecificProps = {
 /**
  * Specific properties for the "extended" FAB variant.
  */
-type ExtendedFabSpecificProps = {
+type ExtendedSpecificProps = {
   /** The variant of the FAB. */
   variant: "extended";
   /** The label for the FAB. Required for extended FAB. */
@@ -63,11 +63,11 @@ type ExtendedFabSpecificProps = {
  * Props for the Fab component.
  * @template V - The variant of the FAB, defaults to "standard".
  */
-type FabProps<V extends FabVariantValue = "standard"> = FabCommonProps &
+type FabProps<V extends FabVariantValue = "standard"> = CommonProps &
   (V extends "standard"
-    ? StandardFabSpecificProps
+    ? StandardSpecificProps
     : V extends "extended"
-      ? ExtendedFabSpecificProps
+      ? ExtendedSpecificProps
       : never);
 
 /**

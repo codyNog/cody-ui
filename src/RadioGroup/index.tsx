@@ -12,7 +12,7 @@ import styles from "./index.module.css";
 /**
  * Props for the RadioGroup component.
  */
-type RadioGroupProps = {
+type Props = {
   /** The label for the radio group. */
   label?: ReactNode;
   /** Additional CSS class name(s) to apply to the radio group. */
@@ -32,12 +32,7 @@ type RadioGroupProps = {
  * RadioGroup component based on react-aria-components.
  * Groups multiple Radio components.
  */
-export const RadioGroup = ({
-  label,
-  className,
-  options,
-  ...props
-}: RadioGroupProps) => {
+export const RadioGroup = ({ label, className, options, ...props }: Props) => {
   return (
     <RACRadioGroup
       {...props}
@@ -50,15 +45,17 @@ export const RadioGroup = ({
           </Typography>
         </RACLabel>
       )}
-      {options.map((option) => (
-        <Radio
-          key={option.value}
-          value={option.value}
-          isDisabled={option.isDisabled} // Pass isDisabled from option data
-        >
-          {option.label}
-        </Radio>
-      ))}
+      {options.map(
+        (option: { value: string; label: string; isDisabled?: boolean }) => (
+          <Radio
+            key={option.value}
+            value={option.value}
+            isDisabled={option.isDisabled} // Pass isDisabled from option data
+          >
+            {option.label}
+          </Radio>
+        ),
+      )}
     </RACRadioGroup>
   );
 };
@@ -66,7 +63,7 @@ export const RadioGroup = ({
 /**
  * Props for the Radio component.
  */
-type RadioProps = {
+type RadioOptionProps = {
   /** The content to be displayed as the radio button's label. */
   children: ReactNode;
   /** Additional CSS class name(s) to apply to the radio button. */
@@ -77,7 +74,7 @@ type RadioProps = {
  * Radio component based on react-aria-components.
  * Represents a single option within a RadioGroup.
  */
-const Radio = ({ children, className, ...props }: RadioProps) => {
+const Radio = ({ children, className, ...props }: RadioOptionProps) => {
   return (
     <RACRadio
       {...props}

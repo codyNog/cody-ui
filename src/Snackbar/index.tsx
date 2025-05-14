@@ -32,7 +32,7 @@ const SnackbarContext = createContext<ToastQueue<SnackbarContent> | null>(null);
 /**
  * Props for the SnackbarProvider component.
  */
-type SnackbarProviderProps = {
+type ProviderProps = {
   /** The child elements to be rendered within the provider. */
   children: ReactNode;
   /** The toast queue instance to manage Snackbar messages. */
@@ -43,10 +43,7 @@ type SnackbarProviderProps = {
  * SnackbarProvider component sets up the context for displaying Snackbar messages.
  * It uses `react-aria-components` ToastRegion to manage the queue and rendering of Snackbars.
  */
-export const SnackbarProvider = ({
-  children,
-  queue,
-}: SnackbarProviderProps) => {
+export const SnackbarProvider = ({ children, queue }: ProviderProps) => {
   return (
     <SnackbarContext.Provider value={queue}>
       <ToastRegion queue={queue} className={styles.toastRegion}>

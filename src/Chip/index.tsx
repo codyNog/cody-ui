@@ -9,7 +9,7 @@ import styles from "./index.module.css";
 /**
  * Base props common to all chip variants.
  */
-type ChipBaseProps = {
+type BaseProps = {
   /** The content displayed within the chip, typically text. */
   children: ReactNode;
   /** An optional icon displayed at the beginning of the chip. */
@@ -58,7 +58,7 @@ type VariantSpecificProps<V extends ChipVariant> = V extends "filter"
  * The props vary based on the selected `variant`.
  * @template V - The variant of the chip, defaults to "assist".
  */
-type ChipProps<V extends ChipVariant = "assist"> = ChipBaseProps & {
+type ChipProps<V extends ChipVariant = "assist"> = BaseProps & {
   /**
    * The visual style and interaction type of the chip.
    * @default 'assist'

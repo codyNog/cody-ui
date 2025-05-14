@@ -18,7 +18,7 @@ type GridVariant = "default" | "bento";
 /**
  * Props for the Grid component.
  */
-type GridProps = {
+export type Props = {
   /**
    * The content to be displayed within the grid.
    */
@@ -56,7 +56,7 @@ type GridProps = {
 /**
  * Props for the GridItem component.
  */
-type GridItemProps = {
+export type ItemProps = {
   /**
    * The content to be displayed within the grid item.
    */
@@ -89,7 +89,7 @@ type GridItemProps = {
 /**
  * Props for the GridRow component.
  */
-type GridRowProps = GridItemProps & {
+export type RowProps = ItemProps & {
   /**
    * The spacing between elements within the row.
    * @default var(--space-3)
@@ -118,7 +118,7 @@ type GridRowProps = GridItemProps & {
 /**
  * GridItem component represents an individual item within a Grid.
  */
-export const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
+export const GridItem = forwardRef<HTMLDivElement, ItemProps>(
   (
     {
       children,
@@ -158,7 +158,7 @@ GridItem.displayName = "GridItem";
 /**
  * GridRow component is used for arranging items horizontally within a Grid.
  */
-export const GridRow = forwardRef<HTMLDivElement, GridRowProps>(
+export const GridRow = forwardRef<HTMLDivElement, RowProps>(
   (
     {
       children,
@@ -226,7 +226,7 @@ GridRow.displayName = "GridRow";
  */
 export const BentoGridItem = forwardRef<
   HTMLDivElement,
-  Omit<GridItemProps, "variant">
+  Omit<ItemProps, "variant">
 >((props, ref) => {
   return <GridItem ref={ref} variant="bento" {...props} />;
 });
@@ -237,7 +237,7 @@ BentoGridItem.displayName = "BentoGridItem";
  * Grid component provides a flexible layout system based on CSS Grid.
  * It supports different variants like "default" and "bento".
  */
-export const Grid = forwardRef<HTMLDivElement, GridProps>(
+export const Grid = forwardRef<HTMLDivElement, Props>(
   (
     {
       children,
@@ -314,7 +314,7 @@ Grid.displayName = "Grid";
  * This component is provided for backward compatibility.
  * It is recommended to use Grid with the variant="bento" prop instead.
  */
-export const BentoGrid = forwardRef<HTMLDivElement, Omit<GridProps, "variant">>(
+export const BentoGrid = forwardRef<HTMLDivElement, Omit<Props, "variant">>(
   (props, ref) => {
     return <Grid ref={ref} variant="bento" {...props} />;
   },

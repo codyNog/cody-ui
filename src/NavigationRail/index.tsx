@@ -52,7 +52,7 @@ type Props = {
 /**
  * Props for the internal NavigationRailItem component.
  */
-type NavigationRailItemProps = {
+type ItemProps = {
   /** The navigation item data. */
   item: NavigationItem;
   /** Callback function invoked when the item is pressed. */
@@ -68,7 +68,7 @@ const NavigationRailItem = ({
   onPress,
   linkComponent: LinkComponentProp,
   onHoverChange,
-}: NavigationRailItemProps) => {
+}: ItemProps) => {
   const { isFocused, focusProps } = item.href
     ? { isFocused: false, focusProps: {} }
     : useFocusRing();

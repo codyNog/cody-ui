@@ -6,7 +6,7 @@ import styles from "./index.module.css";
 /**
  * Base props for the ProgressIndicator component.
  */
-type ProgressIndicatorBaseProps = {
+type BaseProps = {
   /**
    * Specifies the size of the progress indicator.
    * If omitted, the default size will be applied.
@@ -21,7 +21,7 @@ type ProgressIndicatorBaseProps = {
 /**
  * Props for a determinate linear progress indicator.
  */
-type DeterminateLinearProgressIndicatorProps = ProgressIndicatorBaseProps & {
+type DeterminateLinearProps = BaseProps & {
   /** The visual style of the progress indicator. */
   variant: "linear";
   /** Whether the progress is indeterminate. */
@@ -35,7 +35,7 @@ type DeterminateLinearProgressIndicatorProps = ProgressIndicatorBaseProps & {
 /**
  * Props for an indeterminate linear progress indicator.
  */
-type IndeterminateLinearProgressIndicatorProps = ProgressIndicatorBaseProps & {
+type IndeterminateLinearProps = BaseProps & {
   /** The visual style of the progress indicator. */
   variant: "linear";
   /** Whether the progress is indeterminate. */
@@ -49,7 +49,7 @@ type IndeterminateLinearProgressIndicatorProps = ProgressIndicatorBaseProps & {
 /**
  * Props for a determinate circular progress indicator.
  */
-type DeterminateCircularProgressIndicatorProps = ProgressIndicatorBaseProps & {
+type DeterminateCircularProps = BaseProps & {
   /** The visual style of the progress indicator. */
   variant: "circular";
   /** Whether the progress is indeterminate. */
@@ -63,29 +63,28 @@ type DeterminateCircularProgressIndicatorProps = ProgressIndicatorBaseProps & {
 /**
  * Props for an indeterminate circular progress indicator.
  */
-type IndeterminateCircularProgressIndicatorProps =
-  ProgressIndicatorBaseProps & {
-    /** The visual style of the progress indicator. */
-    variant: "circular";
-    /** Whether the progress is indeterminate. */
-    indeterminate: true;
-    /** The current value (not applicable for indeterminate). */
-    value?: never;
-    /** Textual representation of the current value (not applicable for indeterminate). */
-    ariaValueText?: never;
-    /** Whether to use four colors for the indeterminate circular indicator. */
-    fourColor?: boolean;
-  };
+type IndeterminateCircularProps = BaseProps & {
+  /** The visual style of the progress indicator. */
+  variant: "circular";
+  /** Whether the progress is indeterminate. */
+  indeterminate: true;
+  /** The current value (not applicable for indeterminate). */
+  value?: never;
+  /** Textual representation of the current value (not applicable for indeterminate). */
+  ariaValueText?: never;
+  /** Whether to use four colors for the indeterminate circular indicator. */
+  fourColor?: boolean;
+};
 
 /**
  * Props for the ProgressIndicator component.
  * This is a union of different progress indicator types.
  */
-type ProgressIndicatorProps =
-  | DeterminateLinearProgressIndicatorProps
-  | IndeterminateLinearProgressIndicatorProps
-  | DeterminateCircularProgressIndicatorProps
-  | IndeterminateCircularProgressIndicatorProps;
+type Props =
+  | DeterminateLinearProps
+  | IndeterminateLinearProps
+  | DeterminateCircularProps
+  | IndeterminateCircularProps;
 
 /**
  * The ProgressIndicator component visually displays the progress of a task.
@@ -110,7 +109,7 @@ type ProgressIndicatorProps =
  * ```
  */
 export const ProgressIndicator = forwardRef(
-  (props: ProgressIndicatorProps, ref: ForwardedRef<HTMLDivElement>) => {
+  (props: Props, ref: ForwardedRef<HTMLDivElement>) => {
     const { variant, ariaLabel } = props;
 
     const defaultAriaLabel = "Progress";

@@ -4,8 +4,8 @@ import { type ComponentProps, useState } from "react"; // ComponentProps をイ�
 import { CheckboxList } from "./index";
 
 // ComponentPropsを使ってitemsの型を取得
-type CheckboxListProps = ComponentProps<typeof CheckboxList>;
-type CheckboxListItem = CheckboxListProps["items"][number]; // 配列の要素の型を取得
+type Props = ComponentProps<typeof CheckboxList>;
+type CheckboxListItem = Props["items"][number]; // 配列の要素の型を取得
 
 // --- Sample Data ---
 

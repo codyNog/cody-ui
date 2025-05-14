@@ -68,7 +68,7 @@ type NavigationDrawerItemData<
 /**
  * Props for the LinkItemComponent.
  */
-type LinkItemProps = {
+type LinkProps = {
   /** The link item data. */
   item: NavigationDrawerItemData<"link">;
   /** Whether the item is currently active. */
@@ -86,7 +86,7 @@ const LinkItemComponent = ({
   onClick,
   linkComponent: LinkComponent = "a",
   level = 0,
-}: LinkItemProps) => {
+}: LinkProps) => {
   const paddingLeft = 12 + level * 24;
 
   return (
@@ -126,11 +126,11 @@ const LinkItemComponent = ({
 /**
  * Props for the HeaderItemComponent.
  */
-type HeaderItemProps = {
+type HeaderProps = {
   /** The header item data. */
   item: NavigationDrawerItemData<"header">;
 };
-const HeaderItemComponent = ({ item }: HeaderItemProps) => (
+const HeaderItemComponent = ({ item }: HeaderProps) => (
   <div key={item.id} className={styles.sectionHeader}>
     <Typography variant="titleSmall" color="onSurfaceVariant">
       {item.label}
@@ -141,7 +141,7 @@ const HeaderItemComponent = ({ item }: HeaderItemProps) => (
 /**
  * Props for the GroupItemComponent.
  */
-type GroupItemProps = {
+type GroupProps = {
   /** The group item data. */
   item: NavigationDrawerItemData<"group">;
   /** Whether the group is currently expanded. */
@@ -166,7 +166,7 @@ const GroupItemComponent = ({
   onToggleGroup,
   renderSubItems,
   level = 0,
-}: GroupItemProps) => {
+}: GroupProps) => {
   const paddingLeft = 12 + level * 24;
   return (
     <div key={item.id} className={styles.groupItem}>

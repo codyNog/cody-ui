@@ -6,7 +6,7 @@ import styles from "./index.module.css";
  * Props for the Badge component.
  * It can be a small dot or a large badge with a count.
  */
-type BadgeProps =
+export type Props =
   | {
       /**
        * The variant of the badge.
@@ -53,7 +53,7 @@ type BadgeProps =
  * <Badge variant="large" />
  * ```
  */
-export const Badge = forwardRef<HTMLDivElement, BadgeProps>(
+export const Badge = forwardRef<HTMLDivElement, Props>(
   ({ variant = "small", ...props }, ref) => {
     const getBadgeContent = () => {
       if (variant === "large") {

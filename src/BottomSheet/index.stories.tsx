@@ -4,7 +4,7 @@ import { type ComponentProps, type ReactNode, useState } from "react";
 import { BottomSheet as Component } from ".";
 import { Button } from "../Button";
 
-type BottomSheetProps = ComponentProps<typeof Component>;
+type Props = ComponentProps<typeof Component>;
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -34,10 +34,7 @@ type Story = StoryObj<typeof Component>;
  * Props for the StatefulBottomSheet wrapper component.
  * This component manages the open/closed state of the BottomSheet for Storybook.
  */
-type StatefulWrapperProps = Omit<
-  BottomSheetProps,
-  "onOpenChange" | "isOpen"
-> & {
+type StatefulWrapperProps = Omit<Props, "onOpenChange" | "isOpen"> & {
   /**
    * The initial open state of the BottomSheet.
    * @default false
@@ -61,7 +58,7 @@ const StatefulBottomSheet = (props: StatefulWrapperProps) => {
   const completeProps = {
     ...meta.args, // Default args from meta
     ...restProps, // Args passed to the story
-  } as BottomSheetProps; // Cast to ensure all required props are present
+  } as Props; // Cast to ensure all required props are present
 
   return (
     <Component {...completeProps} isOpen={isOpen} onOpenChange={setIsOpen}>

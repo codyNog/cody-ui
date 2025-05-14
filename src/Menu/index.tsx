@@ -48,7 +48,7 @@ type MenuItemData = {
 /**
  * Props for the Menu component.
  */
-type MenuProps = {
+type Props = {
   /** The trigger element that opens the menu (required). Typically a Button. */
   children: ReactNode;
   /** Array of item/separator data to display in the menu (required). */
@@ -90,12 +90,12 @@ type MenuProps = {
 /**
  * Props for the InternalMenuItem component.
  */
-type InternalMenuItemProps = ComponentProps<typeof RACMenuItem> & {
+type MenuItemProps = ComponentProps<typeof RACMenuItem> & {
   /** The data for the menu item. */
   item: MenuItemData;
 };
 
-const InternalMenuItem = ({ item, ...props }: InternalMenuItemProps) => {
+const InternalMenuItem = ({ item, ...props }: MenuItemProps) => {
   return (
     <RACMenuItem
       {...props}
@@ -125,9 +125,9 @@ const InternalMenuItem = ({ item, ...props }: InternalMenuItemProps) => {
 /**
  * Props for the InternalMenuSeparator component.
  */
-type InternalMenuSeparatorProps = SeparatorProps;
+type MenuSeparatorProps = SeparatorProps;
 
-const InternalMenuSeparator = (props: InternalMenuSeparatorProps) => {
+const InternalMenuSeparator = (props: MenuSeparatorProps) => {
   return <Separator {...props} className={styles.separator} />;
 };
 
@@ -179,7 +179,7 @@ export const Menu = ({
   selectedKeys,
   defaultSelectedKeys,
   onSelectionChange,
-}: MenuProps) => {
+}: Props) => {
   const menuProps: RACMenuProps<object> = {
     onAction,
     "aria-label": ariaLabel,
@@ -187,7 +187,9 @@ export const Menu = ({
     selectedKeys,
     defaultSelectedKeys,
     onSelectionChange,
-    disabledKeys: isDisabled ? items.map((item) => item.id) : undefined,
+    disabledKeys: isDisabled
+      ? items.map((item: MenuItemData) => item.id)
+      : undefined,
   };
 
   return (

@@ -26,7 +26,7 @@ type SegmentedButtonItem = {
 };
 
 // Props for single selection mode
-type SingleSelectionProps = {
+type SingleProps = {
   mode: "single";
   /** The value of the selected button. Must be one of the item values. */
   value: string;
@@ -37,7 +37,7 @@ type SingleSelectionProps = {
 };
 
 // Props for multiple selection mode
-type MultipleSelectionProps = {
+type MultipleProps = {
   mode: "multiple";
   /** The values of the selected buttons. An empty array means no selection. */
   value: string[];
@@ -49,7 +49,7 @@ type MultipleSelectionProps = {
 
 // Base props from ToggleButtonGroup, excluding those managed by SegmentedButtons
 // Also, ensure 'aria-label' or 'aria-labelledby' is provided for accessibility.
-type BaseToggleButtonGroupProps = Omit<
+type BaseProps = Omit<
   ToggleButtonGroupProps,
   // These props are handled by the conditional types or have specific logic within SegmentedButtons:
   | "value" // Handled by SingleSelectionProps or MultipleSelectionProps and passed conditionally
@@ -63,7 +63,7 @@ type BaseToggleButtonGroupProps = Omit<
 >;
 
 // Common props for the SegmentedButtons component
-type SegmentedButtonsCommonProps = BaseToggleButtonGroupProps & {
+type CommonProps = BaseProps & {
   /** Array of items to render as segmented buttons. Recommended length is 2-5. */
   items: SegmentedButtonItem[];
   /** Whether the entire group is disabled. This will override individual item's disabled state. */
@@ -85,8 +85,8 @@ type SegmentedButtonsCommonProps = BaseToggleButtonGroupProps & {
  * The `onChange` and `value`/`defaultValue` props behave differently based on the `mode`.
  * Requires either `aria-label` or `aria-labelledby` for accessibility.
  */
-type Props<V extends Mode> = SegmentedButtonsCommonProps &
-  (V extends "single" ? SingleSelectionProps : MultipleSelectionProps);
+type Props<V extends Mode> = CommonProps &
+  (V extends "single" ? SingleProps : MultipleProps);
 
 export const SegmentedButtons = forwardRef(
   <V extends Mode>(props: Props<V>, ref: ForwardedRef<HTMLDivElement>) => {

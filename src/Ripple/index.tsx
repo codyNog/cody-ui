@@ -91,12 +91,12 @@ export const useRipple = (isInputtingRef?: RefObject<boolean>) => {
     setRipple(null);
   };
 
-  type RippleComponentProps = Omit<
+  type Props = Omit<
     ComponentProps<typeof RippleComponent>,
     "ripple" | "clearRipple" | "isInputtingRef"
   >;
 
-  const component = (props: RippleComponentProps) => {
+  const component = (props: Props) => {
     return (
       <RippleComponent
         ripple={ripple}

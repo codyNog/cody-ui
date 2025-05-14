@@ -36,7 +36,7 @@ type Item = {
  * Props for an individual accordion item.
  * Extends {@link Item}.
  */
-type DisclosureItemProps = Item & {
+type ItemProps = Item & {
   /**
    * Whether the item is disabled.
    * @default false
@@ -69,77 +69,75 @@ const DisclosureGroupStateContext = createContext<ReturnType<
  * <AccordionItem id="item1" title="Item 1" content="Content for item 1" />
  * ```
  */
-const AccordionItem = forwardRef<HTMLDivElement, DisclosureItemProps>(
-  (props, ref) => {
-    const defaultId = useId();
-    const id = props.id || defaultId;
-    const groupState = useContext(DisclosureGroupStateContext);
-    const isActuallyExpanded = groupState
-      ? groupState.expandedKeys.has(id)
-      : !!props.isExpanded;
+const AccordionItem = forwardRef<HTMLDivElement, ItemProps>((props, ref) => {
+  const defaultId = useId();
+  const id = props.id || defaultId;
+  const groupState = useContext(DisclosureGroupStateContext);
+  const isActuallyExpanded = groupState
+    ? groupState.expandedKeys.has(id)
+    : !!props.isExpanded;
 
-    const state = useDisclosureState({
+  const state = useDisclosureState({
+    ...props,
+    isExpanded: isActuallyExpanded,
+    onExpandedChange(isExpanded) {
+      if (groupState) {
+        groupState.toggleKey(id);
+      }
+      props.onExpandedChange?.(isExpanded);
+    },
+  });
+
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const isDisabled = props.isDisabled || groupState?.isDisabled || false;
+
+  const { buttonProps: triggerProps, panelProps } = useDisclosure(
+    {
       ...props,
-      isExpanded: isActuallyExpanded,
-      onExpandedChange(isExpanded) {
-        if (groupState) {
-          groupState.toggleKey(id);
-        }
-        props.onExpandedChange?.(isExpanded);
-      },
-    });
+      isExpanded: state.isExpanded,
+      isDisabled,
+    },
+    state,
+    panelRef,
+  );
+  const { buttonProps } = useButton(triggerProps, triggerRef);
+  const { isFocusVisible, focusProps } = useFocusRing();
 
-    const panelRef = useRef<HTMLDivElement | null>(null);
-    const triggerRef = useRef<HTMLButtonElement | null>(null);
-    const isDisabled = props.isDisabled || groupState?.isDisabled || false;
-
-    const { buttonProps: triggerProps, panelProps } = useDisclosure(
-      {
-        ...props,
-        isExpanded: state.isExpanded,
-        isDisabled,
-      },
-      state,
-      panelRef,
-    );
-    const { buttonProps } = useButton(triggerProps, triggerRef);
-    const { isFocusVisible, focusProps } = useFocusRing();
-
-    return (
-      <div ref={ref}>
-        <button
-          className={`${styles.trigger} ${styles.triggerHeading}`}
-          ref={triggerRef}
-          {...mergeProps(buttonProps, focusProps)}
-          style={{
-            outline: isFocusVisible ? "2px solid dodgerblue" : "none",
-          }}
-          aria-expanded={state.isExpanded}
-          aria-controls={panelProps.id}
+  return (
+    <div ref={ref}>
+      <button
+        className={`${styles.trigger} ${styles.triggerHeading}`}
+        ref={triggerRef}
+        {...mergeProps(buttonProps, focusProps)}
+        style={{
+          outline: isFocusVisible ? "2px solid dodgerblue" : "none",
+        }}
+        aria-expanded={state.isExpanded}
+        aria-controls={panelProps.id}
+      >
+        <Typography variant="titleSmall">{props.title}</Typography>
+        {state.isExpanded ? <MdArrowDropUp /> : <MdArrowDropDown />}
+      </button>
+      {state.isExpanded && (
+        <div
+          className={styles.panel}
+          ref={panelRef}
+          {...panelProps}
+          data-state={state.isExpanded ? "open" : "closed"}
         >
-          <Typography variant="titleSmall">{props.title}</Typography>
-          {state.isExpanded ? <MdArrowDropUp /> : <MdArrowDropDown />}
-        </button>
-        {state.isExpanded && (
-          <div
-            className={styles.panel}
-            ref={panelRef}
-            {...panelProps}
-            data-state={state.isExpanded ? "open" : "closed"}
-          >
-            <Typography variant="bodyMedium">{props.content}</Typography>
-          </div>
-        )}
-      </div>
-    );
-  },
-);
+          <Typography variant="bodyMedium">{props.content}</Typography>
+        </div>
+      )}
+    </div>
+  );
+});
 AccordionItem.displayName = "AccordionItem";
 
 /**
  * Base props for the Accordion component.
  */
-type BaseAccordionProps = {
+type BaseProps = {
   /**
    * Whether all accordion items are disabled.
    * @default false
@@ -164,7 +162,7 @@ type BaseAccordionProps = {
  * Props for Accordion when using `defaultExpandedKeys`.
  * Allows multiple items to be expanded by default.
  */
-type AccordionWithDefaultKeys = BaseAccordionProps & {
+type AccordionWithDefaultKeys = BaseProps & {
   /**
    * The keys of the items that are expanded by default (uncontrolled).
    */
@@ -185,7 +183,7 @@ type AccordionWithDefaultKeys = BaseAccordionProps & {
  * Props for Accordion when using `defaultExpandedAll`.
  * All items are expanded by default, and multiple expansions are allowed.
  */
-type AccordionWithDefaultAll = BaseAccordionProps & {
+type AccordionWithDefaultAll = BaseProps & {
   defaultExpandedKeys?: never;
   /**
    * Whether all accordion items are expanded by default (uncontrolled).
@@ -203,7 +201,7 @@ type AccordionWithDefaultAll = BaseAccordionProps & {
 /**
  * Props for Accordion with default behavior (no specific default expansion, single or multiple allowed based on `allowsMultipleExpanded`).
  */
-type AccordionDefaultBehavior = BaseAccordionProps & {
+type AccordionDefaultBehavior = BaseProps & {
   defaultExpandedKeys?: never;
   defaultExpandedAll?: never;
   /**
@@ -247,14 +245,14 @@ export const Accordion = forwardRef<HTMLDivElement, Props>((props, ref) => {
   let resolvedAllowsMultipleExpanded = props.allowsMultipleExpanded;
 
   if ("defaultExpandedAll" in props && props.defaultExpandedAll) {
-    resolvedDefaultExpandedKeys = new Set(items.map((item) => item.id));
+    resolvedDefaultExpandedKeys = new Set(items.map((item: Item) => item.id));
     resolvedAllowsMultipleExpanded = true;
   } else if ("defaultExpandedKeys" in props && props.defaultExpandedKeys) {
     resolvedAllowsMultipleExpanded = true;
   }
 
   const state = useDisclosureGroupState({
-    ...(rest as BaseAccordionProps),
+    ...(rest as BaseProps),
     defaultExpandedKeys: resolvedDefaultExpandedKeys,
     allowsMultipleExpanded: resolvedAllowsMultipleExpanded,
   });
@@ -262,7 +260,7 @@ export const Accordion = forwardRef<HTMLDivElement, Props>((props, ref) => {
   return (
     <div className={styles.accordion} ref={ref}>
       <DisclosureGroupStateContext.Provider value={state}>
-        {items.map((item) => (
+        {items.map((item: Item) => (
           <AccordionItem key={item.id} {...item} />
         ))}
       </DisclosureGroupStateContext.Provider>

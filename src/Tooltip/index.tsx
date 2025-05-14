@@ -19,7 +19,7 @@ type Action = {
 /**
  * Base props common to all tooltip variants.
  */
-type BaseProps = {
+type BaseTooltipProps = {
   /** The trigger element for the tooltip. */
   children?: ReactNode;
 };
@@ -27,7 +27,7 @@ type BaseProps = {
 /**
  * Props for a plain tooltip, which displays simple text content.
  */
-type PlainTooltipProps = BaseProps & {
+type PlainProps = BaseTooltipProps & {
   /** The variant of the tooltip. For plain tooltips, this is "plain". */
   variant?: "plain";
   /** Actions are not applicable to plain tooltips. */
@@ -39,7 +39,7 @@ type PlainTooltipProps = BaseProps & {
 /**
  * Props for a rich tooltip, which can display a title, complex content, and actions.
  */
-type RichTooltipProps = BaseProps & {
+type RichProps = BaseTooltipProps & {
   /** The variant of the tooltip. For rich tooltips, this is "rich". */
   variant: "rich";
   /** The title of the rich tooltip. */
@@ -53,7 +53,7 @@ type RichTooltipProps = BaseProps & {
 /**
  * Props for the Tooltip component, supporting both plain and rich variants.
  */
-type Props = PlainTooltipProps | RichTooltipProps;
+type Props = PlainProps | RichProps;
 
 /**
  * Tooltip component displays information related to an element when the user
@@ -63,8 +63,8 @@ type Props = PlainTooltipProps | RichTooltipProps;
 export const Tooltip = forwardRef<HTMLDivElement, Props>(
   ({ children, content, ...props }, ref) => {
     const isRich = props.variant === "rich";
-    const title = isRich ? (props as RichTooltipProps).title : undefined;
-    const actions = isRich ? (props as RichTooltipProps).actions : undefined;
+    const title = isRich ? (props as RichProps).title : undefined;
+    const actions = isRich ? (props as RichProps).actions : undefined;
 
     const tooltipPopupClasses = [
       styles.tooltipPopupBase,

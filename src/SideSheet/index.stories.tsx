@@ -5,7 +5,7 @@ import { SideSheet as Component } from ".";
 import { Button } from "../Button";
 
 // SideSheetProps を ComponentProps を使って取得
-type SideSheetProps = ComponentProps<typeof Component>;
+type Props = ComponentProps<typeof Component>;
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -39,7 +39,7 @@ export default meta;
 
 type Story = StoryObj<typeof Component>;
 
-type StatefulWrapperProps = Omit<SideSheetProps, "onOpenChange" | "isOpen"> & {
+type StatefulWrapperProps = Omit<Props, "onOpenChange" | "isOpen"> & {
   initialOpen?: boolean;
   children: ReactNode;
 };
@@ -51,7 +51,7 @@ const StatefulSideSheet = (props: StatefulWrapperProps) => {
   const completeProps = {
     ...meta.args,
     ...restProps,
-  } as SideSheetProps;
+  } as Props;
 
   return (
     <Component {...completeProps} isOpen={isOpen} onOpenChange={setIsOpen}>
