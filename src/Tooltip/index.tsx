@@ -1,5 +1,5 @@
 "use client";
-import { type ReactNode, forwardRef, type ForwardedRef } from "react";
+import { type ForwardedRef, type ReactNode, forwardRef } from "react";
 import { Tooltip as AriaTooltip, TooltipTrigger } from "react-aria-components";
 import { Typography } from "../Typography";
 import styles from "./index.module.css";

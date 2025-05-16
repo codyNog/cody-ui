@@ -1,0 +1,503 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem; /* M3では4dpが一般的かも */
+}
+
+.timePickerLabel {
+  font-weight: 500; /* Medium */
+  font-size: var(--md-sys-typescale-label-medium-size, 0.75rem); /* 12sp */
+  line-height: var(--md-sys-typescale-label-medium-line-height, 1rem); /* 16sp */
+  color: var(--md-sys-color-on-surface-variant, #49454f); /* M3 On Surface Variant */
+  padding-left: 0.25rem; /* 少しインデント */
+}
+
+/* TextFieldのトリガーとなるdivのスタイル */
+.textFieldTriggerWrapper {
+  position: relative; /* ラベルの位置調整のため */
+  /* padding: 0.75rem 1rem; */ /* TextField 自体の padding に任せる */
+  /* border: 1px solid var(--md-sys-color-outline, #79747e); */ /* TextField 自体の border に任せる */
+  /* border-radius: var(--md-sys-shape-corner-extra-small, 0.25rem); */ /* TextField 自体の border-radius に任せる */
+  cursor: pointer;
+  /* background-color: var(--md-sys-color-surface-container-highest, #e6e0e9); */ /* TextField 自体の背景色に任せる */
+  display: inline-flex; /* 中のTextFieldの幅に合わせる */
+  align-items: center;
+  /* min-height: 3.5rem; */ /* TextField 自体の高さに任せる */
+  box-sizing: border-box;
+}
+
+.textFieldTriggerWrapper:hover {
+  /* TextField 自体の hover スタイルに任せる */
+}
+
+.textFieldTriggerWrapper[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.38; /* M3 Disabled state opacity */
+  /* TextField 自体の disabled スタイルに任せる */
+}
+/* .textFieldTriggerWrapper[aria-disabled="true"] .timeField, */ /* TimeField はもうない */
+/* .textFieldTriggerWrapper[aria-disabled="true"] .segment { */ /* segment はもうない */
+/* color: var(--md-sys-color-on-surface, #1d1b20); */
+/* opacity: 0.38; */
+/* } */
+
+/* TimeField自体のスタイル (これはダイアログ内のみで使用) */
+.timeField {
+  display: flex;
+  align-items: center;
+  width: 100%; /* triggerContainerいっぱいに広がるように */
+}
+
+/* DateInputのスタイル (TimeFieldの子要素) */
+.dateInput {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  font-size: var(--md-sys-typescale-body-large-size, 1rem); /* 16sp */
+  line-height: var(--md-sys-typescale-body-large-line-height, 1.5rem); /* 24sp */
+  color: var(--md-sys-color-on-surface, #1d1b20);
+}
+
+.segment {
+  padding: 0.1rem 0.2rem;
+  border-radius: 0.125rem;
+  text-align: center;
+  outline: none;
+  min-width: 1.75ch; /* 少し広めに */
+  background-color: transparent;
+  color: inherit;
+  caret-color: transparent;
+  font-variant-numeric: tabular-nums; /* 数字を等幅に */
+}
+
+.segment[data-placeholder="true"] {
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.errorMessage {
+  color: var(--md-sys-color-error, #b3261e);
+  font-size: var(--md-sys-typescale-body-small-size, 0.75rem); /* 12sp */
+  padding: 0.25rem 1rem 0; /* 4dp 16dp */
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  /* background-color: var(--md-sys-color-scrim, rgba(0, 0, 0, 0.32)); */ /* 古い定義をコメントアウト */
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-scrim, rgb(0 0 0)) 32%,
+    transparent
+  ); /* Dialogコンポーネントのscrim定義に合わせる */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100; /* M3 Dialogのelevationを考慮 */
+}
+
+.modal {
+  outline: none;
+}
+
+.dialog {
+  padding: 1.5rem; /* 24dp */
+  border-radius: var(--md-sys-shape-corner-extra-large, 1.75rem); /* 28dp */
+  background-color: var(--md-sys-color-surface-container-high, #f3edf7); /* M3 Surface Container High */
+  box-shadow: var(
+    --md-sys-elevation-level3,
+    0px 4px 8px 3px rgba(0, 0, 0, 0.15),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.3)
+  ); /* M3 Elevation 3 */
+  outline: none;
+  min-width: 20rem; /* 320dp */ /* M3 Time Picker Dialog width is 328dp */
+  display: flex; /* contentとactionsを分けるため */
+  flex-direction: column;
+}
+
+.dialogPortraitMaxWidth {
+  max-width: calc(100% - 3.5rem); /* 画面幅 - 56dp */
+}
+
+.dialogLandscapeMaxWidth {
+  max-width: 40rem; /* 横向きのときは最大40rem (640px) に */
+}
+
+.dialogHeader {
+  padding: 0 0 1.25rem; /* 0 0 20dp */
+  color: var(--md-sys-color-on-surface-variant);
+  font: var(--md-sys-typescale-body-medium-font);
+  /* M3では "Select time" or "Enter time" */
+}
+
+.dialogContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* 24dp */
+  align-items: center; /* TimeFieldを中央に */
+  flex-grow: 1; /* actionsを下に配置するため */
+}
+
+.dialogContentLandscape {
+  flex-direction: row;
+  align-items: flex-start; /* 横並びの時は上揃えの方がいいかも */
+  justify-content: space-around; /* 要素間にスペースをいい感じに作る */
+}
+
+/* ダイアログ内のTimeField (入力モード) */
+.dialogTimeField {
+  display: flex;
+}
+
+/* ダイアログ内のDateInput (TimeFieldの子) */
+.dialogDateInput {
+  display: flex;
+  align-items: flex-start; /* baseline から flex-start に変更 */
+  gap: 0.25rem; /* 4dp, セグメントとリテラルの間のスペース */
+}
+
+.dialogSegment {
+  composes: typescale-display-large from global; /* グローバルなスタイルを継承 */
+  min-width: 6rem; /* 96dp / M3では (96-8*2)/2 = 40dp per segment container */
+  height: 5rem; /* 80dp */
+  padding: 0; /* 内側の input で調整 */
+  text-align: center;
+  outline: none;
+  background-color: var(--md-sys-color-surface-container-highest);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-medium); /* 8dp */
+  color: var(--md-sys-color-on-surface-variant);
+  /* font: var(--md-sys-typescale-display-large-font); */ /* composesで継承するためコメントアウト */
+  font-variant-numeric: tabular-nums;
+  display: flex; /* inputを中央揃え */
+  align-items: center; /* inputを中央揃え */
+  justify-content: center; /* inputを中央揃え */
+  box-sizing: border-box;
+}
+
+.dialogSegment > input {
+  /* react-aria は input を生成する */
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  outline: none;
+  caret-color: var(--md-sys-color-primary);
+  display: flex; /* 上下中央揃えのため追加 */
+  align-items: center; /* 上下中央揃えのため追加 */
+  justify-content: center; /* 上下中央揃えのため追加 */
+}
+
+.dialogSegment[data-placeholder="true"] {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.dialogSegment:focus-within /* inputにフォーカスが当たった場合 */,
+.dialogSegment[data-focused="true"] {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 1px var(--md-sys-color-primary); /* M3では2pxのborder */
+  color: var(--md-sys-color-on-primary-container); /* 文字色を変更 */
+  background-color: var(--md-sys-color-primary-container); /* 背景色を追加 */
+}
+
+.dialogSegment[data-invalid="true"] {
+  border-color: var(--md-sys-color-error);
+  color: var(--md-sys-color-error);
+}
+.dialogSegment[data-invalid="true"]:focus-within,
+.dialogSegment[data-invalid="true"][data-focused="true"] {
+  box-shadow: 0 0 0 1px var(--md-sys-color-error);
+  background-color: var(--md-sys-color-error-container); /* エラー時のフォーカス背景 */
+  color: var(--md-sys-color-on-error-container); /* エラー時のフォーカス文字色 */
+}
+
+.dialogLiteral {
+  /* padding: 0 4px; */ /* 左右のパディングを少し調整 */
+  display: flex; /* 上下中央揃えのため */
+  align-items: center; /* 上下中央揃えのため */
+  font-size: var(--md-sys-typescale-display-large-font-size, 3.5rem); /* 他のセグメントと合わせる 57sp */
+  line-height: var(--md-sys-typescale-display-large-line-height, 4rem); /* 他のセグメントと合わせる 64sp */
+  color: var(--md-sys-color-on-surface-variant); /* 他のセグメントの通常時の色に合わせる */
+  font-variant-numeric: tabular-nums; /* 数字と同じ設定を適用 */
+}
+
+.segmentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 左揃えに変更 */
+  gap: 0.25rem; /* DateSegment と Typography の間に gap を追加 */
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: space-between; /* 左にIconButton、右にButton */
+  padding-top: 1.5rem; /* 24dp */
+  gap: 0.5rem; /* 8dp */
+}
+
+.dialogModeToggle {
+  /* react-aria-components の Button を IconButton 風にするためのスタイル */
+  background: none;
+  border: none;
+  padding: 0.5rem; /* アイコン周りの余白 (適宜調整してね) */
+  cursor: pointer;
+  display: inline-flex; /* アイコンを中央に配置するため */
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* 丸い背景にする場合 (ホバーとかで色つけたり) */
+  color: var(--md-sys-color-on-surface-variant); /* アイコンの色 */
+}
+
+.dialogModeToggle:hover {
+  background-color: rgba(0, 0, 0, 0.04); /* ちょっとしたホバーエフェクト */
+}
+
+.dialogModeToggle:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary); /* フォーカスリング */
+  outline-offset: 2px;
+}
+
+.dialogModeToggle > svg {
+  /* アイコンのサイズとか調整 */
+  width: 1.5rem; /* 24px */
+  height: 1.5rem; /* 24px */
+}
+
+.dialogConfirmActions {
+  display: flex;
+  gap: 0.5rem; /* 8dp */
+}
+
+/* AM/PM Toggle Styles */
+.timeInputContainer {
+  display: flex;
+  align-items: flex-start; /* baseline から flex-start に変更 */
+  gap: 0.75rem; /* 12dp, TimeFieldとトグルの間 */
+}
+
+.amPmToggleContainer {
+  display: flex;
+  flex-direction: column; /* AMとPMを縦に並べる */
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-large); /* 16dp */
+  overflow: hidden; /* 角丸を適用するため */
+  height: 5rem; /* 80dp, TimeFieldのセグメントと同じ高さ */
+}
+
+.amPmButton {
+  /* react-aria-componentsのToggleButtonのデフォルトスタイルを上書き */
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: var(--md-sys-typescale-label-large-font); /* 14sp */
+  color: var(--md-sys-color-on-surface-variant);
+  flex-grow: 1; /* 高さを均等に分ける */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem; /* 56dp */
+  box-sizing: border-box;
+  outline: none;
+  transition: background-color 150ms, color 150ms;
+}
+
+.amPmButton:first-child {
+  border-bottom: 1px solid var(--md-sys-color-outline); /* AMとPMの間の線 */
+}
+
+.amPmButton[data-selected="true"] {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.amPmButton:hover:not([data-selected="true"]) {
+  background-color: var(--md-sys-color-surface-container-highest); /* ホバー時の背景 */
+}
+
+.amPmButton:focus-visible:not([data-selected="true"]) {
+  /* フォーカスリングはToggleButtonのデフォルトに任せるか、別途定義 */
+  box-shadow: 0 0 0 2px var(--md-sys-color-primary);
+}
+
+/* ClockDial.module.cssからコピーしたスタイル */
+.clockDialContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  width: 280px; /* M3のPicker幅に合わせる */
+  font-family: sans-serif; /* とりあえず */
+}
+
+.digitalDisplay {
+  display: flex;
+  align-items: center;
+  font-size: 57px;
+  line-height: 64px;
+  margin-bottom: 20px;
+  cursor: default;
+  color: var(--md-sys-color-on-surface, black);
+}
+
+.digitalDisplay span:not(:nth-child(2)) {
+  padding: 0 8px;
+  min-width: 80px;
+  text-align: center;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.digitalDisplay span.activeMode {
+  background-color: var(--md-sys-color-primary-container, lightblue);
+  color: var(--md-sys-color-on-primary-container, black);
+}
+
+.digitalDisplay span.inactiveMode {
+  background-color: var(--md-sys-color-surface-container-highest, #f0f0f0);
+  color: var(--md-sys-color-on-surface-variant, gray);
+}
+
+.digitalDisplay span:nth-child(2) {
+  margin: 0 4px;
+  font-weight: normal;
+}
+
+.amPmDisplay {
+  font-size: 16px;
+  font-weight: 500;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: var(--md-sys-color-tertiary-container, lightcoral);
+  color: var(--md-sys-color-on-tertiary-container, white);
+}
+
+.dial {
+  width: 256px;
+  height: 256px;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-surface-container-highest, #e6e0e9);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  user-select: none; /* 文字選択を無効にする */
+}
+
+.hourDial,
+.minuteDial {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.dialButton {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface, black);
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.dialButton:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+.dialButton:hover {
+  background-color: var(--md-sys-color-on-surface-variant, #e0e0e0);
+}
+
+.dialButton.selected {
+  background-color: var(--md-sys-color-primary, #6750a4);
+  color: var(--md-sys-color-on-primary, white);
+  font-size: 22px;
+}
+
+.clockHands {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.hourHand,
+.minuteHand {
+  position: absolute;
+  background-color: var(--md-sys-color-primary, #6750a4);
+  transform-origin: bottom center;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.hourHand {
+  width: 6px;
+  height: 35%;
+  bottom: 50%;
+}
+
+.minuteHand {
+  width: 4px;
+  height: 45%;
+  bottom: 50%;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.handPivot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--md-sys-color-primary, #6750a4);
+  border-radius: 50%;
+  position: absolute;
+  border: 2px solid var(--md-sys-color-surface, white);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+/* .amPmToggleContainer と .amPmButton は TimePicker/index.module.css に既にありそうなので、一旦コメントアウト */
+/* .amPmToggleContainer {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.amPmButton {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--md-sys-color-outline, lightgray);
+  background-color: transparent;
+  color: var(--md-sys-color-primary, #6750a4);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.amPmButton[data-selected="true"] {
+  background-color: var(--md-sys-color-secondary-container, lightpink);
+  color: var(--md-sys-color-on-secondary-container, black);
+  border-color: var(--md-sys-color-secondary-container, lightpink);
+}
+
+.amPmButton:not([data-selected="true"]):hover {
+  background-color: rgba(var(--md-sys-color-primary-rgb, 103, 80, 164), 0.08);
+} */
