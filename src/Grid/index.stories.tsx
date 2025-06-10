@@ -172,23 +172,69 @@ export const WithGridRow: Story = {
   ),
 };
 
-export const CustomColumns: Story = {
+export const ResponsiveDefault: Story = {
   args: {},
   render: () => (
-    <Grid columns={3} gap="var(--space-4)">
-      <GridItem colSpan={1}>
-        {createSampleContent("3カラムグリッド", "colSpan: 1")}
-      </GridItem>
-      <GridItem colSpan={1}>
-        {createSampleContent("3カラムグリッド", "colSpan: 1")}
-      </GridItem>
-      <GridItem colSpan={1}>
-        {createSampleContent("3カラムグリッド", "colSpan: 1")}
-      </GridItem>
-      <GridItem colSpan={3}>
-        {createSampleContent("3カラムグリッド", "colSpan: 3 (フル幅)")}
-      </GridItem>
-    </Grid>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <div>
+        <h3>デフォルトバリアント - レスポンシブ対応</h3>
+        <p>
+          小さいコンテナ（599px以下）: 4カラム
+          <br />
+          中くらいのコンテナ（600px〜904px）: 8カラム
+          <br />
+          大きいコンテナ（905px以上）: 12カラム
+        </p>
+      </div>
+      
+      <div style={{ width: "500px", border: "1px dashed gray", padding: "16px" }}>
+        <h4>500px幅のコンテナ（4カラム）</h4>
+        <Grid>
+          <GridItem colSpan={2}>
+            {createSampleContent("アイテム1", "colSpan: 2")}
+          </GridItem>
+          <GridItem colSpan={2}>
+            {createSampleContent("アイテム2", "colSpan: 2")}
+          </GridItem>
+          <GridItem colSpan={4}>
+            {createSampleContent("アイテム3", "colSpan: 4 (フル幅)")}
+          </GridItem>
+        </Grid>
+      </div>
+
+      <div style={{ width: "750px", border: "1px dashed gray", padding: "16px" }}>
+        <h4>750px幅のコンテナ（8カラム）</h4>
+        <Grid>
+          <GridItem colSpan={4}>
+            {createSampleContent("アイテム1", "colSpan: 4")}
+          </GridItem>
+          <GridItem colSpan={4}>
+            {createSampleContent("アイテム2", "colSpan: 4")}
+          </GridItem>
+          <GridItem colSpan={8}>
+            {createSampleContent("アイテム3", "colSpan: 8 (フル幅)")}
+          </GridItem>
+        </Grid>
+      </div>
+
+      <div style={{ width: "1000px", border: "1px dashed gray", padding: "16px" }}>
+        <h4>1000px幅のコンテナ（12カラム）</h4>
+        <Grid>
+          <GridItem colSpan={4}>
+            {createSampleContent("アイテム1", "colSpan: 4")}
+          </GridItem>
+          <GridItem colSpan={4}>
+            {createSampleContent("アイテム2", "colSpan: 4")}
+          </GridItem>
+          <GridItem colSpan={4}>
+            {createSampleContent("アイテム3", "colSpan: 4")}
+          </GridItem>
+          <GridItem colSpan={12}>
+            {createSampleContent("アイテム4", "colSpan: 12 (フル幅)")}
+          </GridItem>
+        </Grid>
+      </div>
+    </div>
   ),
 };
 

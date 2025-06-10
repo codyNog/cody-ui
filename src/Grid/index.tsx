@@ -31,16 +31,11 @@ export type Props = {
   variant?: GridVariant;
 
   /**
-   * Whether to use container queries (only effective for the "bento" variant).
+   * Whether to use container queries for responsive behavior.
    * @default true
    */
   containerQuery?: boolean;
 
-  /**
-   * The number of columns in the grid.
-   * @default 12
-   */
-  columns?: number;
 
   /**
    * The gap between grid items.
@@ -69,8 +64,8 @@ export type ItemProps = {
   variant?: GridVariant;
 
   /**
-   * The number of columns the item should span (in a 12-column grid system).
-   * @default 3
+   * The number of columns the item should span (responsive: 4/8/12 columns).
+   * @default 12
    */
   colSpan?: 1 | 2 | 3 | 4 | 6 | 8 | 12;
 
@@ -123,7 +118,7 @@ export const GridItem = forwardRef<HTMLDivElement, ItemProps>(
     {
       children,
       variant = "default",
-      colSpan = 3,
+      colSpan = 12,
       rowSpan = 1,
       className,
       ...props
@@ -243,7 +238,6 @@ export const Grid = forwardRef<HTMLDivElement, Props>(
       children,
       variant = "default",
       containerQuery = true,
-      columns = 12,
       gap,
       className,
       ...props
@@ -252,20 +246,20 @@ export const Grid = forwardRef<HTMLDivElement, Props>(
   ) => {
     const style: CSSProperties = {};
 
-    if (columns) {
-      style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
-    }
-
     if (gap !== undefined) {
       style.gap = gap;
     }
 
     const isBento = variant === "bento";
-    const gridClassName = isBento
-      ? containerQuery
-        ? `${styles.grid} ${styles.bentoGrid} ${className || ""}`
-        : `${styles.grid} ${className || ""}`
-      : `${styles.grid} ${className || ""}`;
+    let gridClassName = styles.grid;
+    
+    if (isBento && containerQuery) {
+      gridClassName = `${styles.grid} ${styles.bentoGrid}`;
+    }
+    
+    if (className) {
+      gridClassName = `${gridClassName} ${className}`;
+    }
 
     if (isBento) {
       const validChildren = Children.map(children, (child) => {
